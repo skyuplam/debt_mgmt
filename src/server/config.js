@@ -11,7 +11,27 @@ const config = {
   isProduction: isProduction,
   googleAnalyticsId: 'UA-XXXXXXX-X',
   port: process.env.PORT || 8000,
-  webpackStylesExtensions: ['css', 'less', 'sass', 'scss', 'styl']
+  webpackStylesExtensions: ['css', 'less', 'sass', 'scss', 'styl'],
+  db: {
+    "development": {
+      "dialect": "sqlite",
+      "storage": "./db.development.sqlite"
+    },
+    "test": {
+      "username": "loan",
+      "password": "passw0rd",
+      "database": "loan",
+      "host": "192.168.99.100",
+      "dialect": "postgres"
+    },
+    "production": {
+      "username": "loan",
+      "password": null,
+      "database": "loan",
+      "host": "192.168.99.100",
+      "dialect": "postgres"
+    }
+  }
 };
 
 // Use above config as a default one. Multiple other providers are available

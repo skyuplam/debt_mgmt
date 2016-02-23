@@ -4,6 +4,7 @@ import errorHandler from './lib/errorHandler';
 import express from 'express';
 import helmet from 'helmet';
 import frontend from './frontend';
+import models from './models';
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(errorHandler);
 
 const {port} = config;
 
-app.listen(port, () => {
-  console.log('Server started at port %d', port);
+models.sequelize.sync().then( () => {
+  var server = app.listen(port, () => {
+    console.log('Server started at port %d', port);
+  });
 });
