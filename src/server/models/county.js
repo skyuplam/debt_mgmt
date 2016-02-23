@@ -1,9 +1,9 @@
-export default function(sequelize, DataTypes) {
-  var County = sequelize.define('county', {
+export default function (sequelize, DataTypes) {
+  const County = sequelize.define('county', {
     county: {
       type: DataTypes.STRING,
     }
-  },{
+  }, {
     classMethods: {
       associate: models => {
         County.belongsTo(models.city);

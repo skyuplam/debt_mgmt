@@ -13,23 +13,23 @@ const config = {
   port: process.env.PORT || 8000,
   webpackStylesExtensions: ['css', 'less', 'sass', 'scss', 'styl'],
   db: {
-    "development": {
-      "dialect": "sqlite",
-      "storage": "./db.development.sqlite"
+    development: {
+      dialect: 'sqlite',
+      storage: './db.development.sqlite'
     },
-    "test": {
-      "username": "loan",
-      "password": "passw0rd",
-      "database": "loan",
-      "host": "192.168.99.100",
-      "dialect": "postgres"
+    test: {
+      username: 'loan',
+      password: 'passw0rd',
+      database: 'loan',
+      host: '192.168.99.100',
+      dialect: 'postgres'
     },
-    "production": {
-      "username": "loan",
-      "password": null,
-      "database": "loan",
-      "host": "192.168.99.100",
-      "dialect": "postgres"
+    production: {
+      username: 'loan',
+      password: null,
+      database: 'loan',
+      host: '192.168.99.100',
+      dialect: 'postgres'
     }
   }
 };

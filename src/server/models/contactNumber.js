@@ -1,5 +1,5 @@
-export default function(sequelize, DataTypes) {
-  var City = sequelize.define('contactNumber', {
+export default function (sequelize, DataTypes) {
+  const City = sequelize.define('contactNumber', {
     contackNumber: {
       type: DataTypes.STRING,
     },
@@ -12,7 +12,7 @@ export default function(sequelize, DataTypes) {
     ext: {
       type: DataTypes.STRING,
     }
-  },{
+  }, {
     classMethods: {
       associate: models => {
         City.belongsTo(models.province);

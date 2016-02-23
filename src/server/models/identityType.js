@@ -1,9 +1,9 @@
-export default function(sequelize, DataTypes) {
-  var IdentityType = sequelize.define('idType', {
+export default function (sequelize, DataTypes) {
+  const IdentityType = sequelize.define('idType', {
     idType: {
       type: DataTypes.STRING,
     }
-  },{
+  }, {
     // classMethods: {
     //   associate: models => {
     //     IdentityType.belongsTo(models.province);

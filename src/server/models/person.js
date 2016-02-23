@@ -1,5 +1,5 @@
-export default function(sequelize, DataTypes) {
-  var Person = sequelize.define('person', {
+export default function (sequelize, DataTypes) {
+  const Person = sequelize.define('person', {
     name: {
       type: DataTypes.STRING,
       validate: {

@@ -1,5 +1,5 @@
-export default function(sequelize, DataTypes) {
-  var Identity = sequelize.define('identity', {
+export default function (sequelize, DataTypes) {
+  const Identity = sequelize.define('identity', {
     idNumber: {
       type: DataTypes.STRING,
     },
@@ -9,7 +9,7 @@ export default function(sequelize, DataTypes) {
     expiredDate: {
       type: DataTypes.DATEONLY,
     }
-  },{
+  }, {
     classMethods: {
       associate: models => {
         Identity.belongsTo(models.idType);

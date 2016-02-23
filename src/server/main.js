@@ -17,8 +17,8 @@ app.use(errorHandler);
 
 const {port} = config;
 
-models.sequelize.sync().then( () => {
-  var server = app.listen(port, () => {
+models.sequelize.sync().then(() => {
+  app.listen(port, () => {
     console.log('Server started at port %d', port);
   });
 });

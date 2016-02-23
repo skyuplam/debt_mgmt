@@ -1,12 +1,12 @@
-export default function(sequelize, DataTypes) {
-  var Country = sequelize.define('country', {
+export default function (sequelize, DataTypes) {
+  const Country = sequelize.define('country', {
     country: {
       type: DataTypes.STRING,
     }
-  },{
+  }, {
     classMethods: {
       associate: models => {
-        Country.hasMany(models.city, {as: "municipality"});
+        Country.hasMany(models.city, {as: 'municipality'});
         Country.hasMany(models.province);
       }
     },

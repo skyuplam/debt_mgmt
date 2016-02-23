@@ -1,12 +1,12 @@
-export default function(sequelize, DataTypes) {
-  var Address = sequelize.define('address', {
+export default function (sequelize, DataTypes) {
+  const Address = sequelize.define('address', {
     address: {
       type: DataTypes.STRING,
     },
     postalCode: {
       type: DataTypes.STRING,
     }
-  },{
+  }, {
     classMethods: {
       associate: models => {
         Address.belongsTo(models.county);

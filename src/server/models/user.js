@@ -1,5 +1,5 @@
-export default function(sequelize, DataTypes) {
-  var User = sequelize.define('user', {
+export default function (sequelize, DataTypes) {
+  const User = sequelize.define('user', {
     username: {
       type: DataTypes.STRING,
       unique: true,
