@@ -15,7 +15,7 @@ const debtors = {
   [debtor.id]: debtor
 };
 
-router.route('/user')
+router.route('/')
   .get((req, res) => {
     // Simulate async access.
     // In real app we would check user credentials and load user data from DB.

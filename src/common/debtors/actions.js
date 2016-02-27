@@ -7,7 +7,7 @@ export function fetchDebtors() {
   return ({ fetch }) => ({
     type: 'FETCH_DEBTORS',
     payload: {
-      promise: fetch('/api/v1/debtors/user')
+      promise: fetch('/api/v1/debtors')
         .then(response => response.json())
     }
   });
