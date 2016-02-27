@@ -6,7 +6,7 @@ export default function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: models => {
-        Country.hasMany(models.city, {as: 'municipality'});
+        Country.hasMany(models.city, { as: 'municipality' });
         Country.hasMany(models.province);
       }
     },

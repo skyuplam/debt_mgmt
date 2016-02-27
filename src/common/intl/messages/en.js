@@ -8,7 +8,8 @@ export default {
       home: 'Home',
       login: 'Login',
       me: 'Me',
-      todos: 'Todos'
+      todos: 'Todos',
+      debtors: 'Debtors'
     }
   },
   auth: {

@@ -13,8 +13,8 @@ export default function (sequelize, DataTypes) {
     classMethods: {
       associate: models => {
         Identity.belongsTo(models.idType);
-        Identity.belongsTo(models.city, {as: 'issueAuthority'});
-        Identity.belongsToMany(models.person, {through: 'personIdentity'});
+        Identity.belongsTo(models.city, { as: 'issueAuthority' });
+        Identity.belongsToMany(models.person, { through: 'personIdentity' });
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
