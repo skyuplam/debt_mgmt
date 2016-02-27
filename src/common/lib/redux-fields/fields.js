@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import invariant from 'invariant';
-import {resetFields, setField} from './actions';
+import { resetFields, setField } from './actions';
 
 const isReactNative =
   typeof navigator === 'object' &&
@@ -62,8 +62,9 @@ export default function fields(Wrapped, options) {
         }
       } : {
         name: field,
-        onChange: e => {
-          onChange(field, e.target.value);
+        onChange: ({ target: { type, checked, value } }) => {
+          const isCheckbox = type && type.toLowerCase() === 'checkbox';
+          onChange(field, isCheckbox ? checked : value);
         }
       };
     }
@@ -107,8 +108,8 @@ export default function fields(Wrapped, options) {
       options.fields.forEach(field => {
         this.fields[field].value = this.values[field];
       });
-      this.fields = {...this.fields}; // Ensure rerender for pure components.
-      this.setState({model});
+      this.fields = { ...this.fields }; // Ensure rerender for pure components.
+      this.setState({ model });
     }
 
     componentWillMount() {
@@ -117,7 +118,7 @@ export default function fields(Wrapped, options) {
     }
 
     componentDidMount() {
-      const {store} = this.context;
+      const { store } = this.context;
       this.unsubscribe = store.subscribe(() => {
         const newModel = this.getModelFromState();
         if (newModel === this.state.model) return;

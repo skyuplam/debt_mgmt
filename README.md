@@ -21,7 +21,10 @@
 - Advanced performance with pure components
 - Well tuned dev stack
 - Universal forms with validation
-- Firebase integration ([este.firebaseapp.com](https://este.firebaseapp.com))
+- Firebase Redux integration ([este.firebaseapp.com](https://este.firebaseapp.com))
+  - email and facebook login
+  - declarative queryFirebase higher order component for Firebase imperative api
+  - and more
 
 ## Libraries
 
@@ -30,6 +33,7 @@
 - [babeljs](https://babeljs.io/)
 - [immutablejs](http://facebook.github.io/immutable-js)
 - [react-router](https://github.com/rackt/react-router)
+- [react-router-redux](https://github.com/reactjs/react-router-redux)
 - [webpack](http://webpack.github.io/)
 - [expressjs](http://expressjs.com/)
 - [eslint](http://eslint.org/)
@@ -74,6 +78,7 @@ React Native: [facebook.github.io/react-native/docs/getting-started.html](https:
 - `gulp mocha` run mocha unit tests
 - `gulp mocha-watch` continuous test running for TDD
 - `gulp eslint` eslint
+- `gulp eslint --fix` fix some eslint issues
 
 ## Production Tasks
 

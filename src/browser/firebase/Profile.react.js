@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {logout} from '../../common/auth/actions';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { logout } from '../../common/auth/actions';
 
 class Profile extends Component {
 
@@ -10,12 +10,28 @@ class Profile extends Component {
     viewer: PropTypes.object.isRequired
   };
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
+  constructor(props) {
+    super(props);
+    this.logout = this.logout.bind(this);
+  }
+
+  logout() {
+    const { logout } = this.props;
+    // Redirect user to root page before logout since logout recycles app state.
+    this.context.router.replace('/');
+    logout();
+  }
+
   render() {
-    const {logout, viewer} = this.props;
+    const { viewer } = this.props;
 
     return (
       <div className="firebase-profile">
-        <h2>Hi {viewer.displayName || viewer.email}</h2>
+        <h2>Hi {viewer.displayName || viewer.email}!</h2>
         {viewer.profileImageURL &&
           <div className="profile-image">
             <img src={viewer.profileImageURL} />
@@ -23,7 +39,7 @@ class Profile extends Component {
         }
         <button
           className="btn btn-secondary-outline"
-          onClick={logout}
+          onClick={this.logout}
         >Logout</button>
       </div>
     );
@@ -33,4 +49,4 @@ class Profile extends Component {
 
 export default connect(state => ({
   viewer: state.users.viewer
-}), {logout})(Profile);
+}), { logout })(Profile);

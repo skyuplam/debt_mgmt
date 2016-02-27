@@ -15,7 +15,7 @@ app.use('/api/v1', api);
 app.use(frontend);
 app.use(errorHandler);
 
-const {port} = config;
+const { port } = config;
 
 models.sequelize.sync().then(() => {
   app.listen(port, () => {
