@@ -19,23 +19,27 @@ const { port, isProduction } = config;
 
 models.sequelize.sync({force: !!!isProduction}).then(() => {
   // Dummy Data
-  models.person.bulkCreate(
-    [{
-      name: 'Chan Siu Man 1',
-      maritalStatus: 'married',
-      dob: Date(1985, 1, 21)
-    },
+  models.idType.create(
     {
-      name: 'Chan Siu Man 2',
-      maritalStatus: 'married',
-      dob: Date(1985, 2, 21)
-    },
-    {
-      name: 'Chan Siu Man 3',
-      maritalStatus: 'married',
-      dob: Date(1985, 2, 21)
+      idType: 'ID Card',
     }
-  ]);
+  ).then(idType =>
+    models.identity.create({
+      idNumber: '12345678',
+    }).then(identity => {
+      identity.setIdType(idType);
+      return identity;
+    })
+  ).then(identity =>
+    models.person.create({
+      name: '陈大文',
+      maritalStatus: '已婚',
+      dob: new Date(1985, 7, 1)
+    }).then(person => {
+      person.addIdentities(identity);
+      return person;
+    })
+  ).catch(error => console.log(error));
 
   var server = app.listen(port, () => {
     console.log('Server started at port %d', port);

@@ -4,7 +4,8 @@ const Todo = Record({
   id: '',
   name: '',
   dob: null,
-  maritalStatus: ''
+  maritalStatus: '',
+  idNumber: ''
 });
 
 export default Todo;

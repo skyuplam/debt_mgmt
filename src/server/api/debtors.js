@@ -24,7 +24,19 @@ router.route('/')
     // setTimeout(() => {
     //   res.status(200).send({ debtors }).end();
     // }, 50);
-    models.person.findAll().then(people => {
+    models.sequelize.query(`
+      SELECT
+        p.id,
+        p.name,
+        p.maritalStatus,
+        p.dob,
+        i.idNumber
+      from person p
+      LEFT JOIN personIdentity pi ON p.id = pi.personId
+      LEFT JOIN identity i ON i.id = pi.identityId
+        AND i.idTypeId = 1
+      `,
+      { type: models.sequelize.QueryTypes.SELECT }).then(people => {
       console.log(`Debtors Count:${people.length}`);
       const debtors = people;
       res.status(200).send({debtors}).end();
