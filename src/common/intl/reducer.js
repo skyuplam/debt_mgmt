@@ -2,9 +2,9 @@ import messages from './messages';
 import { Record } from 'immutable';
 
 const InitialState = Record({
-  availableLanguages: ['en'],
-  msg: messages.en,
-  selectedLanguage: 'en'
+  availableLanguages: ['zh_CN'],
+  msg: messages.zh_CN,
+  selectedLanguage: 'zh_CN'
 });
 const initialState = new InitialState;
 
