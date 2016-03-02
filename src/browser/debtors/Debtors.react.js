@@ -3,6 +3,13 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 // import Todo from './Todo.react';
 import { connect } from 'react-redux';
+import Table from 'material-ui/lib/table/table';
+import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
+import TableRow from 'material-ui/lib/table/table-row';
+import TableHeader from 'material-ui/lib/table/table-header';
+import TableRowColumn from 'material-ui/lib/table/table-row-column';
+import TableBody from 'material-ui/lib/table/table-body';
+
 
 // Container component.
 class Debtors extends Component {
@@ -24,22 +31,44 @@ class Debtors extends Component {
 
   render() {
     const { msg, debtors } = this.props;
-
-    if (!debtors.size) {
-      return <p>{msg.empty}</p>;
-    }
-
     // Big lists should be sorted in reducer.
-    const list = debtors.toList().sortBy(item => item.createdAt);
-
+    const list = debtors.toList().sortBy(item => item.createdAt).toJS();
+    const debtorModel = {
+      name: { type: String },
+      idNumber: { type: String }
+    };
     return (
-      <ol className="debtors">
-        {list.map(debtor =>
-          <li key={debtor.id}>
-            {debtor.name}
-          </li>
-        )}
-      </ol>
+      <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHeaderColumn>ID</TableHeaderColumn>
+        <TableHeaderColumn>Name</TableHeaderColumn>
+        <TableHeaderColumn>Status</TableHeaderColumn>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow>
+        <TableRowColumn>1</TableRowColumn>
+        <TableRowColumn>John Smith</TableRowColumn>
+        <TableRowColumn>Employed</TableRowColumn>
+      </TableRow>
+      <TableRow>
+        <TableRowColumn>2</TableRowColumn>
+        <TableRowColumn>Randal White</TableRowColumn>
+        <TableRowColumn>Unemployed</TableRowColumn>
+      </TableRow>
+      <TableRow>
+        <TableRowColumn>3</TableRowColumn>
+        <TableRowColumn>Stephanie Sanders</TableRowColumn>
+        <TableRowColumn>Employed</TableRowColumn>
+      </TableRow>
+      <TableRow>
+        <TableRowColumn>4</TableRowColumn>
+        <TableRowColumn>Steve Brown</TableRowColumn>
+        <TableRowColumn>Employed</TableRowColumn>
+      </TableRow>
+    </TableBody>
+  </Table>
     );
   }
 

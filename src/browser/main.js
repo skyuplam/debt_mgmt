@@ -10,9 +10,16 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import { browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // http://bluebirdjs.com/docs/why-bluebird.html
 window.Promise = Bluebird;
+
+// Needed for onTouchTap
+// Can go away when react 1.0 release
+// Check this repo:
+// https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin();
 
 const app = document.getElementById('app');
 const initialState = window.__INITIAL_STATE__;
