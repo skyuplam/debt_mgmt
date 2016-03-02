@@ -2,18 +2,14 @@ export default function (sequelize, DataTypes) {
   const Person = sequelize.define('person', {
     name: {
       type: DataTypes.STRING,
-      validate: {
-        notNull: true,
-      }
+      allowNull: false
     },
     maritalStatus: {
       type: DataTypes.STRING,
     },
     dob: {
-      type: DataTypes.STRING,
-      validate: {
-        notNull: true,
-      }
+      type: DataTypes.DATEONLY,
+      allowNull: false
     }
   }, {
     classMethods: {

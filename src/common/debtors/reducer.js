@@ -19,9 +19,17 @@ export default function debtorsReducer(state = initialState, action) {
   switch (action.type) {
 
     case actions.FETCH_DEBTORS_SUCCESS: {
-      const debtors = Map(action.payload.debtors).map(debtor => new Debtor(debtor));
+      const debtors = action.payload.debtors.reduce((debtors, json) =>
+        debtors.set(json.id, new Debtor(json))
+      , Map());
       return state.update('map', map => map.merge(debtors));
     }
+    // case actions.ADD_HUNDRED_TODOS: {
+    //   const todos = action.payload.reduce((todos, json) =>
+    //     todos.set(json.id, new Todo(json))
+    //   , Map());
+    //   return state.update('map', map => map.merge(todos));
+    // }
 
   }
 

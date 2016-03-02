@@ -3,8 +3,8 @@ import { Record } from 'immutable';
 const Todo = Record({
   id: '',
   name: '',
-  dateOfBirth: null,
-  idCardNumber: ''
+  dob: null,
+  maritalStatus: ''
 });
 
 export default Todo;
