@@ -1,7 +1,7 @@
 export default {
   app: {
     footer: {
-      madeByHtml: 'made by <a href="https://twitter.com/steida">steida</a>'
+      madeByHtml: ''
     },
     links: {
       firebase: 'Firebase',
