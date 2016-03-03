@@ -29,7 +29,7 @@ class Debtors extends Component {
 
     return (
       <div>
-        {children || <DebtorList />}
+        <DebtorList />
       </div>
     );
   }

@@ -11,16 +11,17 @@ import { fetchDebtors } from '../../common/debtors/actions';
 class Page extends Component {
 
   static propTypes = {
-    msg: PropTypes.object
+    msg: PropTypes.object,
+    children: PropTypes.object
   };
 
   render() {
-    const { msg } = this.props;
+    const { msg, children } = this.props;
 
     return (
       <div className="debtors-page">
         <Helmet title={msg.title} />
-        <Debtors />
+        {children || <Debtors />}
       </div>
     );
   }
