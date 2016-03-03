@@ -30,6 +30,13 @@ export default function debtorsReducer(state = initialState, action) {
     //   , Map());
     //   return state.update('map', map => map.merge(todos));
     // }
+    case actions.SEARCH_DEBTORS_SUCCESS: {
+      const debtors = action.payload.debtors.reduce((debtors, json) =>
+        debtors.set(json.id, new Debtor(json))
+      , Map());
+      console.log(`Reducer ${debtors}`);
+      return state.set('map', debtors);
+    }
 
   }
 

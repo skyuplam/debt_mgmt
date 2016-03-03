@@ -1,7 +1,6 @@
 import * as debtorsActions from '../../common/debtors/actions';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-// import Todo from './Todo.react';
 import { connect } from 'react-redux';
 import Table from 'material-ui/lib/table/table';
 import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
@@ -9,6 +8,13 @@ import TableRow from 'material-ui/lib/table/table-row';
 import TableHeader from 'material-ui/lib/table/table-header';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import TableBody from 'material-ui/lib/table/table-body';
+import Card from 'material-ui/lib/card/card';
+import CardHeader from 'material-ui/lib/card/card-header';
+import CardText from 'material-ui/lib/card/card-text';
+import FlatButton from 'material-ui/lib/flat-button';
+import CardActions from 'material-ui/lib/card/card-actions';
+import DebtorSearch from './DebtorSearch.react';
+
 
 
 // Container component.
@@ -16,7 +22,7 @@ class Debtors extends Component {
 
   static propTypes = {
     msg: PropTypes.object.isRequired,
-    debtors: PropTypes.object.isRequired
+    debtors: PropTypes.object.isRequired,
   };
 
   // Example how to measure component update.
@@ -32,34 +38,41 @@ class Debtors extends Component {
   render() {
     const { msg, debtors } = this.props;
     // Big lists should be sorted in reducer.
-    const list = debtors.toList().sortBy(item => item.createdAt).toJS();
-    const debtorModel = {
-      name: { type: String },
-      idNumber: { type: String }
-    };
+    const list = debtors.toList();
+
     return (
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Status</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableRowColumn>1</TableRowColumn>
-            <TableRowColumn>John Smith</TableRowColumn>
-            <TableRowColumn>Employed</TableRowColumn>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <Card>
+        <CardHeader title={msg.headerTitle} />
+        <CardActions>
+          <DebtorSearch />
+        </CardActions>
+        <CardText>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderColumn>{msg.idCard}</TableHeaderColumn>
+                <TableHeaderColumn>{msg.name}</TableHeaderColumn>
+                <TableHeaderColumn>{msg.originatedAgreementNo}</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {list.map(debtor =>
+                <TableRow key={debtor.id}>
+                  <TableRowColumn>{debtor.idNumber}</TableRowColumn>
+                  <TableRowColumn>{debtor.name}</TableRowColumn>
+                  <TableRowColumn>{debtor.originatedAgreementNo}</TableRowColumn>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardText>
+      </Card>
     );
   }
 
 }
 
 export default connect(state => ({
-  msg: state.intl.msg.todos,
+  msg: state.intl.msg.debtors,
   debtors: state.debtors.map
 }), debtorsActions)(Debtors);

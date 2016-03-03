@@ -61,6 +61,8 @@ export default function (sequelize, DataTypes) {
     classMethods: {
       associate: models => {
         Loan.belongsTo(models.loanType);
+        Loan.belongsTo(models.person, { as: 'debtor' });
+        Loan.belongsTo(models.person, { as: 'coDebtor' });
         Loan.belongsTo(models.loanStatus);
         Loan.belongsTo(models.company, { as: 'originator' });
       }

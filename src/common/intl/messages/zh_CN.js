@@ -87,6 +87,12 @@ export default {
     newTodoPlaceholder: 'What needs to be done?',
     title: 'Todos'
   },
+  debtors: {
+    headerTitle: '贷款人搜索',
+    idCard: '身分证号',
+    name: '姓名',
+    originatedAgreementNo: '原贷款合同号'
+  },
   profile: {
     title: 'Profile'
   },
