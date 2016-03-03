@@ -9,7 +9,8 @@ import React from 'react';
 import Settings from './me/Settings.react';
 import Todos from './todos/Page.react';
 import Debtors from './debtors/Page.react';
-import { IndexRoute, Route } from 'react-router';
+import Debtor from './debtors/Debtor.react';
+import { Redirect, IndexRoute, Route } from 'react-router';
 
 export default function createRoutes(getState) {
   const requireAuth = (nextState, replace) => {
@@ -32,7 +33,10 @@ export default function createRoutes(getState) {
         <Route component={Settings} path="settings" />
       </Route>
       <Route component={Todos} path="todos" />
-      <Route component={Debtors} path="debtors" />
+      <Route component={Debtors} path="debtorList">
+        <Route component={Debtor} path="/debtors/:id" />
+        <Redirect from="debtors/:id" to="/debtors/:id" />
+      </Route>
       <Route component={NotFound} path="*" />
     </Route>
   );

@@ -69,12 +69,12 @@ class DebtorSearch extends Component {
           {...fields.originatedAgreementNo}
         />
         <RaisedButton
-          label="Github Link"
+          label={msg.search}
           onMouseUp={this.onPressedSearch}
           onTouchEnd={this.onPressedSearch}
           secondary={true}
           style={styles.button}
-          icon={<FontIcon className="muidocs-icon-custom-github"/>}
+          icon={<FontIcon className="muidocs-icon-search"/>}
         />
       </div>
     );

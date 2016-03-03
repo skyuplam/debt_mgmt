@@ -91,7 +91,8 @@ export default {
     headerTitle: '贷款人搜索',
     idCard: '身分证号',
     name: '姓名',
-    originatedAgreementNo: '原贷款合同号'
+    originatedAgreementNo: '原贷款合同号',
+    search: '搜索'
   },
   profile: {
     title: 'Profile'
