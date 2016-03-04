@@ -1,6 +1,6 @@
 import { Record } from 'immutable';
 
-const Todo = Record({
+const Debtor = Record({
   id: '',
   name: '',
   dob: null,
@@ -9,4 +9,4 @@ const Todo = Record({
   originatedAgreementNo: ''
 });
 
-export default Todo;
+export default Debtor;

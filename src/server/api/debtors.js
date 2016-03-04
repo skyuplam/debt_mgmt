@@ -45,6 +45,23 @@ function getDebtors(criteria) {
     { type: models.sequelize.QueryTypes.SELECT });
 }
 
+function getDebtor(debtorId) {
+  return models.sequelize.query(`
+    SELECT
+      p.id,
+      p.name,
+      p.maritalStatus,
+      p.dob,
+      i.idNumber
+    from person p
+    LEFT JOIN personIdentity pi ON p.id = pi.personId
+    LEFT JOIN identity i ON i.id = pi.identityId
+      AND i.idTypeId = 1
+    WHERE p.id = ${debtorId}
+    `,
+    { type: models.sequelize.QueryTypes.SELECT });
+}
+
 router.route('/')
   .get((req, res) => {
     // Simulate async access.
@@ -68,6 +85,14 @@ router.route('/')
         const debtors = people;
         return res.status(200).send({debtors}).end();
       });
+  });
+
+router.route('/:debtorId')
+  .get((req, res) => {
+    const debtorId = req.params.debtorId;
+    getDebtor(debtorId).then(debtors => {
+      return res.status(200).send({debtors}).end();
+    });
   });
 
 export default router;

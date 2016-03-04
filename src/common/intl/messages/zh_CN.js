@@ -90,9 +90,11 @@ export default {
   debtors: {
     headerTitle: '贷款人搜索',
     idCard: '身分证号',
+    maritalStatus: '婚姻状态',
     name: '姓名',
     originatedAgreementNo: '原贷款合同号',
-    search: '搜索'
+    search: '搜索',
+    debtorDetail: '贷款人详细'
   },
   profile: {
     title: 'Profile'
