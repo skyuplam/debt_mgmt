@@ -1,3 +1,4 @@
+import './DebtorInfo.scss';
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
@@ -23,21 +24,23 @@ class DebtorInfo extends Component {
         <CardHeader
           title={`${msg.debtorDetail} - ${debtor.name}`}
         />
-      <TextField
-        floatingLabelText={msg.idCard}
-        disabled={true}
-        value={debtor.idNumber}
-      />
-      <TextField
-        floatingLabelText={msg.originatedAgreementNo}
-        disabled={true}
-        value={debtor.originatedAgreementNo}
-      />
-      <TextField
-        floatingLabelText={msg.maritalStatus}
-        disabled={true}
-        value={debtor.maritalStatus}
-      />
+      <div className='debtor-info'>
+        <TextField
+          floatingLabelText={msg.idCard}
+          disabled={true}
+          value={debtor.idNumber}
+        />
+        <TextField
+          floatingLabelText={msg.originatedAgreementNo}
+          disabled={true}
+          value={debtor.originatedAgreementNo}
+        />
+        <TextField
+          floatingLabelText={msg.maritalStatus}
+          disabled={true}
+          value={debtor.maritalStatus}
+        />
+      </div>
       </Card>
     );
   }
