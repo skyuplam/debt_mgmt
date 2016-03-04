@@ -14,9 +14,7 @@ class Footer extends Component {
 
     return (
       <footer>
-        <p>
-          <FormattedHTMLMessage defaultMessage={msg.madeByHtml} />
-        </p>
+        
       </footer>
     );
   }

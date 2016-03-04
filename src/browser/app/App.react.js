@@ -7,6 +7,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { onAppComponentDidMount } from '../../common/app/actions';
 
+
 class App extends Component {
 
   static propTypes = {
@@ -29,16 +30,7 @@ class App extends Component {
 
     return (
       <div className="page">
-        <Helmet
-          link={[
-            { rel: 'shortcut icon', href: require('./favicon.ico') }
-          ]}
-          meta={[{
-            name: 'description',
-            content: 'Dev stack and starter kit for functional and universal React web apps'
-          }]}
-          titleTemplate="%s - Este.js"
-        />
+        <Helmet/>
         {/* Pass location to ensure header active links are updated. */}
         <Header location={location} />
         {children}

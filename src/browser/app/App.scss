@@ -27,7 +27,7 @@ body {
 }
 
 #app {
-  margin: 1em 2em;
+  // margin: 1em 2em;
 
   > header {
     h1 {
@@ -104,4 +104,8 @@ body {
   li {
     max-width: 42em;
   }
+}
+
+.app-bar {
+  position: fixed;
 }

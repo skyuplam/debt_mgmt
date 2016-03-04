@@ -5,11 +5,11 @@ export default {
     },
     links: {
       firebase: 'Firebase',
-      home: 'Home',
+      home: '贷后管理系统',
       login: 'Login',
       me: 'Me',
       todos: 'Todos',
-      debtors: '贷款人'
+      debtors: '贷款人管理'
     }
   },
   auth: {
