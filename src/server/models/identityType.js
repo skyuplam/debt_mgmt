@@ -1,6 +1,6 @@
 export default function (sequelize, DataTypes) {
-  const IdentityType = sequelize.define('idType', {
-    idType: {
+  const IdentityType = sequelize.define('identityType', {
+    type: {
       type: DataTypes.STRING,
     },
     description: {

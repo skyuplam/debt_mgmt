@@ -16,6 +16,11 @@ export default function (sequelize, DataTypes) {
       associate: models => {
         Person.hasOne(models.city, { as: 'censusRegisteredCity' });
         Person.belongsToMany(models.identity, { through: 'personIdentity' });
+        Person.belongsToMany(models.loan, {
+          through: models.debtorLoan,
+          as: 'Loans',
+          foreignKey: 'debtorId',
+        });
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name

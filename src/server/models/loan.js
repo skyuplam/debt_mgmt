@@ -51,20 +51,26 @@ export default function (sequelize, DataTypes) {
     collectablePenaltyFee: {
       type: DataTypes.FLOAT
     },
-    remainingTerms: {
+    repaidTerms: {
       type: DataTypes.INTEGER
     },
     originatedAgreementNo: {
       type: DataTypes.STRING
     },
+    originatedLoanProcessingBranch: {
+      type: DataTypes.STRING
+    }
   }, {
     classMethods: {
       associate: models => {
         Loan.belongsTo(models.loanType);
-        Loan.belongsTo(models.person, { as: 'debtor' });
-        Loan.belongsTo(models.person, { as: 'coDebtor' });
         Loan.belongsTo(models.loanStatus);
         Loan.belongsTo(models.company, { as: 'originator' });
+        Loan.belongsToMany(models.person, {
+          through: models.debtorLoan,
+          as: 'Debtors',
+          foreignKey: 'loanId',
+        });
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
