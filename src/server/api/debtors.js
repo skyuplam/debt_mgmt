@@ -38,8 +38,9 @@ function getDebtors(criteria) {
     from person p
     LEFT JOIN personIdentity pi ON p.id = pi.personId
     LEFT JOIN identity i ON i.id = pi.identityId
-      AND i.idTypeId = 1
+      AND i.identityTypeId = 1
     LEFT JOIN debtorLoan dl ON dl.debtorId = p.id
+      AND dl.isPrimary = 1
     LEFT JOIN loan l ON l.id = dl.loanId
     ${condition}
     `,
@@ -57,7 +58,7 @@ function getDebtor(debtorId) {
     from person p
     LEFT JOIN personIdentity pi ON p.id = pi.personId
     LEFT JOIN identity i ON i.id = pi.identityId
-      AND i.idTypeId = 1
+      AND i.identityTypeId = 1
     WHERE p.id = ${debtorId}
     `,
     { type: models.sequelize.QueryTypes.SELECT });

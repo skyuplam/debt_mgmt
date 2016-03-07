@@ -11,7 +11,7 @@ class Header extends Component {
 
   static propTypes = {
     msg: PropTypes.object.isRequired,
-    open: PropTypes.object.isRequired,
+    open: PropTypes.bool.isRequired,
     toggleSideMenu: PropTypes.func.isRequired
   };
 
