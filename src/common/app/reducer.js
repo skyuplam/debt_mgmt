@@ -9,6 +9,7 @@ import todos from '../todos/reducer';
 import ui from '../ui/reducer';
 import users from '../users/reducer';
 import debtors from '../debtors/reducer';
+import loans from '../loans/reducer';
 
 const appReducer = combineReducers({
   auth,
@@ -18,6 +19,7 @@ const appReducer = combineReducers({
   routing,
   todos,
   debtors,
+  loans,
   ui,
   users
 });

@@ -2,7 +2,9 @@ import * as actions from './actions';
 import { Record } from 'immutable';
 
 const InitialState = Record({
-  isSideMenuOpen: false
+  isSideMenuOpen: false,
+  isConfirmDialogOpen: false,
+  isNewRepaymentPlan: false,
 });
 const initialState = new InitialState;
 
@@ -19,6 +21,21 @@ export default function uiReducer(state = initialState, action) {
     case actions.TOGGLE_SIDE_MENU:
       return state.update('isSideMenuOpen', isSideMenuOpen => !isSideMenuOpen);
 
+    case actions.OPEN_CONFIRM_DIALOG: {
+      return state.update('isConfirmDialogOpen', isConfirmDialogOpen => true);
+    }
+
+    case actions.CLOSE_CONFIRM_DIALOG: {
+      return state.update('isConfirmDialogOpen', isConfirmDialogOpen => false);
+    }
+
+    case actions.OPEN_NEW_REPAYMENT_PLAN_DIALOG: {
+      return state.update('isNewRepaymentPlan', isNewRepaymentPlan => true);
+    }
+
+    case actions.CLOSE_NEW_REPAYMENT_PLAN_DIALOG: {
+      return state.update('isNewRepaymentPlan', isNewRepaymentPlan => false);
+    }
   }
 
   return state;

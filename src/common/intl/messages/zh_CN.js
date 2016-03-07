@@ -88,13 +88,54 @@ export default {
     title: 'Todos'
   },
   debtors: {
-    headerTitle: '贷款人搜索',
+    headerTitle: '借款人搜索',
     idCard: '身分证号',
     maritalStatus: '婚姻状态',
     name: '姓名',
     originatedAgreementNo: '原贷款合同号',
     search: '搜索',
-    debtorDetail: '贷款人详细'
+    debtorDetail: '借款人详细'
+  },
+  loans: {
+    headerTitle: '贷款列表',
+    appliedAt: '申请日期',
+    issuedAt: '贷款日期',
+    terms: '期限',
+    delinquentAt: '逾期日期',
+    amount: '贷款金额',
+    apr: '年化利率',
+    transferredAt: '转让日期',
+    managementFeeRate: '管理费率',
+    handlingFeeRate: '手续费率',
+    lateFeeRate: '滞纳金费率',
+    penaltyFeeRate: '违约金费率',
+    collectablePrincipal: '本金应收',
+    collectableInterest: '利息应收',
+    collectableMgmtFee: '管理费应收',
+    collectableHandlingFee: '手续费应收',
+    collectableLateFee: '滞纳金应收',
+    collectablePenaltyFee: '违约金应收',
+    repaidTerms: '已还期数',
+    remainingTerms: '剩馀期数',
+    originatedAgreementNo: '原贷款合同号',
+    originatedLoanProcessingBranch: '原贷款分行',
+    repaymentPlan: '还款计划',
+    add: '新增',
+    confirmNewRepaymentPlanTitle: '新增还款计划?',
+    confirmNewRepaymentPlanContent: '是否要新增还款计划?',
+  },
+  confirmDialog: {
+    cancel: '取消',
+    confirm: '确定'
+  },
+  newRepaymentPlanDialog: {
+    cancel: '取消',
+    submit: '提交',
+    newRepaymentPlanTitle: '新增还款计划',
+    amount: '还款总金额',
+    terms: '还款总期数',
+    repayDate: '首次还款日期',
+    ok: '确定',
   },
   profile: {
     title: 'Profile'

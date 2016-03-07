@@ -100,6 +100,7 @@
     "react-tap-event-plugin": "^0.2.2",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
+    "react-virtualized": "^5.5.0",
     "redbox-react": "^1.0.5",
     "redux": "^3.0.4",
     "redux-logger": "^2.1.1",

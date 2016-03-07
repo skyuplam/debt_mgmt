@@ -12,7 +12,7 @@ class DebtorInfo extends Component {
 
   static propTypes = {
     msg: PropTypes.object,
-    debtorId: PropTypes.object,
+    debtorId: PropTypes.string,
     debtors: PropTypes.object
   };
 
@@ -29,11 +29,6 @@ class DebtorInfo extends Component {
           floatingLabelText={msg.idCard}
           disabled={true}
           value={debtor.idNumber}
-        />
-        <TextField
-          floatingLabelText={msg.originatedAgreementNo}
-          disabled={true}
-          value={debtor.originatedAgreementNo}
         />
         <TextField
           floatingLabelText={msg.maritalStatus}
