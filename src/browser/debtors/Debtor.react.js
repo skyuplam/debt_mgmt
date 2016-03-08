@@ -4,6 +4,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DebtorInfo from './DebtorInfo.react';
 import DebtorLoans from './DebtorLoans.react';
+import Repayments from './Repayments.react';
 import { fetchDebtor } from '../../common/debtors/actions';
 import { fetchLoans } from '../../common/loans/actions';
 import fetch from '../../common/components/fetch';
@@ -23,6 +24,7 @@ class Debtor extends Component {
         <Helmet title={msg.debtorDetail} />
         <DebtorInfo debtorId={debtorId}/>
         <DebtorLoans />
+        <Repayments />
       </div>
     );
   }

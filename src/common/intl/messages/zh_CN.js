@@ -128,6 +128,10 @@ export default {
     cancel: '取消',
     confirm: '确定'
   },
+  repayments: {
+    repaymentPlan: '还款计划',
+    repayments: '还款计划详细',
+  },
   newRepaymentPlanDialog: {
     cancel: '取消',
     submit: '提交',

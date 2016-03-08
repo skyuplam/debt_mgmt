@@ -5,7 +5,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/lib/text-field';
 import Card from 'material-ui/lib/card/card';
-import CardHeader from 'material-ui/lib/card/card-header';
+import CardTitle from 'material-ui/lib/card/card-title';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -67,7 +67,7 @@ class DebtorLoans extends Component {
 
     return (
       <Card>
-        <CardHeader
+        <CardTitle
           title={`${msg.headerTitle}`}
         />
         <div >

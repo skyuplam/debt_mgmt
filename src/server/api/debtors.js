@@ -105,4 +105,35 @@ router.route('/:debtorId/loans')
     });
   });
 
+router.route('/:debtorId/repaymentPlans')
+  .get((req, res) => {
+    const debtorId = req.params.debtorId;
+    models.sequelize.query(`
+      SELECT
+        *
+      FROM repaymentPlan rp
+      LEFT JOIN loan l ON l.id = rp.loanId
+      LEFT JOIN debtorLoan dl ON dl.loanId = l.id
+      LEFT JOIN person d ON d.id = dl.debtorId
+      WHERE d.id = ${debtorId}
+    `, { type: models.sequelize.QueryTypes.SELECT }
+    ).then(repaymentPlans =>
+      res.status(200).send({repaymentPlans}).end()
+    );
+  });
+
+router.route('/:repaymentPlansId/repayments')
+  .get((req, res) => {
+    const repaymentPlanId = req.params.repaymentPlanId;
+    models.sequelize.query(`
+      SELECT
+       *
+      FROM repayment r
+      WHERE r.repaymentPlanId = ${repaymentPlanId}
+    `, { type: models.sequelize.QueryTypes.SELECT }
+  ).then(repayments =>
+      res.status(200).send({repayments}).end()
+    );
+  });
+
 export default router;

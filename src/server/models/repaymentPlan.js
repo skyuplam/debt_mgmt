@@ -31,6 +31,7 @@ export default function (sequelize, DataTypes) {
     classMethods: {
       associate: models => {
         RepaymentPlan.hasMany(models.repayment);
+        RepaymentPlan.belongsTo(models.loan);
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name

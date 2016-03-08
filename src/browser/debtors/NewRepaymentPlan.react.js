@@ -78,7 +78,7 @@ class NewRepaymentPlan extends Component {
           type='number'
           floatingLabelText={msg.amount}
           {...fields.amount}
-        /><br/>
+        />
         <TextField
           hintText={(
             <FormattedNumber
@@ -88,18 +88,18 @@ class NewRepaymentPlan extends Component {
           type='number'
           floatingLabelText={msg.terms}
           {...fields.amount}
-        /><br/>
-      <DatePicker
-        hintText={msg.repayDate}
-        floatingLabelText={msg.repayDate}
-        locale='zh'
-        DateTimeFormat={global.Intl.DateTimeFormat}
-        wordings={{
-          ok: msg.ok,
-          cancel: msg.cancel
-        }}
-        {...fields.repayDate}
-      />
+        />
+        <DatePicker
+          hintText={msg.repayDate}
+          floatingLabelText={msg.repayDate}
+          locale='zh'
+          DateTimeFormat={global.Intl.DateTimeFormat}
+          wordings={{
+            ok: msg.ok,
+            cancel: msg.cancel
+          }}
+          {...fields.repayDate}
+        />
       </Dialog>
     );
   }
