@@ -69,6 +69,7 @@ class NewRepaymentPlan extends Component {
 
     onConfirmSubmit();
     closeNewRepyamnetPlanDialog();
+    fields.$reset();
   }
 
   _handleOnChange(e, date) {
