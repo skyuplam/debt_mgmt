@@ -9,7 +9,7 @@ export default {
       login: 'Login',
       me: 'Me',
       todos: 'Todos',
-      debtors: '贷款人管理'
+      debtors: '借款人管理'
     }
   },
   auth: {
