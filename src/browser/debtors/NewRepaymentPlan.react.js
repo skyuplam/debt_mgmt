@@ -7,11 +7,12 @@ import TextField from 'material-ui/lib/text-field';
 import Dialog from 'material-ui/lib/dialog';
 import FlatButton from 'material-ui/lib/flat-button';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import * as uiAction from '../../common/ui/actions';
+import { closeNewRepyamnetPlanDialog, onConfirmSubmit } from '../../common/ui/actions';
 import { fields } from '../../common/lib/redux-fields';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
-// import { newRepaymentPlan } from '../../common/repaymentPlans/actions';
+import { setField } from '../../common/lib/redux-fields/actions';
+import { newRepaymentPlan } from '../../common/repaymentPlans/actions';
 
 
 const customContentStyle = {
@@ -32,12 +33,14 @@ class NewRepaymentPlan extends Component {
     fields: PropTypes.object.isRequired,
     loans: PropTypes.object.isRequired,
     currentLoanId: PropTypes.number.isRequired,
+    setField: PropTypes.func.isRequired,
+    newRepaymentPlan: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-
     this.onHandlingSubmit = this.onHandlingSubmit.bind(this);
+    this._handleOnChange = this._handleOnChange.bind(this);
   }
 
   onHandlingSubmit() {
@@ -45,30 +48,37 @@ class NewRepaymentPlan extends Component {
       onConfirmSubmit,
       closeNewRepyamnetPlanDialog,
       loans,
-      currentLoanID,
-      fields
+      currentLoanId,
+      fields,
+      newRepaymentPlan
     } = this.props;
 
     if (!(fields.amount.value.trim() ||
         fields.terms.value.trim() ||
-        fields.repayDate.value.trim()
+        fields.repayDate.value
       )) return;
 
     const currentLoan = loans.get(currentLoanId);
 
-    // newRepaymentPlan({
-    //   loanId: currentLoanId,
-    //   amount: fields.amount.value,
-    //   terms: fields.terms.value,
-    //   repayDate: fields.repayDate.value
-    // });
+    newRepaymentPlan({
+      loanId: currentLoanId,
+      amount: fields.amount.value,
+      terms: fields.terms.value,
+      repayDate: fields.repayDate.value
+    });
 
     onConfirmSubmit();
     closeNewRepyamnetPlanDialog();
   }
 
+  _handleOnChange(e, date) {
+    const { setField } = this.props;
+    setField(['newRepaymentPlan', 'repayDate'], date);
+    return date;
+  }
+
   render() {
-    const { msg, closeNewRepyamnetPlanDialog, isNewRepaymentPlan, loans, currentLoanId } = this.props;
+    const { msg, closeNewRepyamnetPlanDialog, isNewRepaymentPlan, loans, currentLoanId, fields } = this.props;
     const currentLoan = loans.get(currentLoanId);
 
     const actions = [
@@ -119,18 +129,18 @@ class NewRepaymentPlan extends Component {
           )}
           type='number'
           floatingLabelText={msg.terms}
-          {...fields.amount}
+          {...fields.terms}
         />
         <DatePicker
           hintText={msg.repayDate}
           floatingLabelText={msg.repayDate}
           locale='zh'
           DateTimeFormat={global.Intl.DateTimeFormat}
+          onChange={this._handleOnChange}
           wordings={{
             ok: msg.ok,
             cancel: msg.cancel
           }}
-          {...fields.repayDate}
         />
       </Dialog>
     );
@@ -152,4 +162,8 @@ export default connect(state => ({
   loans: state.loans.map,
   currentLoanId: state.ui.currentLoanId,
   isNewRepaymentPlan: state.ui.isNewRepaymentPlan,
-}), uiAction)(NewRepaymentPlan);
+}), {
+  closeNewRepyamnetPlanDialog,
+  setField,
+  newRepaymentPlan
+})(NewRepaymentPlan);

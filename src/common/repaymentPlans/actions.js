@@ -1,7 +1,9 @@
 export const FETCH_REPAYMENT_PALNS_START = 'FETCH_REPAYMENT_PALNS_START';
 export const FETCH_REPAYMENT_PALNS_FAILURE = 'FETCH_REPAYMENT_PALNS_FAILURE';
 export const FETCH_REPAYMENT_PALNS_SUCCESS = 'FETCH_REPAYMENT_PALNS_SUCCESS';
-export const NEW_REPAYMENT_PLAN = 'NEW_REPAYMENT_PLAN';
+export const NEW_REPAYMENT_PLAN_START = 'NEW_REPAYMENT_PLAN_START';
+export const NEW_REPAYMENT_PLAN_FAILURE = 'NEW_REPAYMENT_PLAN_FAILURE';
+export const NEW_REPAYMENT_PLAN_SUCCESS = 'NEW_REPAYMENT_PLAN_SUCCESS';
 
 const API_VERSION = '/api/v1';
 
@@ -17,14 +19,14 @@ export function newRepaymentPlan(repaymentPlan) {
           },
           body: JSON.stringify(repaymentPlan)
         });
-        if (response.status !== 200) throw response;
+        if (response.status !== 201) throw response;
         return response.json();
       } catch (error) {
         throw error;
       }
     }
     return {
-      type: 'SEARCH_DEBTORS',
+      type: 'NEW_REPAYMENT_PLAN',
       payload: {
         promise: getPromise()
       }

@@ -131,8 +131,10 @@ router.route('/repaymentPlans')
         terms: terms,
         startedAt: new Date(repayDate)
       }, { transaction: t }).then(repaymentPlan => {
-        repaymentPlan.setLoanId(loanId);
-        return repaymentPlan;
+        return models.loan.findById(loanId).then(loan => {
+          repaymentPlan.setLoan(loan);
+          return repaymentPlan;
+        });
       });
     }).then(repaymentPlan =>
       res.status(201).send({repaymentPlan}).end()

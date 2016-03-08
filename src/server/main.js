@@ -19,29 +19,7 @@ app.use(errorHandler);
 const { port, isProduction } = config;
 
 models.sequelize.sync({force: !!!isProduction}).then(() => {
-  // Dummy Data
-  // models.idType.create(
-  //   {
-  //     idType: 'ID Card',
-  //   }
-  // ).then(idType =>
-  //   models.identity.create({
-  //     idNumber: '12345678',
-  //   }).then(identity => {
-  //     identity.setIdType(idType);
-  //     return identity;
-  //   })
-  // ).then(identity =>
-  //   models.person.create({
-  //     name: '陈大文',
-  //     maritalStatus: '已婚',
-  //     dob: new Date(1985, 7, 1)
-  //   }).then(person => {
-  //     person.addIdentities(identity);
-  //     return person;
-  //   })
-  // ).catch(error => console.log(error));
-
+  
   const { debtors } = data;
 
   models.sequelize.transaction(t1 =>
