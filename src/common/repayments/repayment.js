@@ -8,7 +8,7 @@ const Repayment = Record({
   managementFee: 0,
   lateFee: 0,
   penaltyFee: 0,
-  terms: 0,
+  term: 0,
   expectedRepaidAt: null,
   repaidAt: null,
 });

@@ -18,7 +18,7 @@ export default function (sequelize, DataTypes) {
     penaltyFee: {
       type: DataTypes.FLOAT,
     },
-    terms: {
+    term: {
       type: DataTypes.FLOAT,
     },
     expectedRepaidAt: {

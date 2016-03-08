@@ -12,12 +12,14 @@ import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 class Repayments extends Component {
 
   static propTypes = {
-    msg: PropTypes.object,
+    msg: PropTypes.object.isRequired,
+    repaymentPlans: PropTypes.object.isRequired,
+    repayments: PropTypes.object.isRequired,
   };
 
   render() {
-    const { msg } = this.props;
-
+    const { msg, repaymentPlans } = this.props;
+    const repaymentPlanList = repaymentPlans.toArray();
     return (
       <div className="repayment">
         <GridList
@@ -26,35 +28,85 @@ class Repayments extends Component {
         >
           <Card>
             <CardTitle title={msg.repaymentPlan} />
-            <CardText>
-              <AutoSizer>
-                {({ width, height }) => (
+            <div>
+              <AutoSizer disableHeight>
+                {({ width }) => (
                   <FlexTable
                     width={width}
-                    height={height}
+                    height={300}
+                    headerHeight={36}
                     rowHeight={36}
-                    rowsCount={2}
-                    rowGetter={index => index}
+                    rowsCount={repaymentPlanList.length}
+                    rowGetter={index => repaymentPlanList[index]}
                   >
                     <FlexColumn
-                      label={msg.originatedAgreementNo}
-                      dataKey='originatedAgreementNo'
-                      width={150}
+                      label={'ID'}
+                      dataKey='id'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.principal}
+                      dataKey='principal'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.terms}
+                      dataKey='terms'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.startedAt}
+                      dataKey='startedAt'
+                      width={100}
                     />
                   </FlexTable>
                 )}
               </AutoSizer>
-            </CardText>
+            </div>
           </Card>
-            <Card>
-              <CardTitle title={msg.repayments} />
-              <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-              </CardText>
-            </Card>
+          <Card>
+            <CardTitle title={msg.repayments} />
+            <div>
+              <AutoSizer disableHeight>
+                {({ width }) => (
+                  <FlexTable
+                    width={width}
+                    height={300}
+                    headerHeight={36}
+                    rowHeight={36}
+                    rowsCount={repaymentPlanList.length}
+                    rowGetter={index => repaymentPlanList[index]}
+                  >
+                    <FlexColumn
+                      label={msg.term}
+                      dataKey='id'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.principal}
+                      dataKey='principal'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.interest}
+                      dataKey='terms'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.expectedRepaidAt}
+                      dataKey='startedAt'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.repaymentStatus}
+                      dataKey='startedAt'
+                      width={100}
+                    />
+                  </FlexTable>
+                )}
+              </AutoSizer>
+            </div>
+          </Card>
         </GridList>
       </div>
     );
@@ -64,5 +116,7 @@ class Repayments extends Component {
 
 
 export default connect(state => ({
-  msg: state.intl.msg.repayments
+  msg: state.intl.msg.repayments,
+  repaymentPlans: state.repaymentPlans.map,
+  repayments: state.repayments.map
 }))(Repayments);

@@ -79,7 +79,7 @@ class DebtorLoans extends Component {
                 <FlexColumn
                   label={msg.originatedAgreementNo}
                   dataKey='originatedAgreementNo'
-                  width={150}
+                  width={100}
                   />
                 <FlexColumn
                   label={msg.amount}
