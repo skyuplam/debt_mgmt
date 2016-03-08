@@ -29,7 +29,7 @@ export default function repaymentPlansReducer(state = initialState, action) {
 
     case actions.NEW_REPAYMENT_PLAN_SUCCESS: {
       const repaymentPlan = new RepaymentPlan(action.payload.repaymentPlan);
-      return state.update('map', map => map.merge(repaymentPlan));
+      return state.update('map', map => map.merge(Map().set(repaymentPlan.id, repaymentPlan)));
     }
 
   }
