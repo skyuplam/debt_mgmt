@@ -11,6 +11,7 @@ import * as uiAction from '../../common/ui/actions';
 import { fields } from '../../common/lib/redux-fields';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
+// import { newRepaymentPlan } from '../../common/repaymentPlans/actions';
 
 
 const customContentStyle = {
@@ -29,6 +30,8 @@ class NewRepaymentPlan extends Component {
     isNewRepaymentPlan: PropTypes.bool.isRequired,
     onConfirmSubmit: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
+    loans: PropTypes.object.isRequired,
+    currentLoanId: PropTypes.number.isRequired,
   };
 
   constructor(props) {
@@ -38,14 +41,36 @@ class NewRepaymentPlan extends Component {
   }
 
   onHandlingSubmit() {
-    const { onConfirmSubmit, closeNewRepyamnetPlanDialog } = this.props;
+    const {
+      onConfirmSubmit,
+      closeNewRepyamnetPlanDialog,
+      loans,
+      currentLoanID,
+      fields
+    } = this.props;
+
+    if (!(fields.amount.value.trim() ||
+        fields.terms.value.trim() ||
+        fields.repayDate.value.trim()
+      )) return;
+
+    const currentLoan = loans.get(currentLoanId);
+
+    // newRepaymentPlan({
+    //   loanId: currentLoanId,
+    //   amount: fields.amount.value,
+    //   terms: fields.terms.value,
+    //   repayDate: fields.repayDate.value
+    // });
 
     onConfirmSubmit();
     closeNewRepyamnetPlanDialog();
   }
 
   render() {
-    const { msg, closeNewRepyamnetPlanDialog, isNewRepaymentPlan } = this.props;
+    const { msg, closeNewRepyamnetPlanDialog, isNewRepaymentPlan, loans, currentLoanId } = this.props;
+    const currentLoan = loans.get(currentLoanId);
+
     const actions = [
       <FlatButton
         label={msg.cancel}
@@ -70,7 +95,14 @@ class NewRepaymentPlan extends Component {
         <TextField
           hintText={(
             <FormattedNumber
-              value={10000}
+              value={currentLoan?
+                currentLoan.collectablePrincipal
+                +currentLoan.collectableInterest
+                +currentLoan.collectableMgmtFee
+                +currentLoan.collectableHandlingFee
+                +currentLoan.collectableLateFee
+                +currentLoan.collectablePenaltyFee:0
+              }
               style='currency'
               currency='CNY'
             />
@@ -117,5 +149,7 @@ NewRepaymentPlan = fields(NewRepaymentPlan, {
 
 export default connect(state => ({
   msg: state.intl.msg.newRepaymentPlanDialog,
-  isNewRepaymentPlan: state.ui.isNewRepaymentPlan
+  loans: state.loans.map,
+  currentLoanId: state.ui.currentLoanId,
+  isNewRepaymentPlan: state.ui.isNewRepaymentPlan,
 }), uiAction)(NewRepaymentPlan);

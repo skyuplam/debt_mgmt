@@ -122,6 +122,23 @@ router.route('/:debtorId/repaymentPlans')
     );
   });
 
+router.route('/repaymentPlans')
+  .post((req, res) => {
+    const { loanId, amount, terms, repayDate } = req.body;
+    return models.sequelize.transaction(t => {
+      return models.repaymentPlan.create({
+        principal: amount,
+        terms: terms,
+        startedAt: new Date(repayDate)
+      }, { transaction: t }).then(repaymentPlan => {
+        repaymentPlan.setLoanId(loanId);
+        return repaymentPlan;
+      });
+    }).then(repaymentPlan =>
+      res.status(201).send({repaymentPlan}).end()
+    );
+  });
+
 router.route('/:repaymentPlansId/repayments')
   .get((req, res) => {
     const repaymentPlanId = req.params.repaymentPlanId;

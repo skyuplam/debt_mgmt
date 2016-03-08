@@ -4,13 +4,15 @@ import { Map, Record } from 'immutable';
 
 
 const InitialState = Record({
-  map: Map()
+  map: Map(),
+  newRepaymentPlan: null
 });
 const initialState = new InitialState;
 
 // Note how JSON from server is revived to immutable record.
-const revive = ({ map }) => initialState.merge({
-  map: Map(map).map(repaymentPlan => new RepaymentPlan(repaymentPlan))
+const revive = ({ map, newRepaymentPlan }) => initialState.merge({
+  map: Map(map).map(repaymentPlan => new RepaymentPlan(repaymentPlan)),
+  newRepaymentPlan: new RepaymentPlan(newRepaymentPlan),
 });
 
 export default function repaymentPlansReducer(state = initialState, action) {
@@ -23,6 +25,11 @@ export default function repaymentPlansReducer(state = initialState, action) {
         repaymentPlans.set(json.id, new RepaymentPlan(json))
       , Map());
       return state.set('map', repaymentPlans);
+    }
+
+    case actions.NEW_REPAYMENT_PLAN: {
+      const repaymentPlan = new RepaymentPlan(action.payload.repaymentPlan);
+      return state.set('newRepaymentPlan', repaymentPlan);
     }
 
   }

@@ -21,7 +21,7 @@ class DebtorLoans extends Component {
   static propTypes = {
     msg: PropTypes.object,
     loans: PropTypes.object.isRequired,
-    openConfirmDialog: PropTypes.func.isRequired,
+    currentLoanId: PropTypes.number.isRequired,
     openNewRepyamnetPlanDialog: PropTypes.func.isRequired,
   };
 
@@ -30,31 +30,26 @@ class DebtorLoans extends Component {
 
     this._onBtnClick = this._onBtnClick.bind(this);
     this._cellRenderer = this._cellRenderer.bind(this);
-    this._onConfirm = this._onConfirm.bind(this);
     this._onConfirmSubmitNewPaymentPlan = this._onConfirmSubmitNewPaymentPlan.bind(this);
   }
 
-  _onBtnClick(rowIndex) {
-    const { openConfirmDialog } = this.props;
-    console.log(rowIndex);
-    openConfirmDialog();
+  _onBtnClick(loanId) {
+    const { openNewRepyamnetPlanDialog } = this.props;
+    const { loans } = this.props;
+    const loan = loans.get(loanId);
+    openNewRepyamnetPlanDialog({ loanId: loan.id });
   }
 
-  _cellRenderer(rowIndex) {
+  _cellRenderer(loanId) {
     const { msg } = this.props;
     return (
       <RaisedButton
         label={msg.add}
         secondary={true}
         fullWidth={true}
-        onMouseDown={e => this._onBtnClick(rowIndex)}
+        onMouseDown={e => this._onBtnClick(loanId)}
       />
     );
-  }
-
-  _onConfirm() {
-    const { openNewRepyamnetPlanDialog } = this.props;
-    openNewRepyamnetPlanDialog();
   }
 
   _onConfirmSubmitNewPaymentPlan() {
@@ -62,7 +57,7 @@ class DebtorLoans extends Component {
   }
 
   render() {
-    const { msg, loans } = this.props;
+    const { msg, loans, currentLoanId } = this.props;
     const loanList = loans.toArray();
 
     return (
@@ -140,11 +135,6 @@ class DebtorLoans extends Component {
               </FlexTable>
             }
           </AutoSizer>
-          <ConfirmDialog
-            title={msg.confirmNewRepaymentPlanTitle}
-            content={msg.confirmNewRepaymentPlanContent}
-            onConfirm={this._onConfirm}
-          />
           <NewRepaymentPlan
             onConfirmSubmit={this._onConfirmSubmitNewPaymentPlan}
           />
@@ -158,5 +148,6 @@ class DebtorLoans extends Component {
 
 export default connect(state => ({
   msg: state.intl.msg.loans,
-  loans: state.loans.map
+  currentLoanId: state.ui.currentLoanId,
+  loans: state.loans.map,
 }), uiActions)(DebtorLoans);

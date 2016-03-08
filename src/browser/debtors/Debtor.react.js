@@ -7,6 +7,7 @@ import DebtorLoans from './DebtorLoans.react';
 import Repayments from './Repayments.react';
 import { fetchDebtor } from '../../common/debtors/actions';
 import { fetchLoans } from '../../common/loans/actions';
+import { fetchRepamentPlans } from '../../common/repaymentPlans/actions';
 import fetch from '../../common/components/fetch';
 
 class Debtor extends Component {
@@ -31,7 +32,7 @@ class Debtor extends Component {
 
 }
 
-Debtor = fetch(fetchDebtor, fetchLoans)(Debtor);
+Debtor = fetch(fetchDebtor, fetchLoans, fetchRepamentPlans)(Debtor);
 
 export default connect(state => ({
   msg: state.intl.msg.debtors,

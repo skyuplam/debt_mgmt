@@ -30,9 +30,10 @@ export function closeConfirmDialog() {
   };
 }
 
-export function openNewRepyamnetPlanDialog() {
+export function openNewRepyamnetPlanDialog(loanId) {
   return {
-    type: OPEN_NEW_REPAYMENT_PLAN_DIALOG
+    type: OPEN_NEW_REPAYMENT_PLAN_DIALOG,
+    payload: loanId
   };
 }
 

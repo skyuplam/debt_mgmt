@@ -5,6 +5,7 @@ const InitialState = Record({
   isSideMenuOpen: false,
   isConfirmDialogOpen: false,
   isNewRepaymentPlan: false,
+  currentLoanId: null,
 });
 const initialState = new InitialState;
 
@@ -30,6 +31,8 @@ export default function uiReducer(state = initialState, action) {
     }
 
     case actions.OPEN_NEW_REPAYMENT_PLAN_DIALOG: {
+      const loanId = action.payload.loanId;
+      state = state.update('currentLoanId', currentLoanId => loanId);
       return state.update('isNewRepaymentPlan', isNewRepaymentPlan => true);
     }
 
