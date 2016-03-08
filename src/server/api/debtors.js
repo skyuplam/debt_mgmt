@@ -9,9 +9,9 @@ const router = express.Router();
 function getDebtors(criteria) {
   let condition = '';
   if (criteria) {
-    const matchIdCard = criteria.idCard?`i.idNumber = ${criteria.idCard}`:'';
-    const matchName = criteria.name?`p.name = ${criteria.name}`:'';
-    const matchOriAgmentNo = criteria.originatedAgreementNo?`l.originatedAgreementNo = ${criteria.originatedAgreementNo}`:'';
+    const matchIdCard = criteria.idCard?`i.idNumber = '${criteria.idCard}'`:'';
+    const matchName = criteria.name?`p.name = '${criteria.name}'`:'';
+    const matchOriAgmentNo = criteria.originatedAgreementNo?`l.originatedAgreementNo = '${criteria.originatedAgreementNo}'`:'';
     const criteriaStr = [matchIdCard, matchName, matchOriAgmentNo].filter(a => a).join(' OR ');
     condition = criteriaStr?`WHERE ${criteriaStr}`:'';
   }

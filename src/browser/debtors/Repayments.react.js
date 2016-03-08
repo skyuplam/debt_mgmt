@@ -42,22 +42,22 @@ class Repayments extends Component {
                     <FlexColumn
                       label={'ID'}
                       dataKey='id'
-                      width={100}
+                      width={120}
                     />
                     <FlexColumn
                       label={msg.principal}
                       dataKey='principal'
-                      width={100}
+                      width={120}
                     />
                     <FlexColumn
                       label={msg.terms}
                       dataKey='terms'
-                      width={100}
+                      width={120}
                     />
                     <FlexColumn
                       label={msg.startedAt}
                       dataKey='startedAt'
-                      width={100}
+                      width={120}
                     />
                   </FlexTable>
                 )}

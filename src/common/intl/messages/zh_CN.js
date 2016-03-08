@@ -45,13 +45,13 @@ export default {
   home: {
     // // TODO: Android text.
     // androidInfoText: ``,
-    infoHtml: '<a href="https://github.com/este/este">Este.js</a> dev stack.',
+    infoHtml: '',
     iosInfoText: `
       Este.js dev stack
       Press CMD+R to reload
       Press CMD+D for debug menu
     `,
-    title: 'Este.js',
+    title: '贷后管理系统',
     toCheck: {
       andMuchMore: 'And much more :-)',
       h2: 'Things to Check',
