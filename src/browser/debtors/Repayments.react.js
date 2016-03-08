@@ -18,8 +18,9 @@ class Repayments extends Component {
   };
 
   render() {
-    const { msg, repaymentPlans } = this.props;
+    const { msg, repaymentPlans, repayments } = this.props;
     const repaymentPlanList = repaymentPlans.toArray();
+    const repaymentList = repayments.toArray();
     return (
       <div className="repayment">
         <GridList
@@ -74,8 +75,8 @@ class Repayments extends Component {
                     height={300}
                     headerHeight={36}
                     rowHeight={36}
-                    rowsCount={repaymentPlanList.length}
-                    rowGetter={index => repaymentPlanList[index]}
+                    rowsCount={repaymentList.length}
+                    rowGetter={index => repaymentList[index]}
                   >
                     <FlexColumn
                       label={msg.term}
