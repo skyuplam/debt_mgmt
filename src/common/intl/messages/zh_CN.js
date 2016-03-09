@@ -153,10 +153,14 @@ export default {
   newRepaymentPlanDialog: {
     cancel: '取消',
     submit: '提交',
+    generateRepayments: '生成',
     newRepaymentPlanTitle: '新增还款计划',
     amount: '还款总金额',
     terms: '还款总期数',
     repayDate: '首次还款日期',
+    term: '期数',
+    expectedRepaidAt: '预期还款日',
+    repaymentAmt: '还款金额'  ,
     ok: '确定',
   },
   profile: {

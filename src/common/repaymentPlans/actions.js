@@ -1,9 +1,11 @@
+import { Range } from 'immutable';
 export const FETCH_REPAYMENT_PALNS_START = 'FETCH_REPAYMENT_PALNS_START';
 export const FETCH_REPAYMENT_PALNS_FAILURE = 'FETCH_REPAYMENT_PALNS_FAILURE';
 export const FETCH_REPAYMENT_PALNS_SUCCESS = 'FETCH_REPAYMENT_PALNS_SUCCESS';
 export const NEW_REPAYMENT_PLAN_START = 'NEW_REPAYMENT_PLAN_START';
 export const NEW_REPAYMENT_PLAN_FAILURE = 'NEW_REPAYMENT_PLAN_FAILURE';
 export const NEW_REPAYMENT_PLAN_SUCCESS = 'NEW_REPAYMENT_PLAN_SUCCESS';
+export const ADD_REPAYMENTS = 'ADD_REPAYMENTS';
 
 const API_VERSION = '/api/v1';
 
@@ -58,5 +60,37 @@ export function fetchRepamentPlans(locParams) {
         promise: getPromise()
       }
     };
+  };
+}
+
+
+export function addRepayments(repaymentPlan) {
+  const terms = parseInt(repaymentPlan.terms);
+  const amount = parseFloat(repaymentPlan.amount);
+  const repayDate = repaymentPlan.repayDate;
+
+  const payload = Range(0, terms).map(term => {
+    if (terms === 1) {
+      return {
+        principal: amount,
+        term: term+1,
+        expectedRepaidAt: repayDate?new Date(repayDate): new Date(),
+      };
+    } else {
+      const unitAmt = Math.round(amount/terms/100)*100;
+      const repayAt = repayDate?new Date(repayDate): new Date();
+      repayAt.setMonth(repayAt.getMonth()+term);
+      const repayment = {
+        principal: term === terms-1?amount - unitAmt*term:unitAmt,
+        term: term+1,
+        expectedRepaidAt: repayAt,
+      };
+      return repayment;
+    }
+  }).toJS();
+
+  return {
+    type: ADD_REPAYMENTS,
+    payload,
   };
 }

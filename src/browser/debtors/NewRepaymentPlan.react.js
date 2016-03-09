@@ -12,13 +12,14 @@ import { fields } from '../../common/lib/redux-fields';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
 import { setField } from '../../common/lib/redux-fields/actions';
-import { newRepaymentPlan } from '../../common/repaymentPlans/actions';
-
+import { newRepaymentPlan, addRepayments } from '../../common/repaymentPlans/actions';
+import RepaymentList from './RepaymentList.react';
 
 const customContentStyle = {
   width: '500px',
-  height: '300px',
-  'maxHeight': '300px',
+  height: '600px',
+  'maxHeight': '600px',
+  'maxWidth': '500px',
 }
 
 class NewRepaymentPlan extends Component {
@@ -35,12 +36,14 @@ class NewRepaymentPlan extends Component {
     currentLoanId: PropTypes.number,
     setField: PropTypes.func.isRequired,
     newRepaymentPlan: PropTypes.func.isRequired,
+    addRepayments: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.onHandlingSubmit = this.onHandlingSubmit.bind(this);
     this._handleOnChange = this._handleOnChange.bind(this);
+    this._handleGenerate = this._handleGenerate.bind(this);
   }
 
   onHandlingSubmit() {
@@ -76,6 +79,16 @@ class NewRepaymentPlan extends Component {
     const { setField } = this.props;
     setField(['newRepaymentPlan', 'repayDate'], date);
     return date;
+  }
+
+  _handleGenerate() {
+    const { addRepayments, fields } = this.props;
+    if (!parseFloat(fields.amount.value.trim())) return;
+    addRepayments({
+      terms: fields.terms.value,
+      amount: fields.amount.value,
+      repayDate: fields.repayDate.value
+    });
   }
 
   render() {
@@ -114,8 +127,6 @@ class NewRepaymentPlan extends Component {
                 +currentLoan.collectableLateFee
                 +currentLoan.collectablePenaltyFee:0
               }
-              style='currency'
-              currency='CNY'
             />
           )}
           type='number'
@@ -136,6 +147,7 @@ class NewRepaymentPlan extends Component {
           hintText={msg.repayDate}
           floatingLabelText={msg.repayDate}
           locale='zh'
+          defaultDate={fields.repayDate.value?fields.repayDate.value:new Date()}
           DateTimeFormat={global.Intl.DateTimeFormat}
           onChange={this._handleOnChange}
           wordings={{
@@ -143,6 +155,16 @@ class NewRepaymentPlan extends Component {
             cancel: msg.cancel
           }}
         />
+      <div style={{textAlign: 'right'}}>
+          <FlatButton
+            label={msg.generateRepayments}
+            secondary={true}
+            keyboardFocused={true}
+            onTouchTap={this._handleGenerate}
+            fullWidth={true}
+          />
+        </div>
+        <RepaymentList />
       </Dialog>
     );
   }
@@ -166,5 +188,6 @@ export default connect(state => ({
 }), {
   closeNewRepyamnetPlanDialog,
   setField,
-  newRepaymentPlan
+  newRepaymentPlan,
+  addRepayments
 })(NewRepaymentPlan);
