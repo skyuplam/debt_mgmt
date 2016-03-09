@@ -19,7 +19,7 @@ app.use(errorHandler);
 const { port, isProduction } = config;
 
 models.sequelize.sync({force: !!!isProduction}).then(() => {
-  
+
   const { debtors } = data;
 
   models.sequelize.transaction(t1 =>

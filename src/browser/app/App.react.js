@@ -6,7 +6,17 @@ import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { onAppComponentDidMount } from '../../common/app/actions';
+import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
+import { cyan500 } from 'material-ui/lib/styles/colors';
 
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: cyan500,
+  },
+}, {
+  userAgent: 'all',
+});
 
 class App extends Component {
 
@@ -29,13 +39,15 @@ class App extends Component {
     const { children, location } = this.props;
 
     return (
-      <div className="page">
-        <Helmet/>
-        {/* Pass location to ensure header active links are updated. */}
-        <Header location={location} />
-        {children}
-        <Footer />
-      </div>
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <div className="page">
+          <Helmet/>
+          {/* Pass location to ensure header active links are updated. */}
+          <Header location={location} />
+          {children}
+          <Footer />
+        </div>
+      </MuiThemeProvider>
     );
   }
 
