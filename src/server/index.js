@@ -1,9 +1,10 @@
 require('babel-register');
+require('babel-polyfill');
 
 const Bluebird = require('bluebird');
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
+const config = require('../common/config');
 const rootDir = require('path').resolve(__dirname, '..', '..');
-const serverConfig = require('./config');
 const webpackIsomorphicAssets = require('../../webpack/assets');
 
 if (!process.env.NODE_ENV) {
@@ -27,7 +28,7 @@ if (global.Intl) {
 }
 
 global.webpackIsomorphicTools = new WebpackIsomorphicTools(webpackIsomorphicAssets)
-  .development(!serverConfig.isProduction)
+  .development(!config.isProduction)
   .server(rootDir, () => {
     require('./main');
   });
