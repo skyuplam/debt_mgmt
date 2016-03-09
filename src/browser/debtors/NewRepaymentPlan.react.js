@@ -32,7 +32,7 @@ class NewRepaymentPlan extends Component {
     onConfirmSubmit: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     loans: PropTypes.object.isRequired,
-    currentLoanId: PropTypes.number.isRequired,
+    currentLoanId: PropTypes.number,
     setField: PropTypes.func.isRequired,
     newRepaymentPlan: PropTypes.func.isRequired,
   };

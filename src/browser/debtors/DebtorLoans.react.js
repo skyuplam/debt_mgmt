@@ -21,7 +21,7 @@ class DebtorLoans extends Component {
   static propTypes = {
     msg: PropTypes.object,
     loans: PropTypes.object.isRequired,
-    currentLoanId: PropTypes.number.isRequired,
+    currentLoanId: PropTypes.number,
     openNewRepyamnetPlanDialog: PropTypes.func.isRequired,
   };
 

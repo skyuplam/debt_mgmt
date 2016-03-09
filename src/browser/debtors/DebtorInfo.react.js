@@ -11,9 +11,9 @@ import CardHeader from 'material-ui/lib/card/card-header';
 class DebtorInfo extends Component {
 
   static propTypes = {
-    msg: PropTypes.object,
-    debtorId: PropTypes.string,
-    debtors: PropTypes.object
+    msg: PropTypes.object.isRequired,
+    debtorId: PropTypes.string.isRequired,
+    debtors: PropTypes.object.isRequired
   };
 
   render() {
@@ -22,18 +22,18 @@ class DebtorInfo extends Component {
     return (
       <Card>
         <CardHeader
-          title={`${msg.debtorDetail} - ${debtor.name}`}
+          title={`${msg.debtorDetail} - ${debtor?debtor.name:''}`}
         />
       <div className='debtor-info'>
         <TextField
           floatingLabelText={msg.idCard}
           disabled={true}
-          value={debtor.idNumber}
+          value={debtor?debtor.idNumber:''}
         />
         <TextField
           floatingLabelText={msg.maritalStatus}
           disabled={true}
-          value={debtor.maritalStatus}
+          value={debtor?debtor.maritalStatus:''}
         />
       </div>
       </Card>
