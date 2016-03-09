@@ -2,7 +2,7 @@
 *.sublime-workspace
 
 # Sqlite
-*.sqlite3
+*.sqlite
 
 # OSX
 .DS_Store
