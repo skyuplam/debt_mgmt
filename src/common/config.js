@@ -30,11 +30,8 @@ nconf.defaults({
       dialect: 'postgres'
     },
     production: {
-      username: 'loan',
-      password: null,
-      database: 'loan',
-      host: '192.168.99.100',
-      dialect: 'postgres'
+      dialect: 'sqlite',
+      storage: './db.development.sqlite'
     }
   }
 });
