@@ -11,6 +11,7 @@ const repaymentPlan = Record({
   terms: 0,
   startedAt: null,
   endedAt: null,
+  debtorId: null,
 });
 
 export default repaymentPlan;
