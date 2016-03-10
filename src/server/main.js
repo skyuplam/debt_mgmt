@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import frontend from './frontend';
 import models from './models';
 import data from './data/testData.json';
+import typesAndStatus from './data/data.json';
 
 const app = express();
 
@@ -21,14 +22,22 @@ const { port, isProduction } = config;
 models.sequelize.sync({force: !!!isProduction}).then(() => {
 
   const { debtors } = data;
+  const {
+    identityTypes,
+    loanTypes,
+    repaymentStatuses
+  } = typesAndStatus;
+
+  models.sequelize.transaction(t2 => {
+    return Promise.all([
+      identityTypes.map(idType => models.identityType.create(idType)),
+      loanTypes.map(loanType => models.loanType.create(loanType)),
+      repaymentStatuses.map(status => models.repaymentStatus.create(status)),
+    ]);
+  }).catch(error => console.log(error));
 
   models.sequelize.transaction(t1 =>
-    models.identityType.create({
-      type: 'ID Card',
-      description: '身份证'
-    }, {
-      transaction: t1
-    })
+    models.identityType.findById(1)
   ).then(identityType =>
     models.sequelize.transaction(t2 =>
       Promise.all(

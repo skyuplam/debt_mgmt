@@ -1,0 +1,40 @@
+{
+  "identityTypes": [
+    {
+      "type": "ID Card",
+      "description": "身分证"
+    }
+  ],
+  "loanTypes": [
+    {
+      "type": "Salary Loan",
+      "description": "薪贷"
+    },
+    {
+      "type": "Executive Loan",
+      "description": "老板贷"
+    },
+    {
+      "type": "Property Owner Loan",
+      "description": "业主贷"
+    },
+    {
+      "type": "Revolving Loan",
+      "description": "循环贷"
+    }
+  ],
+  "repaymentStatuses": [
+    {
+      "status": "New",
+      "description": "新还款"
+    },
+    {
+      "status": "Overdue",
+      "description": "过期"
+    },
+    {
+      "status": "Paid",
+      "description": "已还款"
+    }
+  ]
+}

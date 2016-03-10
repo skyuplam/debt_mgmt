@@ -7,7 +7,7 @@ import Dialog from 'material-ui/lib/dialog';
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
 class ConfirmDialog extends Component {
-  shouldPureComponentUpdate = shouldPureComponentUpdate
+  shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
     msg: PropTypes.object.isRequired,

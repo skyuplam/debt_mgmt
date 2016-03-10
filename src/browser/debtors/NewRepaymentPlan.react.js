@@ -12,18 +12,19 @@ import { fields } from '../../common/lib/redux-fields';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
 import { setField } from '../../common/lib/redux-fields/actions';
-import { newRepaymentPlan, addRepayments } from '../../common/repaymentPlans/actions';
+import { newRepaymentPlan, addRepayments, resetRepyments } from '../../common/repaymentPlans/actions';
 import RepaymentList from './RepaymentList.react';
+import { toFloat } from 'validator';
 
 const customContentStyle = {
-  width: '500px',
+  width: '600px',
   height: '600px',
   'maxHeight': '600px',
-  'maxWidth': '500px',
+  'maxWidth': '600px',
 }
 
 class NewRepaymentPlan extends Component {
-  shouldPureComponentUpdate = shouldPureComponentUpdate;
+  shouldComponentUpdate = shouldPureComponentUpdate;
   mixins = [IntlMixin];
 
   static propTypes = {
@@ -33,10 +34,12 @@ class NewRepaymentPlan extends Component {
     onConfirmSubmit: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     loans: PropTypes.object.isRequired,
+    repayments: PropTypes.object.isRequired,
     currentLoanId: PropTypes.number,
     setField: PropTypes.func.isRequired,
     newRepaymentPlan: PropTypes.func.isRequired,
     addRepayments: PropTypes.func.isRequired,
+    resetRepyments: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -44,6 +47,8 @@ class NewRepaymentPlan extends Component {
     this.onHandlingSubmit = this.onHandlingSubmit.bind(this);
     this._handleOnChange = this._handleOnChange.bind(this);
     this._handleGenerate = this._handleGenerate.bind(this);
+    this._isInValidAmt = this._isInValidAmt.bind(this);
+    this._totalAmt = this._totalAmt.bind(this);
   }
 
   onHandlingSubmit() {
@@ -53,26 +58,33 @@ class NewRepaymentPlan extends Component {
       loans,
       currentLoanId,
       fields,
-      newRepaymentPlan
+      newRepaymentPlan,
+      repayments,
+      resetRepyments
     } = this.props;
 
     if (!(fields.amount.value.trim() ||
         fields.terms.value.trim() ||
-        fields.repayDate.value
+        fields.repayDate.value ||
+        currentLoanId ||
+        loans ||
+        loans.get(currentLoanId)
       )) return;
 
     const currentLoan = loans.get(currentLoanId);
 
     newRepaymentPlan({
       loanId: currentLoanId,
-      amount: fields.amount.value,
+      repayAmount: fields.amount.value,
       terms: fields.terms.value,
-      repayDate: fields.repayDate.value
+      startedAt: fields.repayDate.value,
+      repayments: repayments.toArray()
     });
 
     onConfirmSubmit();
     closeNewRepyamnetPlanDialog();
     fields.$reset();
+    resetRepyments();
   }
 
   _handleOnChange(e, date) {
@@ -91,6 +103,41 @@ class NewRepaymentPlan extends Component {
     });
   }
 
+  _totalAmt() {
+    const { loans, currentLoanId } = this.props;
+    const currentLoan = loans.get(currentLoanId);
+    const totalAmt = currentLoan?
+      currentLoan.collectablePrincipal
+      +currentLoan.collectableInterest
+      +currentLoan.collectableMgmtFee
+      +currentLoan.collectableHandlingFee
+      +currentLoan.collectableLateFee
+      +currentLoan.collectablePenaltyFee:0;
+    return totalAmt;
+  }
+
+  _isInValidAmt() {
+    const { fields } = this.props;
+    const totalAmt = this._totalAmt();
+    const amt = toFloat(fields.amount.value);
+    if (amt < 0 || amt > totalAmt) {
+      return true;
+    }
+    return false;
+  }
+
+  _isInvalidRepaymentsAmt() {
+    const { repayments, fields } = this.props;
+    if (!repayments || !repayments.size) return true;
+    const totalAmt = toFloat(fields.amount.value);
+    let repaymentAmt = 0;
+    repayments.map(repayment => repaymentAmt+=repayment.principal);
+    if (repaymentAmt < 0 || repaymentAmt !== totalAmt) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
     const { msg, closeNewRepyamnetPlanDialog, isNewRepaymentPlan, loans, currentLoanId, fields } = this.props;
     const currentLoan = loans.get(currentLoanId);
@@ -105,6 +152,7 @@ class NewRepaymentPlan extends Component {
         label={msg.submit}
         primary={true}
         onTouchTap={this.onHandlingSubmit}
+        disabled={this._isInvalidRepaymentsAmt()}
       />,
     ];
 
@@ -119,14 +167,7 @@ class NewRepaymentPlan extends Component {
         <TextField
           hintText={(
             <FormattedNumber
-              value={currentLoan?
-                currentLoan.collectablePrincipal
-                +currentLoan.collectableInterest
-                +currentLoan.collectableMgmtFee
-                +currentLoan.collectableHandlingFee
-                +currentLoan.collectableLateFee
-                +currentLoan.collectablePenaltyFee:0
-              }
+              value={this._totalAmt()}
             />
           )}
           type='number'
@@ -162,6 +203,7 @@ class NewRepaymentPlan extends Component {
             keyboardFocused={true}
             onTouchTap={this._handleGenerate}
             fullWidth={true}
+            disabled={this._isInValidAmt()}
           />
         </div>
         <RepaymentList />
@@ -183,11 +225,13 @@ NewRepaymentPlan = fields(NewRepaymentPlan, {
 export default connect(state => ({
   msg: state.intl.msg.newRepaymentPlanDialog,
   loans: state.loans.map,
+  repayments: state.repaymentPlans.newRepaymentPlan.repayments,
   currentLoanId: state.ui.currentLoanId,
   isNewRepaymentPlan: state.ui.isNewRepaymentPlan,
 }), {
   closeNewRepyamnetPlanDialog,
   setField,
   newRepaymentPlan,
-  addRepayments
+  addRepayments,
+  resetRepyments
 })(NewRepaymentPlan);

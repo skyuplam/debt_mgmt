@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
+import { updateRepayment } from '../../common/repaymentPlans/actions';
+import TextField from 'material-ui/lib/text-field';
+import { toFloat } from 'validator';
 
 class RepaymentList extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -14,6 +17,7 @@ class RepaymentList extends Component {
   static propTypes = {
     msg: PropTypes.object.isRequired,
     repayments: PropTypes.object.isRequired,
+    updateRepayment: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -22,6 +26,7 @@ class RepaymentList extends Component {
     this._randerDateCell = this._randerDateCell.bind(this);
     this._randerNumberCell = this._randerNumberCell.bind(this);
     this._handleRowClick = this._handleRowClick.bind(this);
+    this._onChangeRepayAmt = this._onChangeRepayAmt.bind(this);
   }
 
   _randerDateCell(cellData, cellDataKey, rowData, rowIndex, columnData) {
@@ -32,16 +37,31 @@ class RepaymentList extends Component {
     );
   }
 
+  _onChangeRepayAmt({ rowData, cellDataKey, value }) {
+    const { updateRepayment } = this.props;
+    const repayment = rowData.toJS();
+    repayment[cellDataKey] = value;
+    updateRepayment(repayment);
+  }
+
   _randerNumberCell(cellData, cellDataKey, rowData, rowIndex, columnData) {
     return (
-      <FormattedNumber
-        value={cellData}
+      <TextField
+        defaultValue={cellData}
+        hintText={cellData}
+        value={cellData?cellData:0}
+        onChange={e => this._onChangeRepayAmt({
+          rowData: rowData,
+          cellDataKey: cellDataKey,
+          value: toFloat(e.target.value)
+        })}
+        fullWidth={true}
       />
     );
   }
 
   _handleRowClick(rowIdx) {
-    
+
   }
 
   render() {
@@ -52,9 +72,9 @@ class RepaymentList extends Component {
           {({ width }) => (
             <FlexTable
               width={width}
-              height={130}
+              height={200}
               headerHeight={36}
-              rowHeight={30}
+              rowHeight={48}
               rowsCount={repayments.size}
               rowGetter={index => repayments.get(index+1)}
               onRowClick={this._handleRowClick}
@@ -62,18 +82,18 @@ class RepaymentList extends Component {
               <FlexColumn
                 label={msg.term}
                 dataKey='term'
-                width={100}
+                width={50}
               />
               <FlexColumn
                 label={msg.repaymentAmt}
                 dataKey='principal'
-                width={100}
+                width={120}
                 cellRenderer={this._randerNumberCell}
               />
               <FlexColumn
                 label={msg.expectedRepaidAt}
                 dataKey='expectedRepaidAt'
-                width={100}
+                width={120}
                 cellRenderer={this._randerDateCell}
               />
             </FlexTable>
@@ -87,4 +107,6 @@ class RepaymentList extends Component {
 export default connect(state => ({
   msg: state.intl.msg.newRepaymentPlanDialog,
   repayments: state.repaymentPlans.newRepaymentPlan.repayments,
-}))(RepaymentList);
+}), {
+  updateRepayment
+})(RepaymentList);

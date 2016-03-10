@@ -162,6 +162,7 @@ export default {
     expectedRepaidAt: '预期还款日',
     repaymentAmt: '还款金额'  ,
     ok: '确定',
+    invalidRepaymentAmount: '还款总金额不正确'
   },
   profile: {
     title: 'Profile'

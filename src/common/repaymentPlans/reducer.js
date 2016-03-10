@@ -46,6 +46,22 @@ export default function repaymentPlansReducer(state = initialState, action) {
       );
     }
 
+    case actions.UPDATE_REPAYMENT: {
+      if (!action.payload) return state;
+      const repayment = Map().set(action.payload.term, new Repayment(action.payload));
+      return state.update('newRepaymentPlan', newRepaymentPlan =>
+        newRepaymentPlan.update('repayments', repayments =>
+        repayments.merge(repayment)
+      ));
+    }
+
+    case actions.RESET_REPAYMENTS: {
+      return state.update('newRepaymentPlan', newRepaymentPlan =>
+        newRepaymentPlan.update('repayments', repayments =>
+        Map()
+      ));
+    }
+
   }
 
   return state;

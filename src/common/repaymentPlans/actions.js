@@ -6,6 +6,8 @@ export const NEW_REPAYMENT_PLAN_START = 'NEW_REPAYMENT_PLAN_START';
 export const NEW_REPAYMENT_PLAN_FAILURE = 'NEW_REPAYMENT_PLAN_FAILURE';
 export const NEW_REPAYMENT_PLAN_SUCCESS = 'NEW_REPAYMENT_PLAN_SUCCESS';
 export const ADD_REPAYMENTS = 'ADD_REPAYMENTS';
+export const UPDATE_REPAYMENT = 'UPDATE_REPAYMENT';
+export const RESET_REPAYMENTS = 'RESET_REPAYMENTS';
 
 const API_VERSION = '/api/v1';
 
@@ -92,5 +94,18 @@ export function addRepayments(repaymentPlan) {
   return {
     type: ADD_REPAYMENTS,
     payload,
+  };
+}
+
+export function resetRepyments() {
+  return {
+    type: RESET_REPAYMENTS
+  };
+}
+
+export function updateRepayment(repayment) {
+  return {
+    type: UPDATE_REPAYMENT,
+    payload: repayment,
   };
 }

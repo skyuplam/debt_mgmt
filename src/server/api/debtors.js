@@ -124,16 +124,44 @@ router.route('/:debtorId/repaymentPlans')
 
 router.route('/repaymentPlans')
   .post((req, res) => {
-    const { loanId, amount, terms, repayDate } = req.body;
+
+    const {
+      loanId,
+      repayAmount,
+      terms,
+      startedAt,
+      repayments
+    } = req.body;
+
     return models.sequelize.transaction(t => {
       return models.repaymentPlan.create({
-        principal: amount,
+        principal: repayAmount,
         terms: terms,
-        startedAt: new Date(repayDate)
+        startedAt: new Date(startedAt)
       }, { transaction: t }).then(repaymentPlan => {
         return models.loan.findById(loanId).then(loan => {
+          // Link repaymentplan with loan
           repaymentPlan.setLoan(loan);
           return repaymentPlan;
+        }).then(repaymentPlan => {
+          return models.repaymentStatus.findById(1).then(repaymentStatus => {
+            return Promise.all(
+              repayments.map(repayment => {
+                return models.repayment.create(
+                  repayment,
+                  { transaction: t }
+                ).then(newRpmt => {
+                  // Link repayment with repaymentplan
+                  repaymentPlan.addRepayment(newRpmt);
+                  newRpmt.setRepaymentStatus(repaymentStatus);
+                  return newRpmt;
+                });
+              })
+            ).then(newRepayments => {
+              // Created new repayments
+              return repaymentPlan;
+            });
+          });
         });
       });
     }).then(repaymentPlan =>

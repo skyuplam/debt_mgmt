@@ -19,7 +19,7 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.FLOAT,
     },
     term: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.INTEGER,
     },
     expectedRepaidAt: {
       type: DataTypes.DATEONLY,
