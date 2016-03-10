@@ -9,6 +9,8 @@ import CardTitle from 'material-ui/lib/card/card-title';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { FormattedDate, IntlMixin } from 'react-intl';
+import { fetchRepaments } from '../../common/repayments/actions';
+import RaisedButton from 'material-ui/lib/raised-button';
 
 class Repayments extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -17,6 +19,8 @@ class Repayments extends Component {
   static propTypes = {
     msg: PropTypes.object.isRequired,
     repaymentPlans: PropTypes.object.isRequired,
+    debtorId: PropTypes.number,
+    fetchRepaments: PropTypes.func.isRequired,
     repayments: PropTypes.object.isRequired,
   };
 
@@ -24,6 +28,8 @@ class Repayments extends Component {
     super(props);
 
     this._cellRenderer = this._cellRenderer.bind(this);
+    this._handleRepaymentPlanRowClick = this._handleRepaymentPlanRowClick.bind(this);
+    this._handleRepaymentCellRender = this._handleRepaymentCellRender.bind(this);
   }
 
   _cellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
@@ -32,6 +38,28 @@ class Repayments extends Component {
         value={cellData}
       />
     );
+  }
+
+  _handleRepaymentCellRender(cellData, cellDataKey, rowData, rowIndex, columnData) {
+    const { msg } = this.props;
+    return (
+      <RaisedButton
+        label={msg.repay}
+        primary={true}
+        fullWidth={true}
+      />
+    );
+  }
+
+  _handleRepaymentPlanRowClick(rowIndex) {
+    const { repaymentPlans, fetchRepaments } = this.props;
+    const repaymentPlanList = repaymentPlans?repaymentPlans.toArray():[];
+    if (repaymentPlanList) {
+      const selectedRepaymentPlan = repaymentPlanList[rowIndex];
+      console.log(selectedRepaymentPlan);
+
+      fetchRepaments(selectedRepaymentPlan.id, selectedRepaymentPlan.debtorId);
+    }
   }
 
   render() {
@@ -56,6 +84,7 @@ class Repayments extends Component {
                     rowHeight={36}
                     rowsCount={repaymentPlanList.length}
                     rowGetter={index => repaymentPlanList[index]}
+                    onRowClick={this._handleRepaymentPlanRowClick}
                   >
                     <FlexColumn
                       label={'ID'}
@@ -76,7 +105,7 @@ class Repayments extends Component {
                       label={msg.startedAt}
                       cellRenderer={this._cellRenderer}
                       dataKey='startedAt'
-                      width={120}
+                      width={100}
                     />
                   </FlexTable>
                 )}
@@ -98,27 +127,28 @@ class Repayments extends Component {
                   >
                     <FlexColumn
                       label={msg.term}
-                      dataKey='id'
+                      dataKey='term'
                       width={100}
                     />
                     <FlexColumn
-                      label={msg.principal}
+                      label={msg.repaymentAmt}
                       dataKey='principal'
                       width={100}
                     />
                     <FlexColumn
-                      label={msg.interest}
-                      dataKey='terms'
-                      width={100}
-                    />
-                    <FlexColumn
                       label={msg.expectedRepaidAt}
-                      dataKey='startedAt'
+                      dataKey='expectedRepaidAt'
+                      cellRenderer={this._cellRenderer}
                       width={100}
                     />
                     <FlexColumn
                       label={msg.repaymentStatus}
-                      dataKey='startedAt'
+                      dataKey='status'
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={msg.action}
+                      cellRenderer={this._handleRepaymentCellRender}
                       width={100}
                     />
                   </FlexTable>
@@ -136,4 +166,7 @@ class Repayments extends Component {
 
 export default connect(state => ({
   msg: state.intl.msg.repayments,
-}))(Repayments);
+  repayments: state.repayments.map,
+}), {
+  fetchRepaments
+})(Repayments);

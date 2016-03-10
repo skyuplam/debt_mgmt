@@ -130,8 +130,10 @@ export default {
   },
   repayments: {
     repaymentPlan: '还款计划',
+    repay: '还款',
     repayments: '还款计划详细',
     principal: '本金',
+    repaymentAmt: '还款金额',
     apr: '年利率',
     servicingFeeRate: '服务费率',
     managementFeeRate: '管理费率',
@@ -148,7 +150,8 @@ export default {
     term: '期数',
     expectedRepaidAt: '预期还款日',
     repaymentStatus: '还款状态',
-    repaidAt: null,
+    repaidAt: '还款于',
+    action: '操作',
   },
   newRepaymentPlanDialog: {
     cancel: '取消',

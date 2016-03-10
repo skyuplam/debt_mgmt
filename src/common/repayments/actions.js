@@ -5,11 +5,11 @@ export const FETCH_REPAYMENTS_SUCCESS = 'FETCH_REPAYMENTS_SUCCESS';
 const API_VERSION = '/api/v1';
 
 
-export function fetchRepaments(repaymentPlanId) {
+export function fetchRepaments(repaymentPlanId, debtorId) {
   return ({ fetch }) => {
     async function getPromise(fields) {
       try {
-        const response = await fetch(`${API_VERSION}/repayments/${repaymentPlanId}`, {
+        const response = await fetch(`${API_VERSION}/debtors/${debtorId}/repaymentPlans/${repaymentPlanId}/repayments`, {
           method: 'get',
           headers: {
             'Accept': 'application/json',

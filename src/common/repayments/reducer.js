@@ -19,10 +19,10 @@ export default function repaymentsReducer(state = initialState, action) {
   switch (action.type) {
 
     case actions.FETCH_REPAYMENTS_SUCCESS: {
-      const repaymants = action.payload.repaymants.reduce((repaymants, json) =>
-        repaymants.set(json.id, new Repayment(json))
+      const repayments = action.payload.repayments.reduce((repayments, json) =>
+        repayments.set(json.id, new Repayment(json))
       , Map());
-      return state.set('map', repaymants);
+      return state.set('map', repayments);
     }
 
   }
