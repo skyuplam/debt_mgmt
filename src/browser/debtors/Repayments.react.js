@@ -132,7 +132,7 @@ class Repayments extends Component {
                     <FlexColumn
                       label={msg.term}
                       dataKey='term'
-                      width={100}
+                      width={50}
                     />
                     <FlexColumn
                       label={msg.repaymentAmt}
@@ -148,10 +148,10 @@ class Repayments extends Component {
                     <FlexColumn
                       label={msg.repaymentStatus}
                       dataKey='status'
-                      width={100}
+                      width={80}
                     />
                     <FlexColumn
-                      label={msg.action}
+                      label={msg.repay}
                       cellRenderer={this._handleRepaymentCellRender}
                       width={100}
                     />
