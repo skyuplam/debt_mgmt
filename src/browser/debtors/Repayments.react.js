@@ -8,16 +8,31 @@ import CardText from 'material-ui/lib/card/card-text';
 import CardTitle from 'material-ui/lib/card/card-title';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-
+import { FormattedDate, IntlMixin } from 'react-intl';
 
 class Repayments extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
+  mixins = [IntlMixin];
 
   static propTypes = {
     msg: PropTypes.object.isRequired,
     repaymentPlans: PropTypes.object.isRequired,
     repayments: PropTypes.object.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+
+    this._cellRenderer = this._cellRenderer.bind(this);
+  }
+
+  _cellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
+    return (
+      <FormattedDate
+        value={cellData}
+      />
+    );
+  }
 
   render() {
     const { msg, repaymentPlans, repayments } = this.props;
@@ -59,6 +74,7 @@ class Repayments extends Component {
                     />
                     <FlexColumn
                       label={msg.startedAt}
+                      cellRenderer={this._cellRenderer}
                       dataKey='startedAt'
                       width={120}
                     />
