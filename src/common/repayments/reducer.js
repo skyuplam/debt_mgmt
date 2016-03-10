@@ -25,6 +25,13 @@ export default function repaymentsReducer(state = initialState, action) {
       return state.set('map', repayments);
     }
 
+    case actions.PAY_REPAYMENT_SUCCESS: {
+      const repayment = action.payload.repayment;
+      return state.update('map', map =>
+        map.merge(Map().set(repayment.id, new Repayment(repayment)))
+      );
+    }
+
   }
 
   return state;

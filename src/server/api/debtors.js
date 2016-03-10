@@ -189,4 +189,20 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
     );
   });
 
+router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId/pay')
+  .post((req, res) => {
+    const { repaymentId } = req.params;
+    return models.repayment.findById(repaymentId).then(repayment => {
+      return models.sequelize.transaction(t => {
+        // Repayment Status ID 3 is Paid
+        return models.repaymentStatus.findById(3).then(status => {
+          repayment.setRepaymentStatus(status);
+          repayment.repaidAt = new Date();
+          return repayment.save();
+        });
+      });
+    }).then(repayment =>
+      res.status(201).send({repayment}).end());
+  });
+
 export default router;

@@ -131,6 +131,7 @@ export default {
   repayments: {
     repaymentPlan: '还款计划',
     repay: '还款',
+    paid: '已还款',
     repayments: '还款计划详细',
     principal: '本金',
     repaymentAmt: '还款金额',
@@ -152,6 +153,10 @@ export default {
     repaymentStatus: '还款状态',
     repaidAt: '还款于',
     action: '操作',
+    confirmRepayment: '是否确定这笔还款?',
+    repaymentStatus1: '新还款',
+    repaymentStatus2: '过期',
+    repaymentStatus3: '已还款',
   },
   newRepaymentPlanDialog: {
     cancel: '取消',

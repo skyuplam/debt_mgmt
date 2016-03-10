@@ -9,8 +9,9 @@ import CardTitle from 'material-ui/lib/card/card-title';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { FormattedDate, IntlMixin } from 'react-intl';
-import { fetchRepaments } from '../../common/repayments/actions';
+import { fetchRepaments, payRepayment } from '../../common/repayments/actions';
 import RaisedButton from 'material-ui/lib/raised-button';
+import { dateFormat } from '../../common/intl/format';
 
 class Repayments extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -21,6 +22,7 @@ class Repayments extends Component {
     repaymentPlans: PropTypes.object.isRequired,
     debtorId: PropTypes.number,
     fetchRepaments: PropTypes.func.isRequired,
+    payRepayment: PropTypes.func.isRequired,
     repayments: PropTypes.object.isRequired,
   };
 
@@ -30,6 +32,13 @@ class Repayments extends Component {
     this._cellRenderer = this._cellRenderer.bind(this);
     this._handleRepaymentPlanRowClick = this._handleRepaymentPlanRowClick.bind(this);
     this._handleRepaymentCellRender = this._handleRepaymentCellRender.bind(this);
+    this._handleRepayAction = this._handleRepayAction.bind(this);
+    this._checkIfPaid = this._checkIfPaid.bind(this);
+  }
+
+  _handleRepayAction(rowData) {
+    const { debtorId, payRepayment } = this.props;
+    payRepayment(rowData.repaymentPlanId, parseInt(debtorId), rowData.id);
   }
 
   _cellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
@@ -40,14 +49,24 @@ class Repayments extends Component {
     );
   }
 
+  _checkIfPaid(status) {
+    // Repayment Status ID 3: Paid
+    return status === 3;
+  }
+
   _handleRepaymentCellRender(cellData, cellDataKey, rowData, rowIndex, columnData) {
     const { msg } = this.props;
     return (
-      <RaisedButton
-        label={msg.repay}
-        primary={true}
-        fullWidth={true}
-      />
+      <div>
+        <RaisedButton
+          label={this._checkIfPaid(rowData.repaymentStatusId)?dateFormat(new Date(rowData.repaidAt)):msg.repay}
+          primary={true}
+          fullWidth={true}
+          onTouchEnd={e => this._handleRepayAction(rowData)}
+          onMouseUp={e => this._handleRepayAction(rowData)}
+          disabled={this._checkIfPaid(rowData.repaymentStatusId)}
+        />
+      </div>
     );
   }
 
@@ -147,7 +166,8 @@ class Repayments extends Component {
                     />
                     <FlexColumn
                       label={msg.repaymentStatus}
-                      dataKey='status'
+                      dataKey='repaymentStatusId'
+                      cellRenderer={(cellData) => `${msg['repaymentStatus'+cellData]}`}
                       width={80}
                     />
                     <FlexColumn
@@ -172,5 +192,6 @@ export default connect(state => ({
   msg: state.intl.msg.repayments,
   repayments: state.repayments.map,
 }), {
-  fetchRepaments
+  fetchRepaments,
+  payRepayment,
 })(Repayments);
