@@ -21,7 +21,9 @@ class Debtor extends Component {
   render() {
     const { msg, params, repaymentPlans } = this.props;
     const debtorId = params.id;
-    const newRepaymentPlans = repaymentPlans.filter(true);
+    const newRepaymentPlans = repaymentPlans.filter(repaymentPlan => {
+      return repaymentPlan.debtorId == debtorId;
+    });
     return (
       <div className="debtor-detail">
         <Helmet title={msg.debtorDetail} />
