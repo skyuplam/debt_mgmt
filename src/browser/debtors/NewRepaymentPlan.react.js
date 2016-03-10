@@ -77,7 +77,7 @@ class NewRepaymentPlan extends Component {
       loanId: currentLoanId,
       repayAmount: fields.amount.value,
       terms: fields.terms.value,
-      startedAt: fields.repayDate.value,
+      startedAt: fields.repayDate.value?fields.repayDate.value:new Date(),
       repayments: repayments.toArray()
     });
 

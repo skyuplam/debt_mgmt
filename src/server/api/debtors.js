@@ -137,7 +137,7 @@ router.route('/repaymentPlans')
       return models.repaymentPlan.create({
         principal: repayAmount,
         terms: terms,
-        startedAt: new Date(startedAt)
+        startedAt: startedAt
       }, { transaction: t }).then(repaymentPlan => {
         return models.loan.findById(loanId).then(loan => {
           // Link repaymentplan with loan
