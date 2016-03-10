@@ -65,7 +65,11 @@ class Repayments extends Component {
   render() {
     const { msg, repaymentPlans, repayments } = this.props;
     const repaymentPlanList = repaymentPlans?repaymentPlans.toArray():[];
-    const repaymentList = repayments?repayments.toArray():[];
+    const repaymentList = repayments?repayments.filter(repayment => {
+      return repaymentPlans.find(repaymentPlan =>
+        repaymentPlan.id == repayment.repaymentPlanId
+      );
+    }).toArray():[];
     return (
       <div className="repayment">
         <GridList

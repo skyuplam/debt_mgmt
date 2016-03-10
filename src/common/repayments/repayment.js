@@ -12,6 +12,7 @@ const Repayment = Record({
   expectedRepaidAt: null,
   repaidAt: null,
   status: '',
+  repaymentPlanId: null,
 });
 
 export default Repayment;
