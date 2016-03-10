@@ -23,6 +23,7 @@ class DebtorLoans extends Component {
     loans: PropTypes.object.isRequired,
     currentLoanId: PropTypes.number,
     openNewRepyamnetPlanDialog: PropTypes.func.isRequired,
+    debtorId: PropTypes.number,
   };
 
   constructor(props, context) {
@@ -57,7 +58,7 @@ class DebtorLoans extends Component {
   }
 
   render() {
-    const { msg, loans, currentLoanId } = this.props;
+    const { msg, loans, currentLoanId, debtorId } = this.props;
     const loanList = loans.toArray();
 
     return (
@@ -136,7 +137,7 @@ class DebtorLoans extends Component {
             }
           </AutoSizer>
           <NewRepaymentPlan
-            onConfirmSubmit={this._onConfirmSubmitNewPaymentPlan}
+            debtorId={debtorId}
           />
         </div>
       </Card>

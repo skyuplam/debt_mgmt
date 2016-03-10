@@ -123,9 +123,9 @@ router.route('/:debtorId/repaymentPlans')
     );
   });
 
-router.route('/repaymentPlans')
+router.route('/:debtorId/repaymentPlans')
   .post((req, res) => {
-
+    const debtorId = req.params.debtorId;
     const {
       loanId,
       repayAmount,
@@ -165,8 +165,11 @@ router.route('/repaymentPlans')
           });
         });
       });
-    }).then(repaymentPlan =>
-      res.status(201).send({repaymentPlan}).end()
+    }).then(repaymentPlan => {
+      const rp = repaymentPlan.toJSON();
+      rp.debtorId = parseInt(debtorId);
+      return res.status(201).send({repaymentPlan}).end();
+    }
     );
   });
 

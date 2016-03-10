@@ -11,11 +11,11 @@ export const RESET_REPAYMENTS = 'RESET_REPAYMENTS';
 
 const API_VERSION = '/api/v1';
 
-export function newRepaymentPlan(repaymentPlan) {
+export function newRepaymentPlan(repaymentPlan, debtorId) {
   return ({ fetch }) => {
     async function getPromise(fields) {
       try {
-        const response = await fetch(`${API_VERSION}/debtors/repaymentPlans`, {
+        const response = await fetch(`${API_VERSION}/debtors/${debtorId}/repaymentPlans`, {
           method: 'post',
           headers: {
             'Accept': 'application/json',

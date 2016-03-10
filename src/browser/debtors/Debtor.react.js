@@ -13,19 +13,21 @@ import fetch from '../../common/components/fetch';
 class Debtor extends Component {
 
   static propTypes = {
-    msg: PropTypes.object,
-    debtors: PropTypes.object.isRequired
+    msg: PropTypes.object.isRequired,
+    debtors: PropTypes.object.isRequired,
+    repaymentPlans: PropTypes.object.isRequired,
   };
 
   render() {
-    const { msg, params } = this.props;
+    const { msg, params, repaymentPlans } = this.props;
     const debtorId = params.id;
+    const newRepaymentPlans = repaymentPlans.filter(true);
     return (
       <div className="debtor-detail">
         <Helmet title={msg.debtorDetail} />
         <DebtorInfo debtorId={debtorId}/>
-        <DebtorLoans />
-        <Repayments />
+        <DebtorLoans debtorId={debtorId}/>
+        <Repayments repaymentPlans={newRepaymentPlans} />
       </div>
     );
   }
@@ -36,5 +38,6 @@ Debtor = fetch(fetchDebtor, fetchLoans, fetchRepamentPlans)(Debtor);
 
 export default connect(state => ({
   msg: state.intl.msg.debtors,
-  debtors: state.debtors.map
+  debtors: state.debtors.map,
+  repaymentPlans: state.repaymentPlans.map,
 }))(Debtor);

@@ -7,7 +7,7 @@ import TextField from 'material-ui/lib/text-field';
 import Dialog from 'material-ui/lib/dialog';
 import FlatButton from 'material-ui/lib/flat-button';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import { closeNewRepyamnetPlanDialog, onConfirmSubmit } from '../../common/ui/actions';
+import { closeNewRepyamnetPlanDialog } from '../../common/ui/actions';
 import { fields } from '../../common/lib/redux-fields';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
@@ -31,11 +31,11 @@ class NewRepaymentPlan extends Component {
     msg: PropTypes.object.isRequired,
     closeNewRepyamnetPlanDialog: PropTypes.func.isRequired,
     isNewRepaymentPlan: PropTypes.bool.isRequired,
-    onConfirmSubmit: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     loans: PropTypes.object.isRequired,
     repayments: PropTypes.object.isRequired,
-    currentLoanId: PropTypes.number,
+    debtorId: PropTypes.number.isRequired,
+    currentLoanId: PropTypes.number.isRequired,
     setField: PropTypes.func.isRequired,
     newRepaymentPlan: PropTypes.func.isRequired,
     addRepayments: PropTypes.func.isRequired,
@@ -53,14 +53,14 @@ class NewRepaymentPlan extends Component {
 
   onHandlingSubmit() {
     const {
-      onConfirmSubmit,
       closeNewRepyamnetPlanDialog,
       loans,
       currentLoanId,
       fields,
       newRepaymentPlan,
       repayments,
-      resetRepyments
+      resetRepyments,
+      debtorId
     } = this.props;
 
     if (!(fields.amount.value.trim() ||
@@ -79,9 +79,8 @@ class NewRepaymentPlan extends Component {
       terms: fields.terms.value,
       startedAt: fields.repayDate.value?fields.repayDate.value:new Date(),
       repayments: repayments.toArray()
-    });
+    }, debtorId);
 
-    onConfirmSubmit();
     closeNewRepyamnetPlanDialog();
     fields.$reset();
     resetRepyments();

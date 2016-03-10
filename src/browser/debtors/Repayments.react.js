@@ -7,9 +7,11 @@ import Card from 'material-ui/lib/card/card';
 import CardText from 'material-ui/lib/card/card-text';
 import CardTitle from 'material-ui/lib/card/card-title';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 
 class Repayments extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   static propTypes = {
     msg: PropTypes.object.isRequired,
@@ -19,8 +21,8 @@ class Repayments extends Component {
 
   render() {
     const { msg, repaymentPlans, repayments } = this.props;
-    const repaymentPlanList = repaymentPlans.toArray();
-    const repaymentList = repayments.toArray();
+    const repaymentPlanList = repaymentPlans?repaymentPlans.toArray():[];
+    const repaymentList = repayments?repayments.toArray():[];
     return (
       <div className="repayment">
         <GridList
@@ -118,6 +120,4 @@ class Repayments extends Component {
 
 export default connect(state => ({
   msg: state.intl.msg.repayments,
-  repaymentPlans: state.repaymentPlans.map,
-  repayments: state.repayments.map
 }))(Repayments);
