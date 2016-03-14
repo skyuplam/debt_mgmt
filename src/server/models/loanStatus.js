@@ -3,6 +3,10 @@ export default function (sequelize, DataTypes) {
     status: {
       type: DataTypes.STRING,
     },
+    code: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     description: {
       type: DataTypes.STRING,
     }

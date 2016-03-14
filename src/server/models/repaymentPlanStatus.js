@@ -1,5 +1,5 @@
 export default function (sequelize, DataTypes) {
-  const RepaymentStatus = sequelize.define('repaymentStatus', {
+  const RepaymentPlanStatus = sequelize.define('repaymentPlanStatus', {
     status: {
       type: DataTypes.STRING,
     },
@@ -10,5 +10,5 @@ export default function (sequelize, DataTypes) {
     freezeTableName: true // Model tableName will be the same as the model name
   });
 
-  return RepaymentStatus;
+  return RepaymentPlanStatus;
 }

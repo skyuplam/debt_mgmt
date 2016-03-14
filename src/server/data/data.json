@@ -23,6 +23,51 @@
       "description": "循环贷"
     }
   ],
+  "loanStatuses": [
+    {
+      "status": "Loan Originated",
+      "code": "LO",
+      "description": "新貸款"
+    }, {
+      "status": "In Repayment",
+      "code": "RP",
+      "description": ""
+    }, {
+      "status": "Forbearance",
+      "code": "FB",
+      "description": ""
+    }, {
+      "status": "Settlement in Full",
+      "code": "SIF",
+      "description": ""
+    }, {
+      "status": "Paid in Full",
+      "code": "PIF",
+      "description": ""
+    }
+  ],
+  "repaymentPlanStatuses": [
+    {
+      "status": "New",
+      "description": "新还款计划"
+    },
+    {
+      "status": "Repaying",
+      "description": "还款中"
+    },
+    {
+      "status": "Canceled",
+      "description": ""
+    },
+    {
+      "status": "Overdue",
+      "description": ""
+    },
+    {
+      "status": "Completed",
+      "description": ""
+    }
+  ],
   "repaymentStatuses": [
     {
       "status": "New",
@@ -33,8 +78,20 @@
       "description": "过期"
     },
     {
+      "status": "Paid after Overdue",
+      "description": "过期后还款"
+    },
+    {
+      "status": "Partial Paid after Overdue",
+      "description": "过期后部分还款"
+    },
+    {
       "status": "Paid",
       "description": "已还款"
+    },
+    {
+      "status": "Partial Paid",
+      "description": "部份还款"
     }
   ]
 }

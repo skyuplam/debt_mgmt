@@ -25,7 +25,9 @@ models.sequelize.sync({force: !!!isProduction}).then(() => {
   const {
     identityTypes,
     loanTypes,
-    repaymentStatuses
+    repaymentStatuses,
+    loanStatuses,
+    repaymentPlanStatuses,
   } = typesAndStatus;
 
   models.sequelize.transaction(t2 => {
