@@ -35,6 +35,12 @@ models.sequelize.sync({force: !!!isProduction}).then(() => {
       identityTypes.map(idType => models.identityType.create(idType)),
       loanTypes.map(loanType => models.loanType.create(loanType)),
       repaymentStatuses.map(status => models.repaymentStatus.create(status)),
+      loanStatuses.map(loanStatus =>
+        models.loanStatus.create(loanStatus)
+      ),
+      repaymentPlanStatuses.map(repaymentPlanStatus =>
+        models.repaymentPlanStatus.create(repaymentPlanStatus)
+      ),
     ]);
   }).catch(error => console.log(error));
 

@@ -32,6 +32,22 @@ export default function (sequelize, DataTypes) {
       associate: models => {
         RepaymentPlan.hasMany(models.repayment);
         RepaymentPlan.belongsTo(models.loan);
+      },
+      hook: models => {
+        // Init RepaymentPlan Status to New
+        RepaymentPlan.afterCreate((repaymentPlan, opts) => {
+          return models.repaymentPlanStatus.findOne({
+            where: {
+              status: 'New'
+            }
+          }, {
+            transaction: opts.transaction
+          });
+        }).then(repaymentPlanStatus =>
+          repaymentPlan.setRepaymentPlanStatus(repaymentPlanStatus, {
+            transaction: opts.transaction
+          })
+        );
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
