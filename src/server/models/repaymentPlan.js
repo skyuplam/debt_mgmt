@@ -31,6 +31,7 @@ export default function (sequelize, DataTypes) {
     classMethods: {
       associate: models => {
         RepaymentPlan.hasMany(models.repayment);
+        RepaymentPlan.belongsTo(models.repaymentPlanStatus);
         RepaymentPlan.belongsTo(models.loan);
       },
       hook: models => {
@@ -42,12 +43,12 @@ export default function (sequelize, DataTypes) {
             }
           }, {
             transaction: opts.transaction
-          });
-        }).then(repaymentPlanStatus =>
-          repaymentPlan.setRepaymentPlanStatus(repaymentPlanStatus, {
-            transaction: opts.transaction
-          })
-        );
+          }).then(repaymentPlanStatus =>
+            repaymentPlan.setRepaymentPlanStatus(repaymentPlanStatus, {
+              transaction: opts.transaction
+            })
+          );
+        });
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
