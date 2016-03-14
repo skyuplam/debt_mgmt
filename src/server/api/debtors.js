@@ -145,23 +145,22 @@ router.route('/:debtorId/repaymentPlans')
           repaymentPlan.setLoan(loan);
           return repaymentPlan;
         }).then(repaymentPlan => {
-          return models.repaymentStatus.findById(1).then(repaymentStatus => {
-            return Promise.all(
-              repayments.map(repayment => {
-                return models.repayment.create(
-                  repayment,
-                  { transaction: t }
-                ).then(newRpmt => {
-                  // Link repayment with repaymentplan
-                  repaymentPlan.addRepayment(newRpmt);
-                  newRpmt.setRepaymentStatus(repaymentStatus);
-                  return newRpmt;
+          return Promise.all(
+            repayments.map(repayment => {
+              return models.repayment.create(
+                repayment,
+                { transaction: t }
+              ).then(newRpmt => {
+                // Link repayment with repaymentplan
+                repaymentPlan.addRepayment(newRpmt, {
+                  transaction: t
                 });
-              })
-            ).then(newRepayments => {
-              // Created new repayments
-              return repaymentPlan;
-            });
+                return newRpmt;
+              });
+            })
+          ).then(newRepayments => {
+            // Created new repayments
+            return repaymentPlan;
           });
         });
       });
