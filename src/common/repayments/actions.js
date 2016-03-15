@@ -34,7 +34,7 @@ export function fetchRepaments(repaymentPlanId, debtorId) {
   };
 }
 
-export function payRepayment(repaymentPlanId, debtorId, repaymentId) {
+export function payRepayment({ repaymentPlanId, debtorId, repaymentId, amount, repaidAt, paidInFull }) {
   return ({ fetch }) => {
     async function getPromise(fields) {
       try {
@@ -43,7 +43,12 @@ export function payRepayment(repaymentPlanId, debtorId, repaymentId) {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({
+            amount: amount,
+            repaidAt: repaidAt,
+            paidInFull: paidInFull,
+          })
         });
         if (response.status !== 201) throw response;
         return response.json();

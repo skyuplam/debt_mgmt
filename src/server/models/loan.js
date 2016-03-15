@@ -22,37 +22,50 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.DATEONLY,
     },
     managementFeeRate: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     handlingFeeRate: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     lateFeeRate: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     penaltyFeeRate: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     collectablePrincipal: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     collectableInterest: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     collectableMgmtFee: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     collectableHandlingFee: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     collectableLateFee: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     collectablePenaltyFee: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     repaidTerms: {
       type: DataTypes.INTEGER
+    },
+    completedAt: {
+      type: DataTypes.DATE
     },
     originatedAgreementNo: {
       type: DataTypes.STRING

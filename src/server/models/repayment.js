@@ -24,6 +24,9 @@ export default function (sequelize, DataTypes) {
     expectedRepaidAt: {
       type: DataTypes.DATEONLY,
     },
+    paidAmount: {
+      type: DataTypes.FLOAT,
+    },
     repaidAt: {
       type: DataTypes.DATE,
     }

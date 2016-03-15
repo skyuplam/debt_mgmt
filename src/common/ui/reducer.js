@@ -1,11 +1,14 @@
 import * as actions from './actions';
 import { Record } from 'immutable';
+import Repayment from '../repayments/repayment';
 
 const InitialState = Record({
   isSideMenuOpen: false,
   isConfirmDialogOpen: false,
   isNewRepaymentPlan: false,
   currentLoanId: null,
+  isRepaymentDialogOpen: false,
+  currentRepayment: Repayment(),
 });
 const initialState = new InitialState;
 
@@ -39,6 +42,16 @@ export default function uiReducer(state = initialState, action) {
     case actions.CLOSE_NEW_REPAYMENT_PLAN_DIALOG: {
       return state.update('isNewRepaymentPlan', isNewRepaymentPlan => false);
     }
+
+    case actions.OPEN_REPAYMENT_DIALOG: {
+      state = state.update('currentRepayment', currentRepayment => new Repayment(action.payload));
+      return state.update('isRepaymentDialogOpen', isRepaymentDialogOpen => true);
+    }
+
+    case actions.CLOSE_REPAYMENT_DIALOG: {
+      return state.update('isRepaymentDialogOpen', isRepaymentDialogOpen => false);
+    }
+
   }
 
   return state;

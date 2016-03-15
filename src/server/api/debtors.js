@@ -190,15 +190,104 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
 
 router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId/pay')
   .post((req, res) => {
-    const { repaymentId } = req.params;
+    const { repaymentId, repaymentPlanId } = req.params;
+    const { amount, repaidAt, paidInFull } = req.body;
+
     return models.repayment.findById(repaymentId).then(repayment => {
       return models.sequelize.transaction(t => {
-        // Repayment Status ID 3 is Paid
-        return models.repaymentStatus.findById(3).then(status => {
-          repayment.setRepaymentStatus(status);
-          repayment.repaidAt = new Date();
-          return repayment.save();
-        });
+        // Repayment Status
+        const expected = new Date(repayment.expectedRepaidAt);
+        const actual = new Date(repaidAt);
+        let rpStatus;
+        if (actual.getFullYear() <= expected.getFullYear() &&
+            actual.getMonth() <= expected.getMonth() &&
+            actual.getDay() <= expected.getDay()) {
+          // On Time
+          if (amount < repayment.principal) {
+            rpStatus = 'Partial Paid';
+          } else {
+            rpStatus = 'Paid';
+          }
+        } else {
+          // Late
+          if (amount < repayment.principal) {
+            rpStatus = 'Partial Paid after Overdue';
+          } else {
+            rpStatus = 'Paid after Overdue';
+          }
+        }
+        return models.repaymentStatus.find({
+          where: {
+            status: rpStatus
+          }
+        }).then(status => {
+          // Update Repayment
+          repayment.setRepaymentStatus(status, { transaction: t });
+          repayment.paidAmount = amount;
+          repayment.repaidAt = new Date(repaidAt);
+          return repayment.save({ transaction: t });
+        }).then(repayment =>
+          models.repaymentPlan.findById(repaymentPlanId).then(rpPlan => {
+            let rpPlanStatus;
+            // Repayment Plan Status
+            const totalRepaymentAmount = rpPlan.repaidAmount + amount;
+            const isCompleted = paidInFull || totalRepaymentAmount >= rpPlan.principal;
+            if (isCompleted) {
+              rpPlanStatus = 'Completed';
+            } else {
+              rpPlanStatus = 'Repaying';
+            }
+            return models.repaymentPlanStatus.find({
+              where: {
+                status: rpPlanStatus
+              }
+            }).then(repaymentPlanStatus => {
+              rpPlan.setRepaymentPlanStatus(repaymentPlanStatus, { transaction: t });
+              if (isCompleted) {
+                rpPlan.endedAt = new Date(repaidAt);
+              }
+              rpPlan.repaidAmount += amount;
+              return rpPlan.save({ transaction: t });
+            }).then(rpPlan => {
+              return models.loan.findById(rpPlan.loanId).then(loan => {
+                // Update loan
+                const totalAmount = loan.collectablePrincipal+
+                  loan.collectableInterest+
+                  loan.collectableMgmtFee+
+                  loan.collectableHandlingFee+
+                  loan.collectableLateFee+
+                  loan.collectablePenaltyFee;
+                let loanStatus;
+                // Repayment Plan Status Code 5: Completed
+                const isCompleted = rpPlan.repaymentPlanStatusId == 5;
+                if (isCompleted) {
+                  if (rpPlan.repaidAmount >= totalAmount) {
+                    loanStatus = 'Paid in Full';
+                  } else {
+                    loanStatus = 'Settlement in Full';
+                  }
+                } else {
+                  if (amount < repayment.principal) {
+                    loanStatus = 'Forbearance';
+                  } else {
+                    loanStatus = 'In Repayment';
+                  }
+                }
+                return models.loanStatus.find({
+                  where: {
+                    status: loanStatus
+                  }
+                }).then(theLoanStatus => {
+                  loan.setLoanStatus(theLoanStatus, { transaction: t });
+                  if (isCompleted) {
+                    loan.completedAt = new Date(repaidAt);
+                  }
+                  return loan.save({ transaction: t });
+                }).then(loan => repayment)
+              })
+            })
+          })
+        );
       });
     }).then(repayment =>
       res.status(201).send({repayment}).end());

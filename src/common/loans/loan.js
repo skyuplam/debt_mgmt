@@ -20,6 +20,7 @@ const Loan = Record({
   collectableLateFee: 0,
   collectablePenaltyFee: 0,
   repaidTerms: 0,
+  completedAt: null,
   originatedAgreementNo: null,
   originatedLoanProcessingBranch: null,
 });

@@ -156,7 +156,10 @@ export default {
     confirmRepayment: '是否确定这笔还款?',
     repaymentStatus1: '新还款',
     repaymentStatus2: '过期',
-    repaymentStatus3: '已还款',
+    repaymentStatus3: '过期后还款',
+    repaymentStatus4: '过期后部分还款',
+    repaymentStatus5: '已还款',
+    repaymentStatus6: '部份还款',
   },
   newRepaymentPlanDialog: {
     cancel: '取消',
@@ -171,6 +174,16 @@ export default {
     repaymentAmt: '还款金额'  ,
     ok: '确定',
     invalidRepaymentAmount: '还款总金额不正确'
+  },
+  repaymentDialog: {
+    title: '请确认还款',
+    cancel: '取消',
+    term: '还款期数',
+    confirm: '确认',
+    repaidAt: '还款日期',
+    expectedRepayAt: '预期还款日',
+    repayAmount: '还款金额',
+    paidInFull: '是否结清',
   },
   profile: {
     title: 'Profile'

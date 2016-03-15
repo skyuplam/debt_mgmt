@@ -12,6 +12,9 @@ import { FormattedDate, IntlMixin } from 'react-intl';
 import { fetchRepaments, payRepayment } from '../../common/repayments/actions';
 import RaisedButton from 'material-ui/lib/raised-button';
 import { dateFormat } from '../../common/intl/format';
+import RepaymentDialog from './RepaymentDialog.react';
+import { openRepaymentDialog } from '../../common/ui/actions';
+
 
 class Repayments extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -23,6 +26,7 @@ class Repayments extends Component {
     debtorId: PropTypes.number,
     fetchRepaments: PropTypes.func.isRequired,
     payRepayment: PropTypes.func.isRequired,
+    openRepaymentDialog: PropTypes.func.isRequired,
     repayments: PropTypes.object.isRequired,
   };
 
@@ -37,8 +41,10 @@ class Repayments extends Component {
   }
 
   _handleRepayAction(rowData) {
-    const { debtorId, payRepayment } = this.props;
-    payRepayment(rowData.repaymentPlanId, parseInt(debtorId), rowData.id);
+    const { debtorId, payRepayment, openRepaymentDialog } = this.props;
+    // payRepayment(rowData.repaymentPlanId, parseInt(debtorId), rowData.id);
+    const repayment = rowData;
+    openRepaymentDialog(repayment);
   }
 
   _cellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
@@ -51,7 +57,7 @@ class Repayments extends Component {
 
   _checkIfPaid(status) {
     // Repayment Status ID 3: Paid
-    return status === 3;
+    return [3, 4, 5, 6].indexOf(status) != -1;
   }
 
   _handleRepaymentCellRender(cellData, cellDataKey, rowData, rowIndex, columnData) {
@@ -59,7 +65,7 @@ class Repayments extends Component {
     return (
       <div>
         <RaisedButton
-          label={this._checkIfPaid(rowData.repaymentStatusId)?dateFormat(new Date(rowData.repaidAt)):msg.repay}
+          label={this._checkIfPaid(rowData.repaymentStatusId)?dateFormat(new Date(rowData.repaidAt), ['zh']):msg.repay}
           primary={true}
           fullWidth={true}
           onTouchEnd={e => this._handleRepayAction(rowData)}
@@ -82,7 +88,7 @@ class Repayments extends Component {
   }
 
   render() {
-    const { msg, repaymentPlans, repayments } = this.props;
+    const { msg, repaymentPlans, repayments, debtorId } = this.props;
     const repaymentPlanList = repaymentPlans?repaymentPlans.toArray():[];
     const repaymentList = repayments?repayments.filter(repayment => {
       return repaymentPlans.find(repaymentPlan =>
@@ -181,6 +187,7 @@ class Repayments extends Component {
             </div>
           </Card>
         </GridList>
+        <RepaymentDialog debtorId={parseInt(debtorId)}/>
       </div>
     );
   }
@@ -194,4 +201,5 @@ export default connect(state => ({
 }), {
   fetchRepaments,
   payRepayment,
+  openRepaymentDialog,
 })(Repayments);

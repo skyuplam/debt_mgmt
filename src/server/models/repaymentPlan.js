@@ -26,6 +26,10 @@ export default function (sequelize, DataTypes) {
     },
     endedAt: {
       type: DataTypes.DATEONLY,
+    },
+    repaidAmount: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0
     }
   }, {
     classMethods: {
