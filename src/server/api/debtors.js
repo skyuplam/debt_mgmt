@@ -139,48 +139,69 @@ router.route('/:debtorId/repaymentPlans')
     } = req.body;
 
     return models.sequelize.transaction(t => {
-      return models.repaymentPlan.create({
-        principal: repayAmount,
-        terms: terms,
-        startedAt: startedAt
-      }, { transaction: t }).then(repaymentPlan => {
-        return models.loan.findById(loanId).then(loan => {
-          // Link repaymentplan with loan
-          return models.loanStatus.find({
-            where: {
-              status: 'In Repayment'
-            }
-          }).then(loanStatus =>
-            loan.setLoanStatus(loanStatus, { transaction: t })
-          ).then(loan =>
-            repaymentPlan.setLoan(loan, { transaction: t })
-          )
-        }).then(repaymentPlan => {
-          return Promise.all(
-            repayments.map(repayment => {
-              return models.repayment.create(
-                repayment,
-                { transaction: t }
-              ).then(newRpmt => {
-                // Link repayment with repaymentplan
-                repaymentPlan.addRepayment(newRpmt, {
-                  transaction: t
+      return models.repaymentPlan.findAll({
+        where: {
+          loanId: loanId
+        },
+        transaction: t
+      }).then(repaymentPlans => Promise.all(
+        repaymentPlans.map(repaymentPlan => {
+          console.log(`GET RepaymentPlans: ${repaymentPlan.repaymentPlanStatusId}`)
+          if ([1, 2, 4].indexOf(repaymentPlan.repaymentPlanStatusId) != -1) {
+            return models.repaymentPlanStatus.find({
+              where: {
+                status: 'Canceled'
+              },
+              transaction: t
+            }).then(rpmStatus => repaymentPlan.setRepaymentPlanStatus(rpmStatus, {
+              transaction: t
+            }));
+          }
+          return repaymentPlan;
+        })
+      )).then(repaymentPlans => {
+        return models.repaymentPlan.create({
+          principal: repayAmount,
+          terms: terms,
+          startedAt: startedAt
+        }, { transaction: t }).then(repaymentPlan => {
+          return models.loan.findById(loanId).then(loan => {
+            // Link repaymentplan with loan
+            return models.loanStatus.find({
+              where: {
+                status: 'In Repayment'
+              }
+            }).then(loanStatus =>
+              loan.setLoanStatus(loanStatus, { transaction: t })
+            ).then(loan =>
+              repaymentPlan.setLoan(loan, { transaction: t })
+            )
+          }).then(repaymentPlan => {
+            return Promise.all(
+              repayments.map(repayment => {
+                return models.repayment.create(
+                  repayment,
+                  { transaction: t }
+                ).then(newRpmt => {
+                  // Link repayment with repaymentplan
+                  repaymentPlan.addRepayment(newRpmt, {
+                    transaction: t
+                  });
+                  return newRpmt;
                 });
-                return newRpmt;
-              });
-            })
-          ).then(newRepayments => {
-            // Created new repayments
-            return repaymentPlan;
+              })
+            ).then(newRepayments => {
+              // Created new repayments
+              return repaymentPlan;
+            });
           });
         });
-      });
+      })
     }).then(repaymentPlan => {
       const rp = repaymentPlan.toJSON();
       rp.debtorId = parseInt(debtorId);
       return res.status(201).send({repaymentPlan}).end();
-    }
-    );
+    });
   });
 
 router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')

@@ -50,18 +50,13 @@ class DebtorLoans extends Component {
         secondary={true}
         fullWidth={true}
         onMouseDown={e => this._onBtnClick(rowData.id)}
-        disabled={cellData==1?false:true}
+        disabled={[1, 2, 3].indexOf(cellData)!=-1?false:true}
       />
     );
   }
 
   _handleNewRepayment() {
-    const { fetchLoans, debtorId } = this.props;
-    fetchLoans({
-      params: {
-        id: debtorId
-      }
-    });
+
   }
 
   render() {
