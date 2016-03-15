@@ -40,6 +40,17 @@ class RepaymentDialog extends Component {
     this.onCheckPaidInFull = this.onCheckPaidInFull.bind(this);
   }
 
+  getInitialState() {
+    const { repayment } = this.props;
+    return {
+      repaymentDialog: {
+        repaymentAmount: repayment.principal,
+        repaidAt: new Date(),
+        paidInFull: true,
+      }
+    }
+  }
+
   isInvalidAmount() {
     const input = this.getValueOfAmount();
     if (input && input > 0) {
@@ -60,13 +71,24 @@ class RepaymentDialog extends Component {
     return fields.repaidAt.value?fields.repaidAt.value:new Date();
   }
 
-  onCheckPaidInFull() {
+  onCheckPaidInFull(e) {
     const { setField, fields } = this.props;
-    setField(['repaymentDialog', 'paidInFull'], !fields.paidInFull.value);
+    setField(['repaymentDialog', 'paidInFull'], e.target.checked);
   }
 
   handleRepayRequest() {
     const { closeRepaymentDialog, repayment, debtorId, fields, payRepayment } = this.props;
+
+    let paidInFull;
+    if (fields.paidInFull.value === null) {
+      if (repayment.terms === repayment.term) {
+        paidInFull = true;
+      } else {
+        paidInFull = false;
+      }
+    } else {
+      paidInFull = fields.paidInFull.value;
+    }
 
     payRepayment({
       repaymentPlanId: repayment.repaymentPlanId,
@@ -74,7 +96,7 @@ class RepaymentDialog extends Component {
       repaymentId: repayment.id,
       amount: this.getValueOfAmount(),
       repaidAt: this.getValueOfRepaidAt(),
-      paidInFull: fields.paidInFull.value?true:false
+      paidInFull: paidInFull
     });
 
     closeRepaymentDialog();
@@ -163,6 +185,7 @@ class RepaymentDialog extends Component {
         />
       <Checkbox
         label={msg.paidInFull}
+        defaultChecked={repayment.terms===repayment.term}
         onCheck={this.onCheckPaidInFull}
       />
       </Dialog>
@@ -176,7 +199,7 @@ RepaymentDialog = fields(RepaymentDialog, {
     'repaymentAmount',
     'repaidAt',
     'paidInFull'
-  ]
+  ],
 });
 
 export default connect(state => ({

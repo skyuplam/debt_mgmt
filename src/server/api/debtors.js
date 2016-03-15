@@ -210,9 +210,13 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
     models.sequelize.query(`
       SELECT
        r.*,
-       rs.status
+       rp.terms,
+       rps.status repaymentPlanStatus,
+       rs.status repaymentStatus
       FROM repayment r
       LEFT JOIN repaymentStatus rs ON rs.id = r.repaymentStatusId
+      LEFT JOIN repaymentPlan rp ON rp.id = r.repaymentPlanId
+      LEFT JOIN repaymentPlanStatus rps ON rps.id = rp.repaymentPlanStatusId
       WHERE r.repaymentPlanId = ${repaymentPlanId}
     `, { type: models.sequelize.QueryTypes.SELECT }
   ).then(repayments =>

@@ -38,6 +38,7 @@ class Repayments extends Component {
     this._handleRepaymentCellRender = this._handleRepaymentCellRender.bind(this);
     this._handleRepayAction = this._handleRepayAction.bind(this);
     this._checkIfPaid = this._checkIfPaid.bind(this);
+    this._isRepaymentPlanCanceledOrCompleted = this._isRepaymentPlanCanceledOrCompleted.bind(this);
   }
 
   _handleRepayAction(rowData) {
@@ -60,6 +61,10 @@ class Repayments extends Component {
     return [3, 4, 5, 6].indexOf(status) != -1;
   }
 
+  _isRepaymentPlanCanceledOrCompleted(repaymentPlanStatus) {
+    return repaymentPlanStatus == 'Canceled' || repaymentPlanStatus == 'Completed';
+  }
+
   _handleRepaymentCellRender(cellData, cellDataKey, rowData, rowIndex, columnData) {
     const { msg } = this.props;
     return (
@@ -70,7 +75,7 @@ class Repayments extends Component {
           fullWidth={true}
           onTouchEnd={e => this._handleRepayAction(rowData)}
           onMouseUp={e => this._handleRepayAction(rowData)}
-          disabled={this._checkIfPaid(rowData.repaymentStatusId)}
+          disabled={this._checkIfPaid(rowData.repaymentStatusId)||this._isRepaymentPlanCanceledOrCompleted(rowData.repaymentPlanStatus)}
         />
       </div>
     );
