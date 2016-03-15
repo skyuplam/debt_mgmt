@@ -146,8 +146,15 @@ router.route('/:debtorId/repaymentPlans')
       }, { transaction: t }).then(repaymentPlan => {
         return models.loan.findById(loanId).then(loan => {
           // Link repaymentplan with loan
-          repaymentPlan.setLoan(loan);
-          return repaymentPlan;
+          return models.loanStatus.find({
+            where: {
+              status: 'In Repayment'
+            }
+          }).then(loanStatus =>
+            loan.setLoanStatus(loanStatus, { transaction: t })
+          ).then(loan =>
+            repaymentPlan.setLoan(loan, { transaction: t })
+          )
         }).then(repaymentPlan => {
           return Promise.all(
             repayments.map(repayment => {

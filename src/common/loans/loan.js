@@ -23,6 +23,7 @@ const Loan = Record({
   completedAt: null,
   originatedAgreementNo: null,
   originatedLoanProcessingBranch: null,
+  loanStatusId: null,
 });
 
 export default Loan;

@@ -40,6 +40,7 @@ class NewRepaymentPlan extends Component {
     newRepaymentPlan: PropTypes.func.isRequired,
     addRepayments: PropTypes.func.isRequired,
     resetRepyments: PropTypes.func.isRequired,
+    onSubmitNewRepayment: PropTypes.func,
   };
 
   constructor(props) {
@@ -60,7 +61,8 @@ class NewRepaymentPlan extends Component {
       newRepaymentPlan,
       repayments,
       resetRepyments,
-      debtorId
+      debtorId,
+      onSubmitNewRepayment
     } = this.props;
 
     if (!(fields.amount.value.trim() ||
@@ -84,6 +86,7 @@ class NewRepaymentPlan extends Component {
     closeNewRepyamnetPlanDialog();
     fields.$reset();
     resetRepyments();
+    onSubmitNewRepayment();
   }
 
   _handleOnChange(e, date) {

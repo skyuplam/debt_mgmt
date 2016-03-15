@@ -11,12 +11,13 @@ import 'react-virtualized/styles.css';
 import RaisedButton from 'material-ui/lib/raised-button';
 import ConfirmDialog from '../common/confirmDialog.react';
 import NewRepaymentPlan from './NewRepaymentPlan.react';
-import * as uiActions from '../../common/ui/actions';
+import { openNewRepyamnetPlanDialog } from '../../common/ui/actions';
 import shouldPureComponentUpdate from 'react-pure-render/function';
+import { fetchLoans } from '../../common/loans/actions';
 
 
 class DebtorLoans extends Component {
-  shouldPureComponentUpdate = shouldPureComponentUpdate
+  shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
     msg: PropTypes.object,
@@ -31,7 +32,7 @@ class DebtorLoans extends Component {
 
     this._onBtnClick = this._onBtnClick.bind(this);
     this._cellRenderer = this._cellRenderer.bind(this);
-    this._onConfirmSubmitNewPaymentPlan = this._onConfirmSubmitNewPaymentPlan.bind(this);
+    this._handleNewRepayment = this._handleNewRepayment.bind(this);
   }
 
   _onBtnClick(loanId) {
@@ -41,20 +42,26 @@ class DebtorLoans extends Component {
     openNewRepyamnetPlanDialog({ loanId: loan.id });
   }
 
-  _cellRenderer(loanId) {
+  _cellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
     const { msg } = this.props;
     return (
       <RaisedButton
         label={msg.add}
         secondary={true}
         fullWidth={true}
-        onMouseDown={e => this._onBtnClick(loanId)}
+        onMouseDown={e => this._onBtnClick(rowData.id)}
+        disabled={cellData==1?false:true}
       />
     );
   }
 
-  _onConfirmSubmitNewPaymentPlan() {
-
+  _handleNewRepayment() {
+    const { fetchLoans, debtorId } = this.props;
+    fetchLoans({
+      params: {
+        id: debtorId
+      }
+    });
   }
 
   render() {
@@ -129,7 +136,7 @@ class DebtorLoans extends Component {
                   />
                 <FlexColumn
                   label={msg.repaymentPlan}
-                  dataKey='id'
+                  dataKey='loanStatusId'
                   cellRenderer={this._cellRenderer}
                   width={100}
                 />
@@ -138,6 +145,7 @@ class DebtorLoans extends Component {
           </AutoSizer>
           <NewRepaymentPlan
             debtorId={debtorId}
+            onSubmitNewRepayment={this._handleNewRepayment}
           />
         </div>
       </Card>
@@ -151,4 +159,7 @@ export default connect(state => ({
   msg: state.intl.msg.loans,
   currentLoanId: state.ui.currentLoanId,
   loans: state.loans.map,
-}), uiActions)(DebtorLoans);
+}), {
+  openNewRepyamnetPlanDialog,
+  fetchLoans,
+})(DebtorLoans);

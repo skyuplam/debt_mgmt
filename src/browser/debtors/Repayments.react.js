@@ -136,6 +136,13 @@ class Repayments extends Component {
                       dataKey='startedAt'
                       width={100}
                     />
+                    <FlexColumn
+                      label={msg.status}
+                      cellRenderer={this._cellRenderer}
+                      dataKey='repaymentPlanStatusId'
+                      cellRenderer={(cellData) => `${msg['repaymentPlanStatus'+cellData]}`}
+                      width={100}
+                    />
                   </FlexTable>
                 )}
               </AutoSizer>
