@@ -118,9 +118,13 @@ router.route('/:debtorId/repaymentPlans')
       LEFT JOIN person d ON d.id = dl.debtorId
       WHERE d.id = ${debtorId}
     `, { type: models.sequelize.QueryTypes.SELECT }
-    ).then(repaymentPlans =>
-      res.status(200).send({repaymentPlans}).end()
-    );
+  ).then(repaymentPlans => {
+    repaymentPlans.map(rp => {
+      rp.debtorId = parseInt(debtorId);
+      return rp;
+    })
+    return res.status(200).send({repaymentPlans}).end()
+  });
   });
 
 router.route('/:debtorId/repaymentPlans')
