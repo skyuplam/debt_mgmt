@@ -93,5 +93,19 @@
       "status": "Partial Paid",
       "description": "部份还款"
     }
+  ],
+  "placementStatuses": [
+    {
+      "status": "Placed",
+      "description": ""
+    },
+    {
+      "status": "Put back",
+      "description": ""
+    },
+    {
+      "status": "Returned",
+      "description": ""
+    }
   ]
 }

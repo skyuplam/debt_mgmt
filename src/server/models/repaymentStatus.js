@@ -2,6 +2,7 @@ export default function (sequelize, DataTypes) {
   const RepaymentStatus = sequelize.define('repaymentStatus', {
     status: {
       type: DataTypes.STRING,
+      unique: true,
     },
     description: {
       type: DataTypes.STRING,

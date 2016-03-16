@@ -1,5 +1,5 @@
 export default function (sequelize, DataTypes) {
-  const RepaymentPlanStatus = sequelize.define('repaymentPlanStatus', {
+  const PlacementStatus = sequelize.define('placementStatus', {
     status: {
       type: DataTypes.STRING,
       unique: true,
@@ -11,5 +11,5 @@ export default function (sequelize, DataTypes) {
     freezeTableName: true // Model tableName will be the same as the model name
   });
 
-  return RepaymentPlanStatus;
+  return PlacementStatus;
 }

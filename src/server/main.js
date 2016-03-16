@@ -28,6 +28,7 @@ models.sequelize.sync({force: !isProduction}).then(() => {
     repaymentStatuses,
     loanStatuses,
     repaymentPlanStatuses,
+    placementStatuses,
   } = typesAndStatus;
 
   models.sequelize.transaction(t2 => {
@@ -40,6 +41,9 @@ models.sequelize.sync({force: !isProduction}).then(() => {
       ),
       repaymentPlanStatuses.map(repaymentPlanStatus =>
         models.repaymentPlanStatus.create(repaymentPlanStatus)
+      ),
+      placementStatues.map(placementStatus =>
+        models.placementStatus.create(placementStatus)
       ),
     ]);
   }).catch(error => console.log(error));
