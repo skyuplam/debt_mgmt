@@ -13,20 +13,17 @@ export default function (sequelize, DataTypes) {
     placedAt: {
       type: DataTypes.DATEONLY,
     },
-    expectedReturnedAt: {
+    expectedRecalledAt: {
       type: DataTypes.DATEONLY,
     },
-    returnedAt: {
+    recalledAt: {
       type: DataTypes.DATEONLY,
     },
   }, {
     classMethods: {
       associate: models => {
         Placement.belongsTo(models.company);
-        Placement.belongsToMany(models.loan, {
-          through: models.loanPlacement,
-          foreignKey: 'placementId',
-        });
+        Placement.hasMany(models.loanPlacement);
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name

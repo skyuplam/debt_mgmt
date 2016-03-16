@@ -3,7 +3,7 @@ export default function (sequelize, DataTypes) {
     name: {
       type: DataTypes.STRING,
     },
-    companyCode: {
+    code: {
       type: DataTypes.STRING,
       unique: true,
     },

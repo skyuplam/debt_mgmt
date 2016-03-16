@@ -1,9 +1,8 @@
 export default function (sequelize, DataTypes) {
   const LoanPlacement = sequelize.define('loanPlacement', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+    refCode: {
+      type: DataTypes.STRING,
+      unique: true
     },
     returnedAt: {
       type: DataTypes.DATEONLY,
@@ -12,6 +11,8 @@ export default function (sequelize, DataTypes) {
     classMethods: {
       associate: models => {
         LoanPlacement.belongsTo(models.placementStatus);
+        LoanPlacement.belongsTo(models.loan);
+        LoanPlacement.belongsTo(models.placement);
       },
       hook: models => {
         // Init Placement Status to New

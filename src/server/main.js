@@ -21,7 +21,7 @@ const { port, isProduction } = config;
 
 models.sequelize.sync({force: !isProduction}).then(() => {
 
-  const { debtors } = data;
+  const { debtors, companies } = data;
   const {
     identityTypes,
     loanTypes,
@@ -33,19 +33,54 @@ models.sequelize.sync({force: !isProduction}).then(() => {
 
   models.sequelize.transaction(t2 => {
     return Promise.all([
-      identityTypes.map(idType => models.identityType.create(idType)),
-      loanTypes.map(loanType => models.loanType.create(loanType)),
-      repaymentStatuses.map(status => models.repaymentStatus.create(status)),
+      identityTypes.map(idType => models.identityType.create(idType, {
+        transaction: t2
+      })),
+      loanTypes.map(loanType => models.loanType.create(loanType, {
+        transaction: t2
+      })),
+      repaymentStatuses.map(status => models.repaymentStatus.create(status, {
+        transaction: t2
+      })),
       loanStatuses.map(loanStatus =>
-        models.loanStatus.create(loanStatus)
+        models.loanStatus.create(loanStatus, {
+          transaction: t2
+        })
       ),
       repaymentPlanStatuses.map(repaymentPlanStatus =>
-        models.repaymentPlanStatus.create(repaymentPlanStatus)
+        models.repaymentPlanStatus.create(repaymentPlanStatus, {
+          transaction: t2
+        })
       ),
-      placementStatues.map(placementStatus =>
-        models.placementStatus.create(placementStatus)
+      placementStatuses.map(placementStatus =>
+        models.placementStatus.create(placementStatus, {
+          transaction: t2
+        })
       ),
     ]);
+  }).catch(error => console.log(error));
+
+  models.sequelize.transaction(t3 => {
+    return Promise.all(companies.map(company =>
+      models.company.create(company,
+        {
+          transaction: t3
+        }).then(company => {
+          return models.placement.create({
+            placementCode: `${company.code}-201603`,
+            servicingFeeRate: 0.3,
+            managementFeeRate: 0.2,
+            placedAt: new Date(2016, 3, 11),
+            expectedRecalledAt: new Date(2016, 6, 10)
+          }, {
+            transaction: t3
+          }).then(placement =>
+            placement.setCompany(company, {
+              transaction: t3
+            })
+          );
+        })
+    ));
   }).catch(error => console.log(error));
 
   models.sequelize.transaction(t1 =>
@@ -56,13 +91,21 @@ models.sequelize.sync({force: !isProduction}).then(() => {
         debtors.map(debtor => {
           return models.identity.create({
             idNumber: debtor['身份证号']
+          }, {
+            transaction: t2
           }).then(identity => {
-            identity.setIdentityType(identityType);
+            identity.setIdentityType(identityType, {
+              transaction: t2
+            });
             return models.person.create({
               name: debtor['客户姓名'],
               dob: new Date(1980, 7, Math.floor(Math.random() * (31)) + 1)
+            }, {
+              transaction: t2
             }).then(person => {
-              person.addIdentity(identity);
+              person.addIdentity(identity, {
+                transaction: t2
+              });
               return person;
             });
           }).then(person =>
@@ -80,9 +123,38 @@ models.sequelize.sync({force: !isProduction}).then(() => {
               repaidTerms: parseInt(debtor['已还期数']),
               originatedAgreementNo: debtor['贷款合同号'],
               originatedLoanProcessingBranch: debtor['分行']
+            }, {
+              transaction: t2
             }).then(loan => {
-              person.addLoan(loan);
+              person.addLoan(loan, {
+                transaction: t2
+              });
               return loan;
+            }).then(loan => {
+              return models.placement.findById(loan.id%2?1:2, {
+                transaction: t2
+              }).then(placement => {
+                return models.placementStatus.find({
+                  where: {
+                    status: 'Placed'
+                  }
+                }, {
+                  transaction: t2
+                }).then(placementStatus =>
+                  models.loanPlacement.create({
+                    refCode: `${placement.placementCode}-${loan.id}`,
+                  }, {
+                    transaction: t2
+                  }).then(loanPlacement =>
+                    loanPlacement.setLoan(loan, {
+                      transaction: t2
+                    }).then(loanPlacement =>
+                      loanPlacement.setPlacement(placement, {
+                        transaction: t2
+                    }))
+                  )
+                )
+              });
             })
           );
         })
