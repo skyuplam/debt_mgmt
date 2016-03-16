@@ -14,10 +14,12 @@ import NewRepaymentPlan from './NewRepaymentPlan.react';
 import { openNewRepyamnetPlanDialog } from '../../common/ui/actions';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { fetchLoans } from '../../common/loans/actions';
+import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
 
 
 class DebtorLoans extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
+  shouldComponentUpdate = shouldPureComponentUpdate;
+  mixins = [IntlMixin];
 
   static propTypes = {
     msg: PropTypes.object,
@@ -33,6 +35,10 @@ class DebtorLoans extends Component {
     this._onBtnClick = this._onBtnClick.bind(this);
     this._cellRenderer = this._cellRenderer.bind(this);
     this._handleNewRepayment = this._handleNewRepayment.bind(this);
+    this._formatNumberCell = this._formatNumberCell.bind(this);
+    this._formatDateCell = this._formatDateCell.bind(this);
+    this._formatPercentageCell = this._formatPercentageCell.bind(this);
+    this._handleTotalFeeRender = this._handleTotalFeeRender.bind(this);
   }
 
   _onBtnClick(loanId) {
@@ -57,6 +63,39 @@ class DebtorLoans extends Component {
 
   _handleNewRepayment() {
 
+  }
+
+  _handleTotalFeeRender(cellData, cellDataKey, rowData, rowIndex, columnData) {
+    const totalFee = rowData.collectableMgmtFee+
+      rowData.collectableHandlingFee+
+      rowData.collectableLateFee+
+      rowData.collectablePenaltyFee;
+    return this._formatNumberCell(totalFee);
+  }
+
+  _formatNumberCell(cellData) {
+    return (
+      <FormattedNumber
+        value={cellData}
+      />
+    );
+  }
+
+  _formatDateCell(cellData) {
+    return (
+      <FormattedDate
+        value={new Date(cellData)}
+      />
+    );
+  }
+
+  _formatPercentageCell(cellData) {
+    return (
+      <FormattedNumber
+        value={cellData}
+        style="percent"
+      />
+    );
   }
 
   render() {
@@ -85,48 +124,44 @@ class DebtorLoans extends Component {
                   width={100}
                   />
                 <FlexColumn
-                  label={msg.amount}
-                  dataKey='amount'
-                  width={100}
-                  />
-                <FlexColumn
-                  label={msg.terms}
-                  dataKey='terms'
-                  width={100}
-                  />
-                <FlexColumn
-                  label={msg.repaidTerms}
-                  dataKey='repaidTerms'
-                  width={100}
-                  />
-                <FlexColumn
                   label={msg.collectablePrincipal}
                   dataKey='collectablePrincipal'
-                  width={100}
+                  cellRenderer={(cellData) => this._formatNumberCell(cellData)}
+                  width={80}
                   />
                 <FlexColumn
                   label={msg.collectableInterest}
                   dataKey='collectableInterest'
+                  cellRenderer={(cellData) => this._formatNumberCell(cellData)}
+                  width={80}
+                  />
+                <FlexColumn
+                  label={msg.totalCollectableFee}
+                  dataKey='totalCollectableFee'
+                  cellRenderer={this._handleTotalFeeRender}
                   width={100}
                   />
                 <FlexColumn
-                  label={msg.collectableMgmtFee}
-                  dataKey='collectableMgmtFee'
+                  label={msg.agency}
+                  dataKey='agency'
                   width={100}
                   />
                 <FlexColumn
-                  label={msg.collectableHandlingFee}
-                  dataKey='collectableHandlingFee'
+                  label={msg.placementServicingFeeRate}
+                  dataKey='placementServicingFeeRate'
+                  cellRenderer={this._formatPercentageCell}
                   width={100}
                   />
                 <FlexColumn
-                  label={msg.collectableLateFee}
-                  dataKey='collectableLateFee'
+                  label={msg.placedAt}
+                  dataKey='placedAt'
+                  cellRenderer={this._formatDateCell}
                   width={100}
                   />
                 <FlexColumn
-                  label={msg.collectablePenaltyFee}
-                  dataKey='collectablePenaltyFee'
+                  label={msg.expectedRecalledAt}
+                  dataKey='expectedRecalledAt'
+                  cellRenderer={this._formatDateCell}
                   width={100}
                   />
                 <FlexColumn
