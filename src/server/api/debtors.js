@@ -95,9 +95,19 @@ router.route('/:debtorId/loans')
     const debtorId = req.params.debtorId;
     models.sequelize.query(`
       SELECT
-        l.*
+        l.*,
+        lp.placementStatusId,
+        p.placementCode,
+        p.servicingFeeRate placementServicingFeeRate,
+        p.placedAt,
+        p.expectedRecalledAt,
+        p.recalledAt,
+        c.name companyName
       FROM debtorLoan dl
       LEFT JOIN loan l ON l.id = dl.loanId
+      LEFT JOIN loanPlacement lp ON lp.loanId = l.id AND lp.placementStatusId = 1
+      LEFT JOIN placement p ON p.id = lp.placementId
+      LEFT JOIN company c ON c.id = p.companyId
       WHERE dl.debtorId = ${debtorId}
       `, { type: models.sequelize.QueryTypes.SELECT }
     ).then(loans => {

@@ -24,6 +24,13 @@ const Loan = Record({
   originatedAgreementNo: null,
   originatedLoanProcessingBranch: null,
   loanStatusId: null,
+  placementStatusId: null,
+  placementCode: '',
+  placementServicingFeeRate: 0.0,
+  placedAt: null,
+  expectedRecalledAt: null,
+  recalledAt: null,
+  companyName: '',
 });
 
 export default Loan;

@@ -6,9 +6,7 @@ export default function (sequelize, DataTypes) {
     },
     servicingFeeRate: {
       type: DataTypes.FLOAT,
-    },
-    managementFeeRate: {
-      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     placedAt: {
       type: DataTypes.DATEONLY,
