@@ -1,9 +1,6 @@
 export default function (sequelize, DataTypes) {
   const LoanPlacement = sequelize.define('loanPlacement', {
-    startedAt: {
-      type: DataTypes.DATEONLY,
-    },
-    endedAt: {
+    returnedAt: {
       type: DataTypes.DATEONLY,
     },
   }, {
