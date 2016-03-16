@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import DebtorInfo from './DebtorInfo.react';
 import DebtorLoans from './DebtorLoans.react';
 import Repayments from './Repayments.react';
+import ContactList from './ContactList.react';
 import { fetchDebtor } from '../../common/debtors/actions';
 import { fetchLoans } from '../../common/loans/actions';
 import { fetchRepamentPlans } from '../../common/repaymentPlans/actions';
@@ -28,6 +29,7 @@ class Debtor extends Component {
       <div className="debtor-detail">
         <Helmet title={msg.debtorDetail} />
         <DebtorInfo debtorId={debtorId}/>
+        <ContactList />
         <DebtorLoans debtorId={debtorId}/>
         <Repayments
           debtorId={debtorId}

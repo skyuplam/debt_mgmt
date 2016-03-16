@@ -104,7 +104,7 @@ class Repayments extends Component {
       <div className="repayment">
         <GridList
           cellHeight={400}
-          padding={0}
+          padding={1}
         >
           <Card>
             <CardTitle title={msg.repaymentPlan} />
@@ -123,17 +123,17 @@ class Repayments extends Component {
                     <FlexColumn
                       label={'ID'}
                       dataKey='id'
-                      width={120}
+                      width={100}
                     />
                     <FlexColumn
                       label={msg.principal}
                       dataKey='principal'
-                      width={120}
+                      width={100}
                     />
                     <FlexColumn
                       label={msg.terms}
                       dataKey='terms'
-                      width={120}
+                      width={60}
                     />
                     <FlexColumn
                       label={msg.startedAt}

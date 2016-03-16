@@ -199,6 +199,10 @@ export default {
     repayAmount: '还款金额',
     paidInFull: '是否结清',
   },
+  contacts: {
+    contacts: '联络电话',
+    addresses: '联络地址',
+  },
   profile: {
     title: 'Profile'
   },
