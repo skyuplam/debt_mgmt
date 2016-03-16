@@ -29,12 +29,12 @@ class Debtor extends Component {
       <div className="debtor-detail">
         <Helmet title={msg.debtorDetail} />
         <DebtorInfo debtorId={debtorId}/>
-        <ContactList />
         <DebtorLoans debtorId={debtorId}/>
         <Repayments
           debtorId={debtorId}
           repaymentPlans={newRepaymentPlans}
         />
+      <ContactList />
       </div>
     );
   }

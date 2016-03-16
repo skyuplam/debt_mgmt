@@ -23,11 +23,6 @@ class ContactList extends Component {
   render() {
     const { msg } = this.props;
     const styles = {
-      root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-      },
       gridList: {
         width: '100%',
         height: 300,
@@ -35,15 +30,13 @@ class ContactList extends Component {
       },
     };
     return (
-      <div>
-        <GridList
-          style={styles.gridList}
-          padding={1}
-        >
-          <ContactNumbers />
-          <Addresses />
-        </GridList>
-      </div>
+      <GridList
+        style={styles.gridList}
+        padding={1}
+      >
+        <ContactNumbers />
+        <Addresses />
+      </GridList>
     );
   }
 }

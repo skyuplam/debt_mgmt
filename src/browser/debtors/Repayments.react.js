@@ -103,7 +103,7 @@ class Repayments extends Component {
     return (
       <div className="repayment">
         <GridList
-          cellHeight={400}
+          cellHeight={386}
           padding={1}
         >
           <Card>
