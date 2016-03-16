@@ -57,14 +57,17 @@ class DebtorSearch extends Component {
     return (
       <div style={styles.padding}>
         <TextField
+          floatingLabelText={msg.idCard}
           hintText={msg.idCard}
           {...fields.idCard}
         />
         <TextField
+          floatingLabelText={msg.name}
           hintText={msg.name}
           {...fields.name}
         />
         <TextField
+          floatingLabelText={msg.originatedAgreementNo}
           hintText={msg.originatedAgreementNo}
           {...fields.originatedAgreementNo}
         />
