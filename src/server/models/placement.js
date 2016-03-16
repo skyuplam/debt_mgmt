@@ -27,7 +27,7 @@ export default function (sequelize, DataTypes) {
           }, {
             transaction: opts.transaction
           }).then(placementStatus =>
-            placement.setRepaymentPlanStatus(placementStatus, {
+            placement.setPlacementStatus(placementStatus, {
               transaction: opts.transaction
             })
           );
