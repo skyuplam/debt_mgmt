@@ -1,5 +1,9 @@
 export default function (sequelize, DataTypes) {
   const Placement = sequelize.define('placement', {
+    placementCode: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     servicingFeeRate: {
       type: DataTypes.FLOAT,
     },

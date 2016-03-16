@@ -37,6 +37,7 @@ export default function (sequelize, DataTypes) {
         RepaymentPlan.hasMany(models.repayment);
         RepaymentPlan.belongsTo(models.repaymentPlanStatus);
         RepaymentPlan.belongsTo(models.loan);
+        RepaymentPlan.belongsTo(models.loanPlacement);
       },
       hook: models => {
         // Init RepaymentPlan Status to New

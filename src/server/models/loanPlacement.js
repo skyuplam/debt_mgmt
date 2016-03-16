@@ -1,5 +1,10 @@
 export default function (sequelize, DataTypes) {
   const LoanPlacement = sequelize.define('loanPlacement', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     returnedAt: {
       type: DataTypes.DATEONLY,
     },
