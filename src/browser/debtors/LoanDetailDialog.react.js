@@ -85,7 +85,7 @@ class LoanDetailDialog extends Component {
           <List>
             <ListItem
               primaryText={msg.amount}
-              secondaryText={loan.amount}/>
+              secondaryText={this._formatNumber(loan.amount)}/>
             <ListItem
               primaryText={msg.issuedAt}
               secondaryText={dateFormat(new Date(loan.issuedAt), ['zh'])}/>
