@@ -11,11 +11,11 @@ import 'react-virtualized/styles.css';
 import RaisedButton from 'material-ui/lib/raised-button';
 import ConfirmDialog from '../common/confirmDialog.react';
 import NewRepaymentPlan from './NewRepaymentPlan.react';
-import { openNewRepyamnetPlanDialog } from '../../common/ui/actions';
+import { openNewRepyamnetPlanDialog, openLoanDetailDialog } from '../../common/ui/actions';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { fetchLoans } from '../../common/loans/actions';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
-
+import LoanDetailDialog from './LoanDetailDialog.react';
 
 class DebtorLoans extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -26,6 +26,7 @@ class DebtorLoans extends Component {
     loans: PropTypes.object.isRequired,
     currentLoanId: PropTypes.number,
     openNewRepyamnetPlanDialog: PropTypes.func.isRequired,
+    openLoanDetailDialog: PropTypes.func.isRequired,
     debtorId: PropTypes.number,
   };
 
@@ -39,6 +40,7 @@ class DebtorLoans extends Component {
     this._formatDateCell = this._formatDateCell.bind(this);
     this._formatPercentageCell = this._formatPercentageCell.bind(this);
     this._handleTotalFeeRender = this._handleTotalFeeRender.bind(this);
+    this._handleRowClicked = this._handleRowClicked.bind(this);
   }
 
   _onBtnClick(loanId) {
@@ -98,6 +100,11 @@ class DebtorLoans extends Component {
     );
   }
 
+  _handleRowClicked(loan) {
+    const { openLoanDetailDialog } = this.props;
+    openLoanDetailDialog(loan);
+  }
+
   render() {
     const { msg, loans, currentLoanId, debtorId } = this.props;
     const loanList = loans.toArray();
@@ -117,6 +124,7 @@ class DebtorLoans extends Component {
                 rowHeight={36}
                 rowsCount={loanList.length}
                 rowGetter={index => loanList[index]}
+                onRowClick={(rowIdx) => this._handleRowClicked(loanList[rowIdx])}
                 >
                 <FlexColumn
                   label={msg.originatedAgreementNo}
@@ -177,6 +185,7 @@ class DebtorLoans extends Component {
             debtorId={debtorId}
             onSubmitNewRepayment={this._handleNewRepayment}
           />
+          <LoanDetailDialog />
         </div>
       </Card>
     );
@@ -191,5 +200,6 @@ export default connect(state => ({
   loans: state.loans.map,
 }), {
   openNewRepyamnetPlanDialog,
+  openLoanDetailDialog,
   fetchLoans,
 })(DebtorLoans);

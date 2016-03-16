@@ -100,6 +100,7 @@ export default {
     headerTitle: '贷款列表',
     appliedAt: '申请日期',
     issuedAt: '贷款日期',
+    loanDetail: '贷款详细',
     terms: '期限',
     delinquentAt: '逾期日期',
     amount: '贷款金额',

@@ -6,6 +6,8 @@ export const OPEN_NEW_REPAYMENT_PLAN_DIALOG = 'OPEN_NEW_REPAYMENT_PLAN_DIALOG';
 export const CLOSE_NEW_REPAYMENT_PLAN_DIALOG = 'CLOSE_NEW_REPAYMENT_PLAN_DIALOG';
 export const OPEN_REPAYMENT_DIALOG = 'OPEN_REPAYMENT_DIALOG';
 export const CLOSE_REPAYMENT_DIALOG = 'CLOSE_REPAYMENT_DIALOG';
+export const OPEN_LOAN_DETAIL_DIALOG = 'OPEN_LOAN_DETAIL_DIALOG';
+export const CLOSE_LOAN_DETAIL_DIALOG = 'CLOSE_LOAN_DETAIL_DIALOG';
 
 export function onSideMenuChange(isOpen) {
   return {
@@ -55,5 +57,18 @@ export function openRepaymentDialog(repayment) {
 export function closeRepaymentDialog() {
   return {
     type: CLOSE_REPAYMENT_DIALOG,
+  };
+}
+
+export function openLoanDetailDialog(loan) {
+  return {
+    type: OPEN_LOAN_DETAIL_DIALOG,
+    payload: loan
+  };
+}
+
+export function closeLoanDetailDialog() {
+  return {
+    type: CLOSE_LOAN_DETAIL_DIALOG,
   };
 }
