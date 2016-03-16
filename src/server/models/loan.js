@@ -84,6 +84,10 @@ export default function (sequelize, DataTypes) {
           as: 'Debtors',
           foreignKey: 'loanId',
         });
+        Loan.belongsToMany(models.placement, {
+          through: models.loanPlacement,
+          foreignKey: 'loanId',
+        });
       },
       hook: models => {
         // Init Loan Status to "LO"

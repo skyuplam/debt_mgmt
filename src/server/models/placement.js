@@ -6,31 +6,22 @@ export default function (sequelize, DataTypes) {
     managementFeeRate: {
       type: DataTypes.FLOAT,
     },
-    startedAt: {
+    placedAt: {
       type: DataTypes.DATEONLY,
     },
-    endedAt: {
+    expectedReturnedAt: {
+      type: DataTypes.DATEONLY,
+    },
+    returnedAt: {
       type: DataTypes.DATEONLY,
     },
   }, {
     classMethods: {
       associate: models => {
-        Placement.belongsTo(models.placementStatus);
-      },
-      hook: models => {
-        // Init Placement Status to New
-        Placement.afterCreate((placement, opts) => {
-          return models.placementStatus.findOne({
-            where: {
-              status: 'Placed'
-            }
-          }, {
-            transaction: opts.transaction
-          }).then(placementStatus =>
-            placement.setPlacementStatus(placementStatus, {
-              transaction: opts.transaction
-            })
-          );
+        Placement.belongsTo(models.company);
+        Placement.belongsToMany(models.loan, {
+          through: models.loanPlacement,
+          foreignKey: 'placementId',
         });
       }
     },
