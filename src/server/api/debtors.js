@@ -102,7 +102,7 @@ router.route('/:debtorId/loans')
         p.placedAt,
         p.expectedRecalledAt,
         p.recalledAt,
-        c.name companyName
+        c.name agency
       FROM debtorLoan dl
       LEFT JOIN loan l ON l.id = dl.loanId
       LEFT JOIN loanPlacement lp ON lp.loanId = l.id AND lp.placementStatusId = 1

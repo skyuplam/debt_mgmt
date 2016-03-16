@@ -30,7 +30,7 @@ const Loan = Record({
   placedAt: null,
   expectedRecalledAt: null,
   recalledAt: null,
-  companyName: '',
+  agency: '',
 });
 
 export default Loan;
