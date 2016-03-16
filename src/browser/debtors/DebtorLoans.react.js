@@ -17,6 +17,7 @@ import shouldPureComponentUpdate from 'react-pure-render/function';
 import { fetchLoans } from '../../common/loans/actions';
 import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
 import LoanDetailDialog from './LoanDetailDialog.react';
+import { dateFormat } from '../../common/intl/format';
 
 class DebtorLoans extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -85,10 +86,11 @@ class DebtorLoans extends Component {
   }
 
   _formatDateCell(cellData) {
+    const theDate = dateFormat(new Date(cellData), ['zh']);
     return (
-      <FormattedDate
-        value={new Date(cellData)}
-      />
+      <div>
+        {theDate}
+      </div>
     );
   }
 
