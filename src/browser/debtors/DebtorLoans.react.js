@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import TextField from 'material-ui/lib/text-field';
 import Card from 'material-ui/lib/card/card';
 import CardTitle from 'material-ui/lib/card/card-title';
+import CardActions from 'material-ui/lib/card/card-actions';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -114,7 +115,7 @@ class DebtorLoans extends Component {
         <CardTitle
           title={`${msg.headerTitle}`}
         />
-        <div >
+        <CardActions>
           <AutoSizer disableHeight>
             {({ width }) =>
               <FlexTable
@@ -186,7 +187,7 @@ class DebtorLoans extends Component {
             onSubmitNewRepayment={this._handleNewRepayment}
           />
           <LoanDetailDialog />
-        </div>
+        </CardActions>
       </Card>
     );
   }

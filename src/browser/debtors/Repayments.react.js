@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import GridList from 'material-ui/lib/grid-list/grid-list';
 import Card from 'material-ui/lib/card/card';
-import CardText from 'material-ui/lib/card/card-text';
+import CardActions from 'material-ui/lib/card/card-actions';
 import CardTitle from 'material-ui/lib/card/card-title';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import shouldPureComponentUpdate from 'react-pure-render/function';
@@ -108,7 +108,7 @@ class Repayments extends Component {
         >
           <Card>
             <CardTitle title={msg.repaymentPlan} />
-            <div>
+            <CardActions>
               <AutoSizer disableHeight>
                 {({ width }) => (
                   <FlexTable
@@ -151,11 +151,11 @@ class Repayments extends Component {
                   </FlexTable>
                 )}
               </AutoSizer>
-            </div>
+            </CardActions>
           </Card>
           <Card>
             <CardTitle title={msg.repayments} />
-            <div>
+            <CardActions>
               <AutoSizer disableHeight>
                 {({ width }) => (
                   <FlexTable
@@ -196,7 +196,7 @@ class Repayments extends Component {
                   </FlexTable>
                 )}
               </AutoSizer>
-            </div>
+            </CardActions>
           </Card>
         </GridList>
         <RepaymentDialog debtorId={parseInt(debtorId)}/>
