@@ -9,7 +9,6 @@ export default function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: models => {
-        PersonAddress.belongsTo(models.county);
         PersonAddress.belongsTo(models.person);
         PersonAddress.belongsTo(models.address);
         PersonAddress.belongsTo(models.source);

@@ -10,6 +10,7 @@ import { fetchDebtor } from '../../common/debtors/actions';
 import { fetchLoans } from '../../common/loans/actions';
 import { fetchRepamentPlans } from '../../common/repaymentPlans/actions';
 import { fetchContactNumbers } from '../../common/contactNumbers/actions';
+import { fetchAddresses } from '../../common/addresses/actions';
 import fetch from '../../common/components/fetch';
 
 class Debtor extends Component {
@@ -49,6 +50,7 @@ Debtor = fetch(
   fetchLoans,
   fetchRepamentPlans,
   fetchContactNumbers,
+  fetchAddresses
 )(Debtor);
 
 export default connect(state => ({

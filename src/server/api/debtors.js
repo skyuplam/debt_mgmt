@@ -357,4 +357,27 @@ router.route('/:debtorId/contactNumbers')
     );
   });
 
+
+router.route('/:debtorId/addresses')
+  .get((req, res) => {
+    const debtorId = req.params.debtorId;
+    models.sequelize.query(`
+      SELECT
+        ad.*,
+        adt.type addressType,
+        s.source,
+        pad.verifiedAt,
+        pad.verifiedBy,
+        pad.personId debtorId
+      FROM address ad
+      LEFT JOIN addressType adt ON adt.id = ad.addressTypeId
+      LEFT JOIN personAddress pad ON pad.addressId = ad.id
+      LEFT JOIN source s ON s.id = pad.sourceId
+      WHERE pad.personid = ${debtorId}
+    `, { type: models.sequelize.QueryTypes.SELECT }
+  ).then(addresses =>
+      res.status(200).send({ addresses }).end()
+    );
+  });
+
 export default router;
