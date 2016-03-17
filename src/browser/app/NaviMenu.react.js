@@ -22,14 +22,14 @@ class Header extends Component {
 
   goToDebtors() {
     const { toggleSideMenu } = this.props;
-    browserHistory.push(`/debtorList`);
+    browserHistory.push('/debtorList');
 
     // Close SideMenu
-    toggleSideMenu()
+    toggleSideMenu();
   }
 
   render() {
-    const { msg, open, toggleSideMenu } = this.props;
+    const { msg, open } = this.props;
 
     return (
       <div>

@@ -12,6 +12,7 @@ class Header extends Component {
     viewer: PropTypes.object,
     onSideMenuChange: PropTypes.func.isRequired,
     toggleSideMenu: PropTypes.func.isRequired,
+    isSideMenuOpen: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -25,13 +26,11 @@ class Header extends Component {
   }
 
   goToDebtors() {
-    browserHistory.push(`/debtorList`);
+    this.browserHistory.push('/debtorList');
   }
 
-  handleToggle = () => toggleSideMenu();
-
   render() {
-    const { msg, ui, toggleSideMenu } = this.props;
+    const { msg, isSideMenuOpen, toggleSideMenu } = this.props;
 
     return (
       <header>
@@ -40,7 +39,7 @@ class Header extends Component {
           className="app-bar"
           onLeftIconButtonTouchTap={toggleSideMenu}
         />
-      <NaviMenu open={ui.isSideMenuOpen}/>
+      <NaviMenu open={isSideMenuOpen} />
       </header>
     );
   }
@@ -49,5 +48,5 @@ class Header extends Component {
 
 export default connect(state => ({
   msg: state.intl.msg.app.links,
-  ui: state.ui
+  isSideMenuOpen: state.ui.isSideMenuOpen
 }), uiActions)(Header);

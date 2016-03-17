@@ -1,10 +1,7 @@
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import { dateFormat } from '../../common/intl/format';
-import { FormattedNumber, IntlMixin } from 'react-intl';
 import Card from 'material-ui/lib/card/card';
 import CardHeader from 'material-ui/lib/card/card-header';
 import CardActions from 'material-ui/lib/card/card-actions';
@@ -14,18 +11,19 @@ import HomeIcon from 'material-ui/lib/svg-icons/action/home';
 
 
 class ContactList extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate;
-
   static propTypes = {
     msg: PropTypes.object.isRequired,
+    addresses: PropTypes.object.isRequired,
+    debtorId: PropTypes.number.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-  }
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
-    const { msg } = this.props;
+    const { msg, addresses, debtorId } = this.props;
+    const addressList = addresses.filter(address =>
+      address.debtorId === debtorId
+    );
     const styles = {
       container: {
         display: 'flex',
@@ -44,26 +42,15 @@ class ContactList extends Component {
         />
       <CardActions style={styles.container}>
           <List style={styles.list}>
-            <ListItem
-              leftIcon={<HomeIcon />}
-              primaryText="(650) 555 - 1234"
-              secondaryText="Mobile"
-            />
-            <ListItem
-              insetChildren={true}
-              primaryText="(323) 555 - 6789"
-              secondaryText="Work"
-            />
-            <ListItem
-              insetChildren={true}
-              primaryText="(323) 555 - 6789"
-              secondaryText="Work"
-            />
-            <ListItem
-              insetChildren={true}
-              primaryText="(323) 555 - 6789"
-              secondaryText="Work"
-            />
+            {
+              addressList.map(address => (
+                <ListItem
+                  leftIcon={<HomeIcon />}
+                  primaryText={address.address}
+                  secondaryText={address.addressType}
+                />
+              ))
+            }
           </List>
         </CardActions>
       </Card>
@@ -73,4 +60,5 @@ class ContactList extends Component {
 
 export default connect(state => ({
   msg: state.intl.msg.contacts,
+  addresses: state.addresses.map,
 }))(ContactList);

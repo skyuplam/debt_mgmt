@@ -41,7 +41,7 @@ class App extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="page">
-          <Helmet/>
+          <Helmet />
           {/* Pass location to ensure header active links are updated. */}
           <Header location={location} />
           {children}
