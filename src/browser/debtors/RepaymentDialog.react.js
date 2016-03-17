@@ -40,17 +40,6 @@ class RepaymentDialog extends Component {
     this.onCheckPaidInFull = this.onCheckPaidInFull.bind(this);
   }
 
-  getInitialState() {
-    const { repayment } = this.props;
-    return {
-      repaymentDialog: {
-        repaymentAmount: repayment.principal,
-        repaidAt: new Date(),
-        paidInFull: true,
-      }
-    }
-  }
-
   isInvalidAmount() {
     const input = this.getValueOfAmount();
     if (input && input > 0) {
@@ -168,7 +157,7 @@ class RepaymentDialog extends Component {
         /><br />
         <TextField
           floatingLabelText={msg.expectedRepayAt}
-          value={dateFormat(new Date(repayment.expectedRepaidAt), ['zh'])}
+          value={repayment.expectedRepaidAt?dateFormat(new Date(repayment.expectedRepaidAt), ['zh']):''}
           disabled
         />
         <DatePicker

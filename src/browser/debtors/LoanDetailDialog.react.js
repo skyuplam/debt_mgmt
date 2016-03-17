@@ -88,7 +88,7 @@ class LoanDetailDialog extends Component {
               secondaryText={this._formatNumber(loan.amount)}/>
             <ListItem
               primaryText={msg.issuedAt}
-              secondaryText={dateFormat(new Date(loan.issuedAt), ['zh'])}/>
+              secondaryText={loan.issuedAt?dateFormat(new Date(loan.issuedAt), ['zh']):''}/>
             <ListItem
               primaryText={msg.terms}
               secondaryText={loan.terms}/>
@@ -97,10 +97,10 @@ class LoanDetailDialog extends Component {
               secondaryText={loan.repaidTerms}/>
             <ListItem
               primaryText={msg.transferredAt}
-              secondaryText={dateFormat(new Date(loan.transferredAt), ['zh'])}/>
+              secondaryText={loan.transferredAt?dateFormat(new Date(loan.transferredAt), ['zh']):''}/>
             <ListItem
               primaryText={msg.delinquentAt}
-              secondaryText={dateFormat(new Date(loan.delinquentAt), ['zh'])}
+              secondaryText={loan.delinquentAt?dateFormat(new Date(loan.delinquentAt), ['zh']):''}
               />
             <ListItem
               primaryText={msg.agency}

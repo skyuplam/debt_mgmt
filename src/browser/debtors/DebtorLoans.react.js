@@ -15,7 +15,7 @@ import NewRepaymentPlan from './NewRepaymentPlan.react';
 import { openNewRepyamnetPlanDialog, openLoanDetailDialog } from '../../common/ui/actions';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { fetchLoans } from '../../common/loans/actions';
-import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
+import { FormattedNumber, IntlMixin } from 'react-intl';
 import LoanDetailDialog from './LoanDetailDialog.react';
 import { dateFormat } from '../../common/intl/format';
 
@@ -29,7 +29,7 @@ class DebtorLoans extends Component {
     currentLoanId: PropTypes.number,
     openNewRepyamnetPlanDialog: PropTypes.func.isRequired,
     openLoanDetailDialog: PropTypes.func.isRequired,
-    debtorId: PropTypes.number,
+    debtorId: PropTypes.number.isRequired,
   };
 
   constructor(props, context) {
@@ -86,7 +86,7 @@ class DebtorLoans extends Component {
   }
 
   _formatDateCell(cellData) {
-    const theDate = dateFormat(new Date(cellData), ['zh']);
+    const theDate = cellData?dateFormat(new Date(cellData), ['zh']):'';
     return (
       <div>
         {theDate}

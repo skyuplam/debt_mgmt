@@ -12,13 +12,11 @@ class DebtorInfo extends Component {
 
   static propTypes = {
     msg: PropTypes.object.isRequired,
-    debtorId: PropTypes.string.isRequired,
-    debtors: PropTypes.object.isRequired
+    debtor: PropTypes.object.isRequired
   };
 
   render() {
-    const { msg, debtors, debtorId } = this.props;
-    const debtor = debtors.get(parseInt(debtorId));
+    const { msg, debtor } = this.props;
     return (
       <Card>
         <CardHeader
@@ -44,6 +42,5 @@ class DebtorInfo extends Component {
 
 
 export default connect(state => ({
-  msg: state.intl.msg.debtors,
-  debtors: state.debtors.map
+  msg: state.intl.msg.debtors
 }))(DebtorInfo);

@@ -49,9 +49,10 @@ class Repayments extends Component {
   }
 
   _cellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
+    const date = cellData ? new Date(cellData) : 0;
     return (
       <FormattedDate
-        value={cellData}
+        value={date}
       />
     );
   }
@@ -70,7 +71,7 @@ class Repayments extends Component {
     return (
       <div>
         <RaisedButton
-          label={this._checkIfPaid(rowData.repaymentStatusId)?dateFormat(new Date(rowData.repaidAt), ['zh']):msg.repay}
+          label={this._checkIfPaid(rowData.repaymentStatusId)?rowData.repaidAt?dateFormat(new Date(rowData.repaidAt), ['zh']):'':msg.repay}
           primary={true}
           fullWidth={true}
           onTouchEnd={e => this._handleRepayAction(rowData)}
@@ -190,6 +191,7 @@ class Repayments extends Component {
                     />
                     <FlexColumn
                       label={msg.repay}
+                      dataKey='id'
                       cellRenderer={this._handleRepaymentCellRender}
                       width={100}
                     />
