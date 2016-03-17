@@ -107,5 +107,45 @@
       "status": "Recalled",
       "description": ""
     }
+  ],
+  "contactNumberTypes": [
+    {
+      "type": "Mobile",
+      "description": ""
+    },
+    {
+      "type": "Home",
+      "description": ""
+    },
+    {
+      "type": "Office",
+      "description": ""
+    }
+  ],
+  "sources": [
+    {
+      "source": "Originator",
+      "description": ""
+    },
+    {
+      "status": "DCA",
+      "description": ""
+    },
+    {
+      "status": "Debtor",
+      "description": ""
+    },
+    {
+      "status": "Debtor relatives",
+      "description": ""
+    },
+    {
+      "status": "Debtor Friends",
+      "description": ""
+    },
+    {
+      "status": "Public Source",
+      "description": ""
+    }
   ]
 }

@@ -13,6 +13,7 @@ import debtors from '../debtors/reducer';
 import loans from '../loans/reducer';
 import repaymentPlans from '../repaymentPlans/reducer';
 import repayments from '../repayments/reducer';
+import contactNumbers from '../contactNumbers/reducer';
 
 const appReducer = combineReducers({
   auth,
@@ -26,6 +27,7 @@ const appReducer = combineReducers({
   loans,
   repaymentPlans,
   repayments,
+  contactNumbers,
   ui,
   users
 });

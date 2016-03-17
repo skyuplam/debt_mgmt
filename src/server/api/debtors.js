@@ -335,4 +335,26 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId
       res.status(201).send({ repayment }).end());
   });
 
+router.route('/:debtorId/contactNumbers')
+  .get((req, res) => {
+    const debtorId = req.params.debtorId;
+    models.sequelize.query(`
+      SELECT
+        cn.*,
+        cnt.type contactNumberType,
+        s.source,
+        pcn.verifiedAt,
+        pcn.verifiedBy,
+        pcn.personId debtorId
+      FROM contactNumber cn
+      LEFT JOIN contactNumberType cnt ON cnt.id = cn.contactNumberTypeId
+      LEFT JOIN personContactNumber pcn ON pcn.contactNumberId = cn.id
+      LEFT JOIN source s ON s.id = pcn.sourceId
+      WHERE pcn.personid = ${debtorId}
+    `, { type: models.sequelize.QueryTypes.SELECT }
+    ).then(contactNumbers =>
+      res.status(200).send({ contactNumbers }).end()
+    );
+  });
+
 export default router;

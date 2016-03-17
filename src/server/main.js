@@ -19,8 +19,7 @@ app.use(errorHandler);
 
 const { port, isProduction } = config;
 
-models.sequelize.sync({force: !isProduction}).then(() => {
-
+models.sequelize.sync({ force: !isProduction }).then(() => {
   const { debtors, companies } = data;
   const {
     identityTypes,
@@ -29,11 +28,13 @@ models.sequelize.sync({force: !isProduction}).then(() => {
     loanStatuses,
     repaymentPlanStatuses,
     placementStatuses,
+    contactNumberTypes,
+    sources,
   } = typesAndStatus;
 
-  models.sequelize.transaction(t2 => {
+  models.sequelize.transaction(t2 =>
     // Status and Types
-    return Promise.all([
+    Promise.all([
       identityTypes.map(idType => models.identityType.create(idType, {
         transaction: t2
       })),
@@ -58,16 +59,26 @@ models.sequelize.sync({force: !isProduction}).then(() => {
           transaction: t2
         })
       ),
-    ]);
-  }).then(() =>
+      contactNumberTypes.map(contactNumberType =>
+        models.contactNumberType.create(contactNumberType, {
+          transaction: t2
+        })
+      ),
+      sources.map(source =>
+        models.source.create(source, {
+          transaction: t2
+        })
+      ),
+    ])
+  ).then(() =>
     // Test Data
-    models.sequelize.transaction(t3 => {
-      return Promise.all(companies.map(company =>
+    models.sequelize.transaction(t3 =>
+      Promise.all(companies.map(company =>
         models.company.create(company,
           {
             transaction: t3
-          }).then(company => {
-            return models.placement.create({
+          }).then(company =>
+            models.placement.create({
               placementCode: `${company.code}-201603`,
               servicingFeeRate: 0.3,
               placedAt: new Date(2016, 3, 11),
@@ -78,10 +89,10 @@ models.sequelize.sync({force: !isProduction}).then(() => {
               placement.setCompany(company, {
                 transaction: t3
               })
-            );
-          })
-      ));
-    })
+            )
+          )
+      ))
+    )
   ).then(() =>
     // Load Test Data
     models.sequelize.transaction(t1 =>
@@ -89,13 +100,13 @@ models.sequelize.sync({force: !isProduction}).then(() => {
         transaction: t1
       }).then(identityType =>
         Promise.all(
-          debtors.map(debtor => {
-            return models.identity.create({
+          debtors.map(debtor =>
+            models.identity.create({
               idNumber: debtor['身份证号']
             }, {
               transaction: t1
-            }).then(identity => {
-              return identity.setIdentityType(identityType, {
+            }).then(identity =>
+              identity.setIdentityType(identityType, {
                 transaction: t1
               }).then(identity =>
                 models.person.create({
@@ -109,11 +120,11 @@ models.sequelize.sync({force: !isProduction}).then(() => {
                   });
                   return person;
                 })
-              );
-            }).then(person =>
+              )
+            ).then(person =>
               models.loan.create({
                 amount: parseFloat(debtor['原贷款本金']),
-                terms: parseInt(debtor['贷款总期数']),
+                terms: parseInt(debtor['贷款总期数'], 10),
                 issuedAt: new Date(debtor['贷款日期']),
                 transferredAt: new Date(debtor['转让日期']),
                 collectableMgmtFee: parseFloat(debtor['管理费应收']),
@@ -122,7 +133,7 @@ models.sequelize.sync({force: !isProduction}).then(() => {
                 collectablePenaltyFee: parseFloat(debtor['违约金应收']),
                 collectablePrincipal: parseFloat(debtor['本金应收']),
                 collectableInterest: parseFloat(debtor['利息应收']),
-                repaidTerms: parseInt(debtor['已还期数']),
+                repaidTerms: parseInt(debtor['已还期数'], 10),
                 originatedAgreementNo: debtor['贷款合同号'],
                 originatedLoanProcessingBranch: debtor['分行']
               }, {
@@ -132,40 +143,74 @@ models.sequelize.sync({force: !isProduction}).then(() => {
                   transaction: t1
                 });
                 return loan;
-              }).then(loan => {
-                return models.placement.findById(loan.id%2?1:2, {
+              }).then(loan =>
+                models.placement.findById(loan.id % 2 ? 1 : 2, {
                   transaction: t1
-                }).then(placement => {
-                  return models.placementStatus.find({
+                }).then(placement =>
+                  models.loanPlacement.create({
+                    refCode: `${placement.placementCode}-${loan.id}`,
+                  }, {
+                    transaction: t1
+                  }).then(loanPlacement =>
+                    loanPlacement.setLoan(loan, {
+                      transaction: t1
+                    }).then(loanPlacement =>
+                      loanPlacement.setPlacement(placement, {
+                        transaction: t1
+                      })
+                    )
+                  )
+                )
+              ).then(() =>
+                models.contactNumber.create({
+                  contactNumber: `1387890765${person.id}`
+                }, {
+                  transaction: t1
+                }).then(contactNumber =>
+                  models.contactNumberType.findOne({
                     where: {
-                      status: 'Placed'
+                      type: 'Mobile'
                     }
                   }, {
                     transaction: t1
-                  }).then(placementStatus =>
-                    models.loanPlacement.create({
-                      refCode: `${placement.placementCode}-${loan.id}`,
-                    }, {
+                  }).then(contactNumberType =>
+                    contactNumber.setContactNumberType(contactNumberType, {
                       transaction: t1
-                    }).then(loanPlacement =>
-                      loanPlacement.setLoan(loan, {
+                    })
+                  )
+                ).then(contactNumber =>
+                  models.personContactNumber.create({
+                  }, {
+                    transaction: t1
+                  }).then(personContactNumber =>
+                    personContactNumber.setContactNumber(contactNumber, {
+                      transaction: t1
+                    }).then(personContactNumber =>
+                      personContactNumber.setPerson(person, {
                         transaction: t1
-                      }).then(loanPlacement =>
-                        loanPlacement.setPlacement(placement, {
-                          transaction: t1
-                      }))
+                      }).then(personContactNumber =>
+                        models.source.findOne({
+                          where: {
+                            source: 'Originator'
+                          }
+                        }).then(source =>
+                          personContactNumber.setSource(source, {
+                            transaction: t1
+                          })
+                        )
+                      )
                     )
                   )
-                });
-              })
-            );
-          })
+                )
+              )
+            )
+          )
         )
       )
     )
   ).catch(error => console.log(error));
 
-  var server = app.listen(port, () => {
+  const server = app.listen(port, () => {
     console.log('Server started at port %d', port);
   });
 

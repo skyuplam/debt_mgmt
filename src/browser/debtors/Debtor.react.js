@@ -9,6 +9,7 @@ import ContactList from './ContactList.react';
 import { fetchDebtor } from '../../common/debtors/actions';
 import { fetchLoans } from '../../common/loans/actions';
 import { fetchRepamentPlans } from '../../common/repaymentPlans/actions';
+import { fetchContactNumbers } from '../../common/contactNumbers/actions';
 import fetch from '../../common/components/fetch';
 
 class Debtor extends Component {
@@ -17,20 +18,21 @@ class Debtor extends Component {
     msg: PropTypes.object.isRequired,
     debtors: PropTypes.object.isRequired,
     repaymentPlans: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
   };
 
   render() {
     const { msg, params, debtors, repaymentPlans } = this.props;
-    const debtorId = parseInt(params.id);
+    const debtorId = parseInt(params.id, 10);
     const debtor = debtors.get(debtorId);
-    const newRepaymentPlans = repaymentPlans.filter(repaymentPlan => {
-      return repaymentPlan.debtorId == debtorId;
-    });
+    const newRepaymentPlans = repaymentPlans.filter(repaymentPlan =>
+      repaymentPlan.debtorId === debtorId
+    );
     return (
       <div className="debtor-detail">
         <Helmet title={msg.debtorDetail} />
-        <DebtorInfo debtor={debtor}/>
-        <DebtorLoans debtorId={debtorId}/>
+        <DebtorInfo debtor={debtor} />
+        <DebtorLoans debtorId={debtorId} />
         <Repayments
           debtorId={debtorId}
           repaymentPlans={newRepaymentPlans}
@@ -42,7 +44,12 @@ class Debtor extends Component {
 
 }
 
-Debtor = fetch(fetchDebtor, fetchLoans, fetchRepamentPlans)(Debtor);
+Debtor = fetch(
+  fetchDebtor,
+  fetchLoans,
+  fetchRepamentPlans,
+  fetchContactNumbers,
+)(Debtor);
 
 export default connect(state => ({
   msg: state.intl.msg.debtors,

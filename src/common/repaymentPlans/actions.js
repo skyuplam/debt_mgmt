@@ -13,12 +13,12 @@ const API_VERSION = '/api/v1';
 
 export function newRepaymentPlan(repaymentPlan, debtorId) {
   return ({ fetch }) => {
-    async function getPromise(fields) {
+    async function getPromise() {
       try {
         const response = await fetch(`${API_VERSION}/debtors/${debtorId}/repaymentPlans`, {
           method: 'post',
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(repaymentPlan)
@@ -41,15 +41,17 @@ export function newRepaymentPlan(repaymentPlan, debtorId) {
 
 export function fetchRepamentPlans(locParams) {
   return ({ fetch }) => {
-    async function getPromise(fields) {
+    async function getPromise() {
       try {
-        const response = await fetch(`${API_VERSION}/debtors/${locParams.params.id}/repaymentPlans`, {
-          method: 'get',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        });
+        const response = await fetch(
+          `${API_VERSION}/debtors/${locParams.params.id}/repaymentPlans`,
+          {
+            method: 'get',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            }
+          });
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
@@ -67,7 +69,7 @@ export function fetchRepamentPlans(locParams) {
 
 
 export function addRepayments(repaymentPlan) {
-  const terms = parseInt(repaymentPlan.terms);
+  const terms = parseInt(repaymentPlan.terms, 10);
   const amount = parseFloat(repaymentPlan.amount);
   const repayDate = repaymentPlan.repayDate;
 
@@ -75,20 +77,20 @@ export function addRepayments(repaymentPlan) {
     if (terms === 1) {
       return {
         principal: amount,
-        term: term+1,
-        expectedRepaidAt: repayDate?new Date(repayDate): new Date(),
+        term: term + 1,
+        expectedRepaidAt: repayDate ? new Date(repayDate) : new Date(),
       };
-    } else {
-      const unitAmt = Math.round(amount/terms/100)*100;
-      const repayAt = repayDate?new Date(repayDate): new Date();
-      repayAt.setMonth(repayAt.getMonth()+term);
-      const repayment = {
-        principal: term === terms-1?amount - unitAmt*term:unitAmt,
-        term: term+1,
-        expectedRepaidAt: repayAt,
-      };
-      return repayment;
     }
+
+    const unitAmt = Math.round(amount / terms / 100) * 100;
+    const repayAt = repayDate ? new Date(repayDate) : new Date();
+    repayAt.setMonth(repayAt.getMonth() + term);
+    const repayment = {
+      principal: term === terms - 1 ? amount - unitAmt * term : unitAmt,
+      term: term + 1,
+      expectedRepaidAt: repayAt,
+    };
+    return repayment;
   }).toJS();
 
   return {

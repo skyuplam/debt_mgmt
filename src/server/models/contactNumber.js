@@ -1,6 +1,6 @@
 export default function (sequelize, DataTypes) {
   const ContactNumber = sequelize.define('contactNumber', {
-    contackNumber: {
+    contactNumber: {
       type: DataTypes.STRING,
     },
     countryCode: {
