@@ -1,32 +1,29 @@
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import { dateFormat } from '../../common/intl/format';
-import { FormattedNumber, IntlMixin } from 'react-intl';
 import Card from 'material-ui/lib/card/card';
 import CardHeader from 'material-ui/lib/card/card-header';
 import CardActions from 'material-ui/lib/card/card-actions';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import CommunicationCall from 'material-ui/lib/svg-icons/communication/call';
-import CommunicationChatBubble from 'material-ui/lib/svg-icons/communication/chat-bubble';
 
 
 class ContactList extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate;
-
   static propTypes = {
     msg: PropTypes.object.isRequired,
+    debtorId: PropTypes.number.isRequired,
+    contactNumbers: PropTypes.object.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-  }
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
-    const { msg } = this.props;
+    const { msg, contactNumbers, debtorId } = this.props;
+    const theContacts = contactNumbers ? contactNumbers.filter(contactNumber =>
+      contactNumber.debtorId === debtorId
+    ) : [];
     const styles = {
       container: {
         display: 'flex',
@@ -45,27 +42,15 @@ class ContactList extends Component {
         />
       <CardActions style={styles.container}>
           <List style={styles.list}>
-            <ListItem
-              leftIcon={<CommunicationCall />}
-              primaryText="(650) 555 - 1234"
-              secondaryText="Mobile"
-            />
-            <ListItem
-              insetChildren={true}
-              primaryText="(323) 555 - 6789"
-              secondaryText="Work"
-            />
-            <ListItem
-              insetChildren={true}
-              primaryText="(323) 555 - 6789"
-              secondaryText="Work"
-            />
-            <ListItem
-              insetChildren={true}
-              rightIcon={<CommunicationChatBubble />}
-              primaryText="(323) 555 - 6789"
-              secondaryText="Work"
-            />
+            {
+              theContacts.map(contact => (
+                <ListItem
+                  leftIcon={<CommunicationCall />}
+                  primaryText={contact.contactNumber}
+                  secondaryText={contact.contactNumberType}
+                />
+              ))
+            }
           </List>
         </CardActions>
       </Card>
@@ -75,4 +60,5 @@ class ContactList extends Component {
 
 export default connect(state => ({
   msg: state.intl.msg.contacts,
+  contactNumbers: state.contactNumbers.map,
 }))(ContactList);

@@ -37,7 +37,7 @@ class Debtor extends Component {
           debtorId={debtorId}
           repaymentPlans={newRepaymentPlans}
         />
-      <ContactList />
+      <ContactList debtorId={debtorId} />
       </div>
     );
   }
