@@ -1,6 +1,4 @@
-import Debtor from '../../common/debtors/debtor';
 import express from 'express';
-import shortid from 'shortid';
 import models from '../models';
 
 
@@ -9,11 +7,13 @@ const router = express.Router();
 function getDebtors(criteria) {
   let condition = '';
   if (criteria) {
-    const matchIdCard = criteria.idCard?`i.idNumber = '${criteria.idCard}'`:'';
-    const matchName = criteria.name?`p.name = '${criteria.name}'`:'';
-    const matchOriAgmentNo = criteria.originatedAgreementNo?`l.originatedAgreementNo = '${criteria.originatedAgreementNo}'`:'';
+    const matchIdCard = criteria.idCard ? `i.idNumber = '${criteria.idCard}'` : '';
+    const matchName = criteria.name ? `p.name = '${criteria.name}'` : '';
+    const matchOriAgmentNo = criteria.originatedAgreementNo ?
+     `l.originatedAgreementNo = '${criteria.originatedAgreementNo}'` :
+     '';
     const criteriaStr = [matchIdCard, matchName, matchOriAgmentNo].filter(a => a).join(' OR ');
-    condition = criteriaStr?`WHERE ${criteriaStr}`:'';
+    condition = criteriaStr ? `WHERE ${criteriaStr}` : '';
   }
 
   return models.sequelize.query(`
@@ -67,7 +67,7 @@ router.route('/')
     getDebtors().then(people => {
       // console.log(`Debtors Count:${people.length}`);
       const debtors = people;
-      return res.status(200).send({debtors}).end();
+      return res.status(200).send({ debtors }).end();
     });
   });
 
@@ -76,18 +76,17 @@ router.route('/')
     const { idCard, originatedAgreementNo, name } = req.body;
 
     getDebtors({ idCard, originatedAgreementNo, name }).then(people => {
-        console.log(`Debtors Count:${people.length}`);
-        const debtors = people;
-        return res.status(200).send({debtors}).end();
-      });
+      const debtors = people;
+      return res.status(200).send({ debtors }).end();
+    });
   });
 
 router.route('/:debtorId')
   .get((req, res) => {
     const debtorId = req.params.debtorId;
-    getDebtor(debtorId).then(debtors => {
-      return res.status(200).send({debtors}).end();
-    });
+    getDebtor(debtorId).then(debtors =>
+      res.status(200).send({ debtors }).end()
+    );
   });
 
 router.route('/:debtorId/loans')
@@ -110,9 +109,7 @@ router.route('/:debtorId/loans')
       LEFT JOIN company c ON c.id = p.companyId
       WHERE dl.debtorId = ${debtorId}
       `, { type: models.sequelize.QueryTypes.SELECT }
-    ).then(loans => {
-      return res.status(200).send({loans}).end();
-    });
+    ).then(loans => res.status(200).send({ loans }).end());
   });
 
 router.route('/:debtorId/repaymentPlans')
@@ -130,10 +127,10 @@ router.route('/:debtorId/repaymentPlans')
     `, { type: models.sequelize.QueryTypes.SELECT }
   ).then(repaymentPlans => {
     repaymentPlans.map(rp => {
-      rp.debtorId = parseInt(debtorId);
+      rp.debtorId = parseInt(debtorId, 10);
       return rp;
-    })
-    return res.status(200).send({repaymentPlans}).end()
+    });
+    return res.status(200).send({ repaymentPlans }).end();
   });
   });
 
@@ -148,16 +145,15 @@ router.route('/:debtorId/repaymentPlans')
       repayments
     } = req.body;
 
-    return models.sequelize.transaction(t => {
-      return models.repaymentPlan.findAll({
+    return models.sequelize.transaction(t =>
+      models.repaymentPlan.findAll({
         where: {
-          loanId: loanId
+          loanId
         },
         transaction: t
       }).then(repaymentPlans => Promise.all(
         repaymentPlans.map(repaymentPlan => {
-          console.log(`GET RepaymentPlans: ${repaymentPlan.repaymentPlanStatusId}`)
-          if ([1, 2, 4].indexOf(repaymentPlan.repaymentPlanStatusId) != -1) {
+          if ([1, 2, 4].indexOf(repaymentPlan.repaymentPlanStatusId) !== -1) {
             return models.repaymentPlanStatus.find({
               where: {
                 status: 'Canceled'
@@ -169,15 +165,15 @@ router.route('/:debtorId/repaymentPlans')
           }
           return repaymentPlan;
         })
-      )).then(repaymentPlans => {
-        return models.repaymentPlan.create({
+      )).then(() =>
+        models.repaymentPlan.create({
           principal: repayAmount,
-          terms: terms,
-          startedAt: startedAt
-        }, { transaction: t }).then(repaymentPlan => {
-          return models.loan.findById(loanId).then(loan => {
+          terms,
+          startedAt
+        }, { transaction: t }).then(repaymentPlan =>
+          models.loan.findById(loanId).then(loan =>
             // Link repaymentplan with loan
-            return models.loanStatus.find({
+            models.loanStatus.find({
               where: {
                 status: 'In Repayment'
               }
@@ -186,10 +182,10 @@ router.route('/:debtorId/repaymentPlans')
             ).then(loan =>
               repaymentPlan.setLoan(loan, { transaction: t })
             )
-          }).then(repaymentPlan => {
-            return Promise.all(
-              repayments.map(repayment => {
-                return models.repayment.create(
+          ).then(repaymentPlan =>
+            Promise.all(
+              repayments.map(repayment =>
+                models.repayment.create(
                   repayment,
                   { transaction: t }
                 ).then(newRpmt => {
@@ -198,25 +194,25 @@ router.route('/:debtorId/repaymentPlans')
                     transaction: t
                   });
                   return newRpmt;
-                });
-              })
-            ).then(newRepayments => {
+                })
+              )
+            ).then(() =>
               // Created new repayments
-              return repaymentPlan;
-            });
-          });
-        });
-      })
-    }).then(repaymentPlan => {
+              repaymentPlan
+            )
+          )
+        )
+      )
+    ).then(repaymentPlan => {
       const rp = repaymentPlan.toJSON();
-      rp.debtorId = parseInt(debtorId);
-      return res.status(201).send({repaymentPlan}).end();
+      rp.debtorId = parseInt(debtorId, 10);
+      return res.status(201).send({ repaymentPlan }).end();
     });
   });
 
 router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
   .get((req, res) => {
-    const { repaymentPlanId, debtorId } = req.params;
+    const { repaymentPlanId } = req.params;
     models.sequelize.query(`
       SELECT
        r.*,
@@ -230,7 +226,7 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
       WHERE r.repaymentPlanId = ${repaymentPlanId}
     `, { type: models.sequelize.QueryTypes.SELECT }
   ).then(repayments =>
-      res.status(200).send({repayments}).end()
+      res.status(200).send({ repayments }).end()
     );
   });
 
@@ -239,8 +235,8 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId
     const { repaymentId, repaymentPlanId } = req.params;
     const { amount, repaidAt, paidInFull } = req.body;
 
-    return models.repayment.findById(repaymentId).then(repayment => {
-      return models.sequelize.transaction(t => {
+    return models.repayment.findById(repaymentId).then(repayment =>
+      models.sequelize.transaction(t => {
         // Repayment Status
         const expected = new Date(repayment.expectedRepaidAt);
         const actual = new Date(repaidAt);
@@ -294,18 +290,18 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId
               }
               rpPlan.repaidAmount += amount;
               return rpPlan.save({ transaction: t });
-            }).then(rpPlan => {
-              return models.loan.findById(rpPlan.loanId).then(loan => {
+            }).then(rpPlan =>
+              models.loan.findById(rpPlan.loanId).then(loan => {
                 // Update loan
-                const totalAmount = loan.collectablePrincipal+
-                  loan.collectableInterest+
-                  loan.collectableMgmtFee+
-                  loan.collectableHandlingFee+
-                  loan.collectableLateFee+
+                const totalAmount = loan.collectablePrincipal +
+                  loan.collectableInterest +
+                  loan.collectableMgmtFee +
+                  loan.collectableHandlingFee +
+                  loan.collectableLateFee +
                   loan.collectablePenaltyFee;
                 let loanStatus;
                 // Repayment Plan Status Code 5: Completed
-                const isCompleted = rpPlan.repaymentPlanStatusId == 5;
+                const isCompleted = rpPlan.repaymentPlanStatusId === 5;
                 if (isCompleted) {
                   if (rpPlan.repaidAmount >= totalAmount) {
                     loanStatus = 'Paid in Full';
@@ -329,14 +325,14 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId
                     loan.completedAt = new Date(repaidAt);
                   }
                   return loan.save({ transaction: t });
-                }).then(loan => repayment)
+                }).then(() => repayment);
               })
-            })
+            );
           })
         );
-      });
-    }).then(repayment =>
-      res.status(201).send({repayment}).end());
+      })
+    ).then(repayment =>
+      res.status(201).send({ repayment }).end());
   });
 
 export default router;
