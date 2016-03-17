@@ -21,6 +21,8 @@ export default function (sequelize, DataTypes) {
           as: 'Loans',
           foreignKey: 'debtorId',
         });
+        Person.hasMany(models.personContactNumber);
+        Person.hasMany(models.personAddress);
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name

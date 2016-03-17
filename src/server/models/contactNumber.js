@@ -1,5 +1,5 @@
 export default function (sequelize, DataTypes) {
-  const City = sequelize.define('contactNumber', {
+  const ContactNumber = sequelize.define('contactNumber', {
     contackNumber: {
       type: DataTypes.STRING,
     },
@@ -11,15 +11,16 @@ export default function (sequelize, DataTypes) {
     },
     ext: {
       type: DataTypes.STRING,
-    }
+    },
   }, {
     classMethods: {
       associate: models => {
-        City.belongsTo(models.province);
+        ContactNumber.belongsTo(models.contactNumberType);
+        ContactNumber.hasMany(models.personContactNumber);
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
   });
 
-  return City;
+  return ContactNumber;
 }

@@ -38,3 +38,6 @@ webpack-assets.json
 
 # firebase
 firebase/rules.json
+
+# ternjs
+.tern-project
