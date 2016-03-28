@@ -5,6 +5,7 @@ const ContactNumber = Record({
   contactNumber: '',
   countryCode: '',
   contactNumberType: '',
+  contactNumberTypeId: '',
   areaCode: '',
   ext: '',
   verifiedAt: null,

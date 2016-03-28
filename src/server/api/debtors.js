@@ -357,6 +357,79 @@ router.route('/:debtorId/contactNumbers')
     );
   });
 
+router.route('/:debtorId/contactNumbers')
+  .post((req, res) => {
+    const debtorId = req.params.debtorId;
+    const {
+      contactNumber,
+      contactNumberType,
+      countryCode,
+      areaCode,
+      ext,
+      source
+    } = req.body;
+    return models.sequelize.transaction(t =>
+      models.person.findById(debtorId, {
+        transaction: t
+      }).then(debtor =>
+        models.contactNumber.findOrCreate({
+          where: {
+            contactNumber,
+            countryCode,
+            areaCode,
+            ext
+          },
+          default: {
+            contactNumber,
+            countryCode,
+            areaCode,
+            ext
+          },
+          transaction: t
+        }).all().then(([theContactNumber, created]) => {
+          if (created) {
+            return models.contactNumberType.findById(contactNumberType, {
+              transaction: t
+            }).then(theContactNumberType =>
+              theContactNumber.setContactNumberType(theContactNumberType, {
+                transaction: t
+              })
+            );
+          }
+          return theContactNumber;
+        }).then(theContactNumber =>
+          models.personContactNumber.create({}, {
+            transaction: t
+          }).then(personContactNumber =>
+            models.source.findById(source, {
+              transaction: t
+            }).then(theSource =>
+              personContactNumber.setSource(theSource, {
+                transaction: t
+              }).then(personContactNumber =>
+                personContactNumber.setPerson(debtor, {
+                  transaction: t
+                })
+              ).then(personContactNumber =>
+                personContactNumber.setContactNumber(theContactNumber, {
+                  transaction: t
+                })
+              ).then(personContactNumber => {
+                const cn = theContactNumber.toJSON();
+                cn.source = theSource.source;
+                cn.sourceId = personContactNumber.sourceId;
+                cn.debtorId = personContactNumber.personId;
+                return cn;
+              })
+            )
+          )
+        )
+      )
+    ).then(contactNumber =>
+      res.status(201).send({ contactNumber }).end()
+    );
+  });
+
 
 router.route('/:debtorId/addresses')
   .get((req, res) => {

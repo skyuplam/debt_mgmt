@@ -18,8 +18,7 @@ class ContactList extends Component {
     const styles = {
       gridList: {
         width: '100%',
-        height: 300,
-        overflowY: 'auto',
+        height: '100%',
       },
     };
     return (

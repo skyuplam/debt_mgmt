@@ -25,6 +25,12 @@ export default function contactNumbersReducer(state = initialState, action) {
       return state.update('map', map => map.merge(contactNumbers));
     }
 
+
+    case actions.NEW_CONTACT_NUMBER_SUCCESS: {
+      const contactNumber = new ContactNumber(action.payload.contactNumber);
+      return state.update('map', map => map.merge(Map().set(contactNumber.id, contactNumber)));
+    }
+
   }
 
   return state;

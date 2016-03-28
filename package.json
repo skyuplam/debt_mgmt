@@ -76,7 +76,7 @@
     "less": "^2.5.1",
     "less-loader": "^2.0.0",
     "make-error": "^1.0.4",
-    "material-ui": "^0.15.0-alpha.1",
+    "material-ui": "^0.15.0-alpha.2",
     "nconf": "^0.8.1",
     "node-sass": "^3.1.2",
     "nodemon": "^1.8.1",

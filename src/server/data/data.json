@@ -128,23 +128,23 @@
       "description": ""
     },
     {
-      "status": "DCA",
+      "source": "DCA",
       "description": ""
     },
     {
-      "status": "Debtor",
+      "source": "Debtor",
       "description": ""
     },
     {
-      "status": "Debtor relatives",
+      "source": "Debtor relatives",
       "description": ""
     },
     {
-      "status": "Debtor Friends",
+      "source": "Debtor Friends",
       "description": ""
     },
     {
-      "status": "Public Source",
+      "source": "Public Source",
       "description": ""
     }
   ]

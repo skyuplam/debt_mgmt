@@ -8,6 +8,8 @@ export const OPEN_REPAYMENT_DIALOG = 'OPEN_REPAYMENT_DIALOG';
 export const CLOSE_REPAYMENT_DIALOG = 'CLOSE_REPAYMENT_DIALOG';
 export const OPEN_LOAN_DETAIL_DIALOG = 'OPEN_LOAN_DETAIL_DIALOG';
 export const CLOSE_LOAN_DETAIL_DIALOG = 'CLOSE_LOAN_DETAIL_DIALOG';
+export const OPEN_ADD_CONTACTNUMBER_DIALOG = 'OPEN_ADD_CONTACTNUMBER_DIALOG';
+export const CLOSE_ADD_CONTACTNUMBER_DIALOG = 'CLOSE_ADD_CONTACTNUMBER_DIALOG';
 
 export function onSideMenuChange(isOpen) {
   return {
@@ -70,5 +72,18 @@ export function openLoanDetailDialog(loan) {
 export function closeLoanDetailDialog() {
   return {
     type: CLOSE_LOAN_DETAIL_DIALOG,
+  };
+}
+
+
+export function openAddContactNumberDialog() {
+  return {
+    type: OPEN_ADD_CONTACTNUMBER_DIALOG,
+  };
+}
+
+export function closeAddContactNumberDialog() {
+  return {
+    type: CLOSE_ADD_CONTACTNUMBER_DIALOG,
   };
 }

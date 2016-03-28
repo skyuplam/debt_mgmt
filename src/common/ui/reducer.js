@@ -12,6 +12,8 @@ const InitialState = Record({
   currentRepayment: Repayment(),
   currentLoan: Loan(),
   isLoanDetailDialogOpen: false,
+  isAddContactNumberDialogOpen: false,
+  isAddAddressDialogOpen: false,
 });
 const initialState = new InitialState;
 
@@ -29,39 +31,47 @@ export default function uiReducer(state = initialState, action) {
       return state.update('isSideMenuOpen', isSideMenuOpen => !isSideMenuOpen);
 
     case actions.OPEN_CONFIRM_DIALOG: {
-      return state.update('isConfirmDialogOpen', isConfirmDialogOpen => true);
+      return state.update('isConfirmDialogOpen', () => true);
     }
 
     case actions.CLOSE_CONFIRM_DIALOG: {
-      return state.update('isConfirmDialogOpen', isConfirmDialogOpen => false);
+      return state.update('isConfirmDialogOpen', () => false);
     }
 
     case actions.OPEN_NEW_REPAYMENT_PLAN_DIALOG: {
       const loanId = action.payload.loanId;
-      state = state.update('currentLoanId', currentLoanId => loanId);
-      return state.update('isNewRepaymentPlan', isNewRepaymentPlan => true);
+      state = state.update('currentLoanId', () => loanId);
+      return state.update('isNewRepaymentPlan', () => true);
     }
 
     case actions.CLOSE_NEW_REPAYMENT_PLAN_DIALOG: {
-      return state.update('isNewRepaymentPlan', isNewRepaymentPlan => false);
+      return state.update('isNewRepaymentPlan', () => false);
     }
 
     case actions.OPEN_REPAYMENT_DIALOG: {
-      state = state.update('currentRepayment', currentRepayment => new Repayment(action.payload));
-      return state.update('isRepaymentDialogOpen', isRepaymentDialogOpen => true);
+      state = state.update('currentRepayment', () => new Repayment(action.payload));
+      return state.update('isRepaymentDialogOpen', () => true);
     }
 
     case actions.CLOSE_REPAYMENT_DIALOG: {
-      return state.update('isRepaymentDialogOpen', isRepaymentDialogOpen => false);
+      return state.update('isRepaymentDialogOpen', () => false);
     }
 
     case actions.OPEN_LOAN_DETAIL_DIALOG: {
-      state = state.update('currentLoan', currentRepayment => new Loan(action.payload));
-      return state.update('isLoanDetailDialogOpen', isLoanDetailDialogOpen => true);
+      state = state.update('currentLoan', () => new Loan(action.payload));
+      return state.update('isLoanDetailDialogOpen', () => true);
     }
 
     case actions.CLOSE_LOAN_DETAIL_DIALOG: {
-      return state.update('isLoanDetailDialogOpen', isLoanDetailDialogOpen => false);
+      return state.update('isLoanDetailDialogOpen', () => false);
+    }
+
+    case actions.OPEN_ADD_CONTACTNUMBER_DIALOG: {
+      return state.update('isAddContactNumberDialogOpen', () => true);
+    }
+
+    case actions.CLOSE_ADD_CONTACTNUMBER_DIALOG: {
+      return state.update('isAddContactNumberDialogOpen', () => false);
     }
 
   }
