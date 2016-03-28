@@ -25,6 +25,11 @@ export default function addressesReducer(state = initialState, action) {
       return state.update('map', map => map.merge(addresses));
     }
 
+    case actions.NEW_ADDRESS_SUCCESS: {
+      const address = new Address(action.payload.address);
+      return state.update('map', map => map.merge(Map().set(address.id, address)));
+    }
+
   }
 
   return state;
