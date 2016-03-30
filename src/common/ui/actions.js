@@ -12,6 +12,8 @@ export const OPEN_ADD_CONTACTNUMBER_DIALOG = 'OPEN_ADD_CONTACTNUMBER_DIALOG';
 export const CLOSE_ADD_CONTACTNUMBER_DIALOG = 'CLOSE_ADD_CONTACTNUMBER_DIALOG';
 export const OPEN_ADD_ADDRESS_DIALOG = 'OPEN_ADD_ADDRESS_DIALOG';
 export const CLOSE_ADD_ADDRESS_DIALOG = 'CLOSE_ADD_ADDRESS_DIALOG';
+export const OPEN_ADD_NOTE_DIALOG = 'OPEN_ADD_NOTE_DIALOG';
+export const CLOSE_ADD_NOTE_DIALOG = 'CLOSE_ADD_NOTE_DIALOG';
 
 export function onSideMenuChange(isOpen) {
   return {
@@ -100,5 +102,18 @@ export function openAddAddressDialog() {
 export function closeAddAddressDialog() {
   return {
     type: CLOSE_ADD_ADDRESS_DIALOG,
+  };
+}
+
+
+export function openAddNoteDialog() {
+  return {
+    type: OPEN_ADD_NOTE_DIALOG,
+  };
+}
+
+export function closeAddNoteDialog() {
+  return {
+    type: CLOSE_ADD_NOTE_DIALOG,
   };
 }

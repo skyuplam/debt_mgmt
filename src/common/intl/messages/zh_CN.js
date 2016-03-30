@@ -94,7 +94,14 @@ export default {
     name: '姓名',
     originatedAgreementNo: '原贷款合同号',
     search: '搜索',
-    debtorDetail: '借款人详细'
+    debtorDetail: '借款人详细',
+    note: '备注',
+  },
+  notes: {
+    newNote: '新增备注',
+    note: '备注',
+    add: '新增',
+    cancel: '取消',
   },
   loans: {
     headerTitle: '贷款列表',

@@ -8,6 +8,7 @@ import Repayments from './Repayments.react';
 import ContactList from './ContactList.react';
 import { fetchDebtor } from '../../common/debtors/actions';
 import { fetchLoans } from '../../common/loans/actions';
+import { fetchNotes } from '../../common/notes/actions';
 import { fetchRepamentPlans } from '../../common/repaymentPlans/actions';
 import { fetchContactNumbers } from '../../common/contactNumbers/actions';
 import { fetchAddresses } from '../../common/addresses/actions';
@@ -38,7 +39,7 @@ class Debtor extends Component {
           debtorId={debtorId}
           repaymentPlans={newRepaymentPlans}
         />
-      <ContactList debtorId={debtorId} />
+        <ContactList debtorId={debtorId} />
       </div>
     );
   }
@@ -50,6 +51,7 @@ Debtor = fetch(
   fetchLoans,
   fetchRepamentPlans,
   fetchContactNumbers,
+  fetchNotes,
   fetchAddresses
 )(Debtor);
 

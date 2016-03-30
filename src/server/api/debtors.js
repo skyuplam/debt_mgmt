@@ -602,4 +602,41 @@ router.route('/:debtorId/addresses')
     );
   });
 
+router.route('/:debtorId/notes')
+  .get((req, res) => {
+    const debtorId = req.params.debtorId;
+    models.note.findAll({
+      where: {
+        personId: debtorId
+      }
+    }).then(notes =>
+      res.status(200).send({ notes }).end()
+    );
+  });
+
+router.route('/:debtorId/notes')
+  .post((req, res) => {
+    const debtorId = req.params.debtorId;
+    const {
+      note
+    } = req.body;
+    return models.sequelize.transaction(t =>
+      models.note.create({
+        note
+      }, {
+        transaction: t
+      }).then(note =>
+        models.person.findById(debtorId, {
+          transaction: t
+        }).then(debtor =>
+          note.setPerson(debtor, {
+            transaction: t
+          })
+        )
+      )
+    ).then(note =>
+      res.status(201).send({ note }).end()
+    );
+  });
+
 export default router;

@@ -1,40 +1,115 @@
 import './DebtorInfo.scss';
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/lib/text-field';
 import Card from 'material-ui/lib/card/card';
 import CardHeader from 'material-ui/lib/card/card-header';
+import GridList from 'material-ui/lib/grid-list/grid-list';
+import List from 'material-ui/lib/lists/list';
+import ListItem from 'material-ui/lib/lists/list-item';
+import FloatingActionButton from 'material-ui/lib/floating-action-button';
+import ContentAdd from 'material-ui/lib/svg-icons/content/add';
+import AddNoteDialog from './AddNoteDialog';
+import { openAddNoteDialog } from '../../common/ui/actions';
 
 
 class DebtorInfo extends Component {
-
   static propTypes = {
     msg: PropTypes.object.isRequired,
-    debtor: PropTypes.object.isRequired
+    notes: PropTypes.object.isRequired,
+    debtor: PropTypes.object.isRequired,
+    openAddNoteDialog: PropTypes.func.isRequired,
   };
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.handleAddNote = this.handleAddNote.bind(this);
+  }
+
+  handleAddNote() {
+    const { openAddNoteDialog } = this.props;
+    openAddNoteDialog();
+  }
+
   render() {
-    const { msg, debtor } = this.props;
+    const { msg, debtor, notes } = this.props;
+    const theNotes = notes ? notes.filter(note =>
+      note.personId === debtor.id
+    ) : [];
+    const styles = {
+      gridList: {
+        width: '100%',
+        height: 236,
+      },
+      card: {
+        height: 234,
+      },
+      list: {
+        height: 180,
+        overflowY: 'auto',
+      },
+      listItem: {
+        width: '100%',
+      },
+      floatingActionBtn: {
+        width: 40,
+        height: 40,
+        marginLeft: 8,
+      }
+    };
     return (
-      <Card>
-        <CardHeader
-          title={`${msg.debtorDetail} - ${debtor?debtor.name:''}`}
-        />
-      <div className='debtor-info'>
-        <TextField
-          floatingLabelText={msg.idCard}
-          disabled={true}
-          value={debtor?debtor.idNumber:''}
-        />
-        <TextField
-          floatingLabelText={msg.maritalStatus}
-          disabled={true}
-          value={debtor?debtor.maritalStatus:''}
-        />
-      </div>
-      </Card>
+      <GridList
+        style={styles.gridList}
+        padding={1}
+      >
+        <Card
+          style={styles.card}
+        >
+          <CardHeader
+            title={`${msg.debtorDetail} - ${debtor ? debtor.name : ''}`}
+          />
+          <div className="debtor-info">
+            <TextField
+              floatingLabelText={msg.idCard}
+              disabled
+              value={debtor ? debtor.idNumber : ''}
+            />
+            <TextField
+              floatingLabelText={msg.maritalStatus}
+              disabled
+              value={debtor ? debtor.maritalStatus : ''}
+            />
+          </div>
+        </Card>
+        <Card
+          style={styles.card}
+        >
+          <List
+            subheader={msg.note}
+            style={styles.list}
+          >
+            {
+              theNotes.map(note => (
+                <ListItem
+                  primaryText={note.note}
+                  secondaryText={note.createdAt}
+                />
+              ))
+            }
+          </List>
+          <FloatingActionButton
+            mini
+            style={styles.floatingActionBtn}
+            onTouchEnd={this.handleAddNote}
+            onMouseDown={this.handleAddNote}
+          >
+            <ContentAdd />
+          </FloatingActionButton>
+          <AddNoteDialog debtorId={debtor.id} />
+        </Card>
+      </GridList>
     );
   }
 
@@ -42,5 +117,8 @@ class DebtorInfo extends Component {
 
 
 export default connect(state => ({
-  msg: state.intl.msg.debtors
-}))(DebtorInfo);
+  msg: state.intl.msg.debtors,
+  notes: state.notes.map,
+}), {
+  openAddNoteDialog
+})(DebtorInfo);

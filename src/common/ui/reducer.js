@@ -14,6 +14,7 @@ const InitialState = Record({
   isLoanDetailDialogOpen: false,
   isAddContactNumberDialogOpen: false,
   isAddAddressDialogOpen: false,
+  isAddNoteDialogOpen: false,
 });
 const initialState = new InitialState;
 
@@ -80,6 +81,14 @@ export default function uiReducer(state = initialState, action) {
 
     case actions.CLOSE_ADD_ADDRESS_DIALOG: {
       return state.update('isAddAddressDialogOpen', () => false);
+    }
+
+    case actions.OPEN_ADD_NOTE_DIALOG: {
+      return state.update('isAddNoteDialogOpen', () => true);
+    }
+
+    case actions.CLOSE_ADD_NOTE_DIALOG: {
+      return state.update('isAddNoteDialogOpen', () => false);
     }
 
 
