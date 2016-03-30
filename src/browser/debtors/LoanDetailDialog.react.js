@@ -8,7 +8,7 @@ import { dateFormat } from '../../common/intl/format';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import GridList from 'material-ui/lib/grid-list/grid-list';
-import { FormattedNumber, FormattedRelative, IntlProvider } from 'react-intl';
+import { FormattedNumber, FormattedRelative } from 'react-intl';
 
 
 class LoanDetailDialog extends Component {
