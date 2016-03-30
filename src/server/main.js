@@ -131,9 +131,9 @@ models.sequelize.sync({ force: !isProduction }).then(() => {
               models.loan.create({
                 amount: parseFloat(debtor['原贷款本金']),
                 terms: parseInt(debtor['贷款总期数'], 10),
-                issuedAt: new Date(debtor['贷款日期']),
-                transferredAt: new Date(debtor['转让日期']),
-                delinquentAt: new Date(debtor['逾期日期']),
+                issuedAt: new Date(Date.parse(debtor['贷款日期'])),
+                transferredAt: new Date(Date.parse(debtor['转让日期'])),
+                delinquentAt: new Date(Date.parse(debtor['逾期日期'])),
                 collectableMgmtFee: parseFloat(debtor['管理费应收']),
                 collectableHandlingFee: parseFloat(debtor['手续费应收']),
                 collectableLateFee: parseFloat(debtor['滞纳金应收']),

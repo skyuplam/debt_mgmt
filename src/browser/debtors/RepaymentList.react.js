@@ -1,19 +1,15 @@
 // import './RepaymentList.scss';
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
-import { FormattedNumber, FormattedDate, IntlMixin } from 'react-intl';
+import { FormattedDate } from 'react-intl';
 import { updateRepayment } from '../../common/repaymentPlans/actions';
 import TextField from 'material-ui/lib/text-field';
 import { toFloat } from 'validator';
 
 class RepaymentList extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate;
-  mixins = [IntlMixin];
-
   static propTypes = {
     msg: PropTypes.object.isRequired,
     repayments: PropTypes.object.isRequired,
@@ -25,14 +21,15 @@ class RepaymentList extends Component {
 
     this._randerDateCell = this._randerDateCell.bind(this);
     this._randerNumberCell = this._randerNumberCell.bind(this);
-    this._handleRowClick = this._handleRowClick.bind(this);
     this._onChangeRepayAmt = this._onChangeRepayAmt.bind(this);
   }
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
-  _randerDateCell(cellData, cellDataKey, rowData, rowIndex, columnData) {
+  _randerDateCell(cellData) {
+    const theDate = cellData ? new Date(cellData) : '';
     return (
       <FormattedDate
-        value={cellData}
+        value={theDate}
       />
     );
   }
@@ -44,24 +41,20 @@ class RepaymentList extends Component {
     updateRepayment(repayment);
   }
 
-  _randerNumberCell(cellData, cellDataKey, rowData, rowIndex, columnData) {
+  _randerNumberCell(cellData, cellDataKey, rowData) {
     return (
       <TextField
         defaultValue={cellData}
         hintText={cellData}
-        value={cellData?cellData:0}
+        value={cellData}
         onChange={e => this._onChangeRepayAmt({
-          rowData: rowData,
-          cellDataKey: cellDataKey,
+          rowData,
+          cellDataKey,
           value: toFloat(e.target.value)
         })}
-        fullWidth={true}
+        fullWidth
       />
     );
-  }
-
-  _handleRowClick(rowIdx) {
-
   }
 
   render() {
@@ -76,23 +69,22 @@ class RepaymentList extends Component {
               headerHeight={36}
               rowHeight={48}
               rowsCount={repayments.size}
-              rowGetter={index => repayments.get(index+1)}
-              onRowClick={this._handleRowClick}
+              rowGetter={index => repayments.get(index + 1)}
             >
               <FlexColumn
                 label={msg.term}
-                dataKey='term'
+                dataKey="term"
                 width={50}
               />
               <FlexColumn
                 label={msg.repaymentAmt}
-                dataKey='principal'
+                dataKey="principal"
                 width={120}
                 cellRenderer={this._randerNumberCell}
               />
               <FlexColumn
                 label={msg.expectedRepaidAt}
-                dataKey='expectedRepaidAt'
+                dataKey="expectedRepaidAt"
                 width={120}
                 cellRenderer={this._randerDateCell}
               />

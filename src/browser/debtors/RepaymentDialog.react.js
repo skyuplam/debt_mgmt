@@ -1,5 +1,4 @@
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/lib/text-field';
@@ -10,17 +9,15 @@ import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import { closeRepaymentDialog } from '../../common/ui/actions';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
-import { toFloat, isNumeric } from 'validator';
 import { payRepayment } from '../../common/repayments/actions';
-import { dateFormat } from '../../common/intl/format';
 import Checkbox from 'material-ui/lib/checkbox';
+import { FormattedDate } from 'react-intl';
 
 class RepaymentDialog extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate;
-
   static propTypes = {
     msg: PropTypes.object.isRequired,
     repayment: PropTypes.object.isRequired,
+    fields: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     isRepaymentDialogOpen: PropTypes.bool.isRequired,
     closeRepaymentDialog: PropTypes.func.isRequired,
@@ -38,6 +35,25 @@ class RepaymentDialog extends Component {
     this.handleCloseOfDialog = this.handleCloseOfDialog.bind(this);
     this.getValueOfAmount = this.getValueOfAmount.bind(this);
     this.onCheckPaidInFull = this.onCheckPaidInFull.bind(this);
+    this.formatDate = this.formatDate.bind(this);
+  }
+  shouldComponentUpdate = shouldPureComponentUpdate;
+
+  onCheckPaidInFull(e) {
+    const { setField } = this.props;
+    setField(['repaymentDialog', 'paidInFull'], e.target.checked);
+  }
+
+  getValueOfRepaidAt() {
+    const { fields } = this.props;
+
+    return fields.repaidAt.value ? fields.repaidAt.value : new Date();
+  }
+
+  getValueOfAmount() {
+    const { repayment, fields } = this.props;
+
+    return fields.repaymentAmount.value ? fields.repaymentAmount.value : repayment.principal;
   }
 
   isInvalidAmount() {
@@ -46,23 +62,6 @@ class RepaymentDialog extends Component {
       return false;
     }
     return true;
-  }
-
-  getValueOfAmount() {
-    const { repayment, fields } = this.props;
-
-    return fields.repaymentAmount.value?fields.repaymentAmount.value:repayment.principal;
-  }
-
-  getValueOfRepaidAt() {
-    const { repayment, fields } = this.props;
-
-    return fields.repaidAt.value?fields.repaidAt.value:new Date();
-  }
-
-  onCheckPaidInFull(e) {
-    const { setField, fields } = this.props;
-    setField(['repaymentDialog', 'paidInFull'], e.target.checked);
   }
 
   handleRepayRequest() {
@@ -81,11 +80,11 @@ class RepaymentDialog extends Component {
 
     payRepayment({
       repaymentPlanId: repayment.repaymentPlanId,
-      debtorId: debtorId,
+      debtorId,
       repaymentId: repayment.id,
       amount: this.getValueOfAmount(),
       repaidAt: this.getValueOfRepaidAt(),
-      paidInFull: paidInFull
+      paidInFull
     });
 
     closeRepaymentDialog();
@@ -112,6 +111,17 @@ class RepaymentDialog extends Component {
     fields.$reset();
   }
 
+  formatDate(date) {
+    const theDate = date ? new Date(date) : null;
+    return (
+      <p>
+        <FormattedDate
+          value={theDate}
+        />
+      </p>
+    );
+  }
+
   render() {
     const {
       msg,
@@ -123,12 +133,12 @@ class RepaymentDialog extends Component {
     const actions = [
       <FlatButton
         label={msg.cancel}
-        secondary={true}
+        secondary
         onTouchTap={this.handleCloseOfDialog}
       />,
       <FlatButton
         label={msg.confirm}
-        primary={true}
+        primary
         onTouchTap={this.handleRepayRequest}
         disabled={this.isInvalidAmount()}
       />,
@@ -138,43 +148,41 @@ class RepaymentDialog extends Component {
       <Dialog
         title={msg.title}
         actions={actions}
-        modal={true}
+        modal
         open={isRepaymentDialogOpen}
       >
         <TextField
           hintText={repayment.term}
           floatingLabelText={msg.term}
-          type='number'
+          type="number"
           value={repayment.term}
           disabled
         /><br />
         <TextField
           hintText={repayment.principal}
           floatingLabelText={msg.repayAmount}
-          type='number'
+          type="number"
           defaultValue={repayment.principal}
           onChange={this.handleChangeAmount}
         /><br />
         <TextField
           floatingLabelText={msg.expectedRepayAt}
-          value={repayment.expectedRepaidAt?dateFormat(new Date(repayment.expectedRepaidAt), ['zh']):''}
+          value={this.formatDate(repayment.expectedRepaidAt)}
           disabled
         />
         <DatePicker
           hintText={msg.repaidAt}
           floatingLabelText={msg.repaidAt}
-          locale='zh'
-          defaultDate={fields.repaidAt.value?new Date(fields.repaidAt.value):new Date()}
+          locale="zh"
+          defaultDate={this.formatDate(fields.repaidAt.value)}
           DateTimeFormat={global.Intl.DateTimeFormat}
           onChange={this.handleChangeOfRepaidAt}
-          wordings={{
-            ok: msg.confirm,
-            cancel: msg.cancel
-          }}
+          cancelLabel={msg.cancel}
+          okLabel={msg.confirm}
         />
       <Checkbox
         label={msg.paidInFull}
-        defaultChecked={repayment.terms===repayment.term}
+        defaultChecked={repayment.terms === repayment.term}
         onCheck={this.onCheckPaidInFull}
       />
       </Dialog>

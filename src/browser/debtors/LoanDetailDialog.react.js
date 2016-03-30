@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import Dialog from 'material-ui/lib/dialog';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { closeLoanDetailDialog } from '../../common/ui/actions';
-import { dateFormat } from '../../common/intl/format';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import GridList from 'material-ui/lib/grid-list/grid-list';
-import { FormattedNumber, FormattedRelative } from 'react-intl';
-
+import { FormattedNumber, FormattedDate } from 'react-intl';
+import { isDate, isAlphanumeric } from 'validator';
 
 class LoanDetailDialog extends Component {
   static propTypes = {
@@ -24,7 +23,7 @@ class LoanDetailDialog extends Component {
 
     this._formatNumber = this._formatNumber.bind(this);
     this._formatPercentage = this._formatPercentage.bind(this);
-    this._formatRelative = this._formatRelative.bind(this);
+    this._formatDate = this._formatDate.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -50,12 +49,12 @@ class LoanDetailDialog extends Component {
     );
   }
 
-  _formatRelative(msg, date) {
+  _formatDate(date) {
+    const theDate = date ? Date.parse(date) : null;
     return (
       <p>
-        {msg}<FormattedRelative
-          value={date}
-          units="day"
+        <FormattedDate
+          value={theDate}
         />
       </p>
     );
@@ -100,7 +99,7 @@ class LoanDetailDialog extends Component {
             />
             <ListItem
               primaryText={msg.issuedAt}
-              secondaryText={loan.issuedAt ? dateFormat(new Date(loan.issuedAt), ['zh']) : ''}
+              secondaryText={this._formatDate(loan.issuedAt)}
             />
             <ListItem
               primaryText={msg.terms}
@@ -113,13 +112,13 @@ class LoanDetailDialog extends Component {
             <ListItem
               primaryText={msg.transferredAt}
               secondaryText={
-                loan.transferredAt ? dateFormat(new Date(loan.transferredAt), ['zh']) : ''
+                this._formatDate(loan.transferredAt)
               }
             />
             <ListItem
               primaryText={`${msg.delinquentAt} - ${daysOfDelinq}${msg.days}`}
               secondaryText={
-                loan.delinquentAt ? dateFormat(new Date(loan.delinquentAt), ['zh']) : ''
+                this._formatDate(loan.delinquentAt)
               }
             />
             <ListItem

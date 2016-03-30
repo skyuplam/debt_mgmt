@@ -12,7 +12,8 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import AddNoteDialog from './AddNoteDialog';
 import { openAddNoteDialog } from '../../common/ui/actions';
-import { dateFormat } from '../../common/intl/format';
+import { FormattedDate } from 'react-intl';
+import { isDate } from 'validator';
 
 class DebtorInfo extends Component {
   static propTypes = {
@@ -30,8 +31,14 @@ class DebtorInfo extends Component {
   }
 
   formatDate(date) {
-    const theDate = date ? new Date(date) : new Date();
-    return dateFormat(theDate, ['zh']);
+    const theDate = isDate(date) ? new Date(date) : null;
+    return (
+      <p>
+        <FormattedDate
+          value={theDate}
+        />
+      </p>
+    );
   }
 
   handleAddNote() {
@@ -53,7 +60,7 @@ class DebtorInfo extends Component {
         height: 234,
       },
       list: {
-        height: 180,
+        height: 130,
         overflowY: 'auto',
       },
       listItem: {
@@ -92,8 +99,10 @@ class DebtorInfo extends Component {
         <Card
           style={styles.card}
         >
+          <CardHeader
+            title={`${msg.note}`}
+          />
           <List
-            subheader={msg.note}
             style={styles.list}
           >
             {

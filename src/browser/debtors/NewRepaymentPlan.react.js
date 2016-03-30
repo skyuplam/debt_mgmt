@@ -8,7 +8,7 @@ import FlatButton from 'material-ui/lib/flat-button';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { closeNewRepyamnetPlanDialog } from '../../common/ui/actions';
 import { fields } from '../../common/lib/redux-fields';
-import { FormattedNumber, IntlMixin } from 'react-intl';
+import { FormattedNumber } from 'react-intl';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
 import { setField } from '../../common/lib/redux-fields/actions';
 import {
@@ -40,10 +40,7 @@ class NewRepaymentPlan extends Component {
     newRepaymentPlan: PropTypes.func.isRequired,
     addRepayments: PropTypes.func.isRequired,
     resetRepyments: PropTypes.func.isRequired,
-    onSubmitNewRepayment: PropTypes.func,
   };
-
-  mixins = [IntlMixin];
 
   constructor(props) {
     super(props);
@@ -66,7 +63,6 @@ class NewRepaymentPlan extends Component {
       repayments,
       resetRepyments,
       debtorId,
-      onSubmitNewRepayment
     } = this.props;
 
     if (!(fields.amount.value.trim() ||
@@ -88,7 +84,6 @@ class NewRepaymentPlan extends Component {
     closeNewRepyamnetPlanDialog();
     fields.$reset();
     resetRepyments();
-    onSubmitNewRepayment();
   }
 
   _handleOnChange(e, date) {
@@ -199,10 +194,8 @@ class NewRepaymentPlan extends Component {
           defaultDate={fields.repayDate.value ? fields.repayDate.value : new Date()}
           DateTimeFormat={global.Intl.DateTimeFormat}
           onChange={this._handleOnChange}
-          wordings={{
-            ok: msg.ok,
-            cancel: msg.cancel
-          }}
+          cancelLabel={msg.cancel}
+          okLabel={msg.ok}
         />
       <div style={{ textAlign: 'right' }}>
           <FlatButton
