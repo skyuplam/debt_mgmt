@@ -72,9 +72,18 @@ class AddContactNumberDialog extends Component {
   isValid() {
     const { fields } = this.props;
     const address = fields.address.value.trim();
+    const county = fields.county.value.trim();
+    const city = fields.city.value.trim();
+    const province = fields.province.value.trim();
+    const country = fields.country.value.trim();
     const source = fields.source.value;
     const addressType = fields.addressType.value;
-    if (address && address.length >= 4 &&
+    if (address &&
+      county &&
+      city &&
+      province &&
+      country &&
+      address.length >= 4 &&
       source > 0 &&
       addressType > 0) {
       return true;
