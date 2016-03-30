@@ -12,7 +12,7 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import AddNoteDialog from './AddNoteDialog';
 import { openAddNoteDialog } from '../../common/ui/actions';
-
+import { dateFormat } from '../../common/intl/format';
 
 class DebtorInfo extends Component {
   static propTypes = {
@@ -26,6 +26,12 @@ class DebtorInfo extends Component {
     super(props, context);
 
     this.handleAddNote = this.handleAddNote.bind(this);
+    this.formatDate = this.formatDate.bind(this);
+  }
+
+  formatDate(date) {
+    const theDate = date ? new Date(date) : new Date();
+    return dateFormat(theDate, ['zh']);
   }
 
   handleAddNote() {
@@ -94,7 +100,7 @@ class DebtorInfo extends Component {
               theNotes.map(note => (
                 <ListItem
                   primaryText={note.note}
-                  secondaryText={note.createdAt}
+                  secondaryText={this.formatDate(note.createdAt)}
                 />
               ))
             }
