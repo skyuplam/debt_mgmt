@@ -1,27 +1,21 @@
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import TextField from 'material-ui/lib/text-field';
 import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { closeLoanDetailDialog } from '../../common/ui/actions';
 import { dateFormat } from '../../common/intl/format';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
-import Divider from 'material-ui/lib/divider';
 import GridList from 'material-ui/lib/grid-list/grid-list';
-import GridTile from 'material-ui/lib/grid-list/grid-tile';
-import { FormattedNumber, IntlMixin } from 'react-intl';
+import { FormattedNumber, FormattedRelative, IntlProvider } from 'react-intl';
 
 
 class LoanDetailDialog extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate;
-
   static propTypes = {
     msg: PropTypes.object.isRequired,
     closeLoanDetailDialog: PropTypes.func.isRequired,
+    isLoanDetailDialogOpen: PropTypes.bool.isRequired,
     loan: PropTypes.object.isRequired,
   }
 
@@ -30,7 +24,10 @@ class LoanDetailDialog extends Component {
 
     this._formatNumber = this._formatNumber.bind(this);
     this._formatPercentage = this._formatPercentage.bind(this);
+    this._formatRelative = this._formatRelative.bind(this);
   }
+
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   _formatNumber(number) {
     return (
@@ -47,7 +44,18 @@ class LoanDetailDialog extends Component {
       <p>
         <FormattedNumber
           value={number}
-          style='percent'
+          style="percent"
+        />
+      </p>
+    );
+  }
+
+  _formatRelative(msg, date) {
+    return (
+      <p>
+        {msg}<FormattedRelative
+          value={date}
+          units="day"
         />
       </p>
     );
@@ -75,6 +83,9 @@ class LoanDetailDialog extends Component {
       },
     };
 
+    const daysOfDelinq = Math.round((Date.now() - new Date(loan.delinquentAt)) /
+    (1000 * 60 * 60 * 24 * 1));
+
     return (
       <Dialog
         title={`${msg.loanDetail}-${loan.originatedAgreementNo}`}
@@ -85,50 +96,66 @@ class LoanDetailDialog extends Component {
           <List>
             <ListItem
               primaryText={msg.amount}
-              secondaryText={this._formatNumber(loan.amount)}/>
+              secondaryText={this._formatNumber(loan.amount)}
+            />
             <ListItem
               primaryText={msg.issuedAt}
-              secondaryText={loan.issuedAt?dateFormat(new Date(loan.issuedAt), ['zh']):''}/>
+              secondaryText={loan.issuedAt ? dateFormat(new Date(loan.issuedAt), ['zh']) : ''}
+            />
             <ListItem
               primaryText={msg.terms}
-              secondaryText={loan.terms}/>
+              secondaryText={loan.terms}
+            />
             <ListItem
               primaryText={msg.repaidTerms}
-              secondaryText={loan.repaidTerms}/>
+              secondaryText={loan.repaidTerms}
+            />
             <ListItem
               primaryText={msg.transferredAt}
-              secondaryText={loan.transferredAt?dateFormat(new Date(loan.transferredAt), ['zh']):''}/>
+              secondaryText={
+                loan.transferredAt ? dateFormat(new Date(loan.transferredAt), ['zh']) : ''
+              }
+            />
             <ListItem
-              primaryText={msg.delinquentAt}
-              secondaryText={loan.delinquentAt?dateFormat(new Date(loan.delinquentAt), ['zh']):''}
-              />
+              primaryText={`${msg.delinquentAt} - ${daysOfDelinq}${msg.days}`}
+              secondaryText={
+                loan.delinquentAt ? dateFormat(new Date(loan.delinquentAt), ['zh']) : ''
+              }
+            />
             <ListItem
               primaryText={msg.agency}
-              secondaryText={loan.agency}/>
+              secondaryText={loan.agency}
+            />
           </List>
           <List>
             <ListItem
               primaryText={msg.collectablePrincipal}
-              secondaryText={this._formatNumber(loan.collectablePrincipal)}/>
+              secondaryText={this._formatNumber(loan.collectablePrincipal)}
+            />
             <ListItem
               primaryText={msg.collectableInterest}
               secondaryText={this._formatNumber(loan.collectableInterest)}
-              />
+            />
             <ListItem
               primaryText={msg.collectableMgmtFee}
-              secondaryText={this._formatNumber(loan.collectableMgmtFee)}/>
+              secondaryText={this._formatNumber(loan.collectableMgmtFee)}
+            />
             <ListItem
               primaryText={msg.collectableHandlingFee}
-              secondaryText={this._formatNumber(loan.collectableHandlingFee)}/>
+              secondaryText={this._formatNumber(loan.collectableHandlingFee)}
+            />
             <ListItem
               primaryText={msg.collectableLateFee}
-              secondaryText={this._formatNumber(loan.collectableLateFee)}/>
+              secondaryText={this._formatNumber(loan.collectableLateFee)}
+            />
             <ListItem
               primaryText={msg.collectablePenaltyFee}
-              secondaryText={this._formatNumber(loan.collectablePenaltyFee)}/>
+              secondaryText={this._formatNumber(loan.collectablePenaltyFee)}
+            />
             <ListItem
               primaryText={msg.placementServicingFeeRate}
-              secondaryText={this._formatPercentage(loan.placementServicingFeeRate)}/>
+              secondaryText={this._formatPercentage(loan.placementServicingFeeRate)}
+            />
           </List>
         </GridList>
       </Dialog>

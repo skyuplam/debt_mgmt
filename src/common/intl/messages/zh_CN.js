@@ -103,6 +103,7 @@ export default {
     loanDetail: '贷款详细',
     terms: '期限',
     delinquentAt: '逾期日期',
+    days: '天',
     amount: '贷款金额',
     apr: '年化利率',
     transferredAt: '转让日期',
