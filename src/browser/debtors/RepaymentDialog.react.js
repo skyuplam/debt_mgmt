@@ -10,8 +10,8 @@ import { setField } from '../../common/lib/redux-fields/actions';
 import { closeRepaymentDialog } from '../../common/ui/actions';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
 import { payRepayment } from '../../common/repayments/actions';
+import { dateFormat } from '../../common/intl/format';
 import Checkbox from 'material-ui/lib/checkbox';
-import { FormattedDate } from 'react-intl';
 
 class RepaymentDialog extends Component {
   static propTypes = {
@@ -113,13 +113,7 @@ class RepaymentDialog extends Component {
 
   formatDate(date) {
     const theDate = date ? new Date(date) : null;
-    return (
-      <p>
-        <FormattedDate
-          value={theDate}
-        />
-      </p>
-    );
+    return dateFormat(theDate, ['zh']);
   }
 
   render() {
@@ -174,7 +168,6 @@ class RepaymentDialog extends Component {
           hintText={msg.repaidAt}
           floatingLabelText={msg.repaidAt}
           locale="zh"
-          defaultDate={this.formatDate(fields.repaidAt.value)}
           DateTimeFormat={global.Intl.DateTimeFormat}
           onChange={this.handleChangeOfRepaidAt}
           cancelLabel={msg.cancel}
