@@ -13,6 +13,7 @@ export default function (sequelize, DataTypes) {
     classMethods: {
       associate: models => {
         Identity.belongsTo(models.identityType);
+        Identity.belongsTo(models.city, { as: 'censusRegisteredCity' });
         Identity.belongsTo(models.city, { as: 'issueAuthority' });
         Identity.belongsToMany(models.person, { through: 'personIdentity' });
       }

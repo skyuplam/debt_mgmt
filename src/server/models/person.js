@@ -14,7 +14,6 @@ export default function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: models => {
-        Person.hasOne(models.city, { as: 'censusRegisteredCity' });
         Person.belongsToMany(models.identity, { through: 'personIdentity' });
         Person.belongsToMany(models.loan, {
           through: models.debtorLoan,

@@ -9,7 +9,7 @@ export default function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: models => {
-        Address.belongsTo(models.county);
+        Address.belongsTo(models.cityCounty);
         Address.hasMany(models.personAddress);
       }
     },

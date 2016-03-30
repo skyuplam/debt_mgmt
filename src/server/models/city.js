@@ -6,7 +6,12 @@ export default function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: models => {
-        City.belongsTo(models.province);
+        City.belongsToMany(models.province, {
+          through: 'provinceCity'
+        });
+        City.belongsToMany(models.county, {
+          through: models.cityCounty
+        });
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name

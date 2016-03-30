@@ -492,60 +492,86 @@ router.route('/:debtorId/addresses')
                 personAddress.setAddressType(theAddressType, {
                   transaction: t
                 }).then(() =>
-                models.county.findOrCreate({
-                  where: {
-                    county
-                  },
-                  default: {
-                    county
-                  },
-                  transaction: t
-                }).all().then(([theCounty]) =>
-                  theAddress.setCounty(theCounty, {
+                  models.country.findOrCreate({
+                    where: {
+                      country
+                    },
+                    default: {
+                      country
+                    },
                     transaction: t
-                  }).then(() =>
-                    models.city.findOrCreate({
+                  }).all().then(([theCountry, countryCreated]) =>
+                    models.province.findOrCreate({
                       where: {
-                        city
+                        province
                       },
                       default: {
-                        city
+                        province
                       },
                       transaction: t
-                    }).all().then(([theCity]) =>
-                      models.province.findOrCreate({
+                    }).all().then(([theProvince, provinceCreated]) =>
+                      models.city.findOrCreate({
                         where: {
-                          province
+                          city
                         },
                         default: {
-                          province
+                          city
                         },
                         transaction: t
-                      }).all().then(([theProvince]) =>
-                        models.country.findOrCreate({
+                      }).all().then(([theCity]) =>
+                        models.county.findOrCreate({
                           where: {
-                            country
+                            county
                           },
                           default: {
-                            country
+                            county
                           },
                           transaction: t
-                        }).all().then(([theCountry]) =>
-                          theProvince.setCountry(theCountry, {
+                        }).all().then(([theCounty]) =>
+                          theCounty.hasCity(theCity, {
                             transaction: t
-                          }).then(() =>
-                            theCity.setProvince(theProvince, {
+                          }).then(hasCity => {
+                            if (hasCity) {
+                              return theCounty;
+                            }
+                            return theCounty.addCity(theCity, {
                               transaction: t
-                            })).then(() =>
-                              theCounty.setCity(theCity, {
+                            });
+                          }).then(() =>
+                            theCity.hasProvince(theProvince, {
+                              transaction: t
+                            }).then(hasProvince => {
+                              if (hasProvince) {
+                                return theCity;
+                              }
+                              return theCity.addProvince(theProvince, {
+                                transaction: t
+                              });
+                            })
+                          ).then(() => {
+                            if (provinceCreated || countryCreated) {
+                              return theProvince.setCountry(theCountry, {
+                                transaction: t
+                              });
+                            }
+                            return theProvince;
+                          }).then(() =>
+                            models.cityCounty.findOrCreate({
+                              where: {
+                                cityId: theCity.id,
+                                countyId: theCounty.id
+                              },
+                              transaction: t
+                            }).all().then(([theCityCounty]) =>
+                              theAddress.setCityCounty(theCityCounty, {
                                 transaction: t
                               })
+                            )
                           )
                         )
                       )
                     )
                   )
-                )
               ).then(() =>
                   personAddress.setSource(theSource, {
                     transaction: t
