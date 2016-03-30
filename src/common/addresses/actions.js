@@ -1,9 +1,9 @@
 export const FETCH_ADDRESSES_START = 'FETCH_ADDRESSES_START';
 export const FETCH_ADDRESSES_FAILURE = 'FETCH_ADDRESSES_FAILURE';
 export const FETCH_ADDRESSES_SUCCESS = 'FETCH_ADDRESSES_SUCCESS';
-export const NEW_ADDRESS_START = 'NEW_ADDRESS_START';
-export const NEW_ADDRESS_FAILURE = 'NEW_ADDRESS_FAILURE';
-export const NEW_ADDRESS_SUCCESS = 'NEW_ADDRESS_SUCCESS';
+export const ADD_NEW_ADDRESS_START = 'ADD_NEW_ADDRESS_START';
+export const ADD_NEW_ADDRESS_FAILURE = 'ADD_NEW_ADDRESS_FAILURE';
+export const ADD_NEW_ADDRESS_SUCCESS = 'ADD_NEW_ADDRESS_SUCCESS';
 
 
 const API_VERSION = '/api/v1';
@@ -37,7 +37,7 @@ export function fetchAddresses(locParams) {
   };
 }
 
-export function addNewContactNumber(address) {
+export function addNewAddress(address) {
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -58,7 +58,7 @@ export function addNewContactNumber(address) {
       }
     }
     return {
-      type: 'NEW_ADDRESS',
+      type: 'ADD_NEW_ADDRESS',
       payload: {
         promise: getPromise()
       }

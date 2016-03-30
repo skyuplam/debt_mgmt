@@ -10,6 +10,8 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import HomeIcon from 'material-ui/lib/svg-icons/action/home';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
+import AddAddressDialog from './AddAddressDialog.react';
+import { openAddAddressDialog } from '../../common/ui/actions';
 
 
 class ContactList extends Component {
@@ -17,6 +19,8 @@ class ContactList extends Component {
     msg: PropTypes.object.isRequired,
     addresses: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
+    openAddAddressDialog: PropTypes.func.isRequired,
+    isAddAddressDialogOpen: PropTypes.bool.isRequired,
   }
 
   constructor(props, context) {
@@ -28,7 +32,9 @@ class ContactList extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   handleAddAddress() {
-
+    const { openAddAddressDialog } = this.props;
+    // Show Dialog for adding contactNumber
+    openAddAddressDialog();
   }
 
   render() {
@@ -77,6 +83,7 @@ class ContactList extends Component {
             <ContentAdd />
           </FloatingActionButton>
         </CardActions>
+        <AddAddressDialog debtorId={debtorId} />
       </Card>
     );
   }
@@ -85,4 +92,6 @@ class ContactList extends Component {
 export default connect(state => ({
   msg: state.intl.msg.contacts,
   addresses: state.addresses.map,
-}))(ContactList);
+}), {
+  openAddAddressDialog
+})(ContactList);

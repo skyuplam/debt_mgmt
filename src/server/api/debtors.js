@@ -443,13 +443,136 @@ router.route('/:debtorId/addresses')
         pad.verifiedBy,
         pad.personId debtorId
       FROM address ad
-      LEFT JOIN addressType adt ON adt.id = ad.addressTypeId
       LEFT JOIN personAddress pad ON pad.addressId = ad.id
+      LEFT JOIN addressType adt ON adt.id = pad.addressTypeId
       LEFT JOIN source s ON s.id = pad.sourceId
       WHERE pad.personid = ${debtorId}
     `, { type: models.sequelize.QueryTypes.SELECT }
   ).then(addresses =>
       res.status(200).send({ addresses }).end()
+    );
+  });
+
+router.route('/:debtorId/addresses')
+  .post((req, res) => {
+    const debtorId = req.params.debtorId;
+    const {
+      address,
+      county,
+      city,
+      province,
+      addressType,
+      country,
+      source
+    } = req.body;
+    return models.sequelize.transaction(t =>
+      models.person.findById(debtorId, {
+        transaction: t
+      }).then(debtor =>
+        models.address.findOrCreate({
+          where: {
+            address,
+          },
+          default: {
+            address
+          },
+          transaction: t
+        }).all().then(([theAddress]) =>
+          theAddress
+        ).then(theAddress =>
+          models.personAddress.create({}, {
+            transaction: t
+          }).then(personAddress =>
+            models.source.findById(source, {
+              transaction: t
+            }).then(theSource =>
+              models.addressType.findById(addressType, {
+                transaction: t
+              }).then(theAddressType =>
+                personAddress.setAddressType(theAddressType, {
+                  transaction: t
+                }).then(() =>
+                models.county.findOrCreate({
+                  where: {
+                    county
+                  },
+                  default: {
+                    county
+                  },
+                  transaction: t
+                }).all().then(([theCounty]) =>
+                  theAddress.setCounty(theCounty, {
+                    transaction: t
+                  }).then(() =>
+                    models.city.findOrCreate({
+                      where: {
+                        city
+                      },
+                      default: {
+                        city
+                      },
+                      transaction: t
+                    }).all().then(([theCity]) =>
+                      models.province.findOrCreate({
+                        where: {
+                          province
+                        },
+                        default: {
+                          province
+                        },
+                        transaction: t
+                      }).all().then(([theProvince]) =>
+                        models.country.findOrCreate({
+                          where: {
+                            country
+                          },
+                          default: {
+                            country
+                          },
+                          transaction: t
+                        }).all().then(([theCountry]) =>
+                          theProvince.setCountry(theCountry, {
+                            transaction: t
+                          }).then(() =>
+                            theCity.setProvince(theProvince, {
+                              transaction: t
+                            })).then(() =>
+                              theCounty.setCity(theCity, {
+                                transaction: t
+                              })
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              ).then(() =>
+                  personAddress.setSource(theSource, {
+                    transaction: t
+                  }).then(personAddress =>
+                    personAddress.setPerson(debtor, {
+                      transaction: t
+                    })
+                  ).then(personAddress =>
+                    personAddress.setAddress(theAddress, {
+                      transaction: t
+                    })
+                  ).then(personAddress => {
+                    const addr = theAddress.toJSON();
+                    addr.source = theSource.source;
+                    addr.addressType = theAddressType.type;
+                    addr.sourceId = personAddress.sourceId;
+                    addr.debtorId = personAddress.personId;
+                    return addr;
+                  })
+                )
+              )
+            )
+          )
+        )
+      )
+    ).then(address =>
+      res.status(201).send({ address }).end()
     );
   });
 

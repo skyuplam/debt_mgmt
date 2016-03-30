@@ -29,6 +29,7 @@ models.sequelize.sync({ force: !isProduction }).then(() => {
     repaymentPlanStatuses,
     placementStatuses,
     contactNumberTypes,
+    addressTypes,
     sources,
   } = typesAndStatus;
 
@@ -61,6 +62,11 @@ models.sequelize.sync({ force: !isProduction }).then(() => {
       ),
       contactNumberTypes.map(contactNumberType =>
         models.contactNumberType.create(contactNumberType, {
+          transaction: t2
+        })
+      ),
+      addressTypes.map(addressType =>
+        models.addressType.create(addressType, {
           transaction: t2
         })
       ),

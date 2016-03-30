@@ -74,6 +74,15 @@ export default function uiReducer(state = initialState, action) {
       return state.update('isAddContactNumberDialogOpen', () => false);
     }
 
+    case actions.OPEN_ADD_ADDRESS_DIALOG: {
+      return state.update('isAddAddressDialogOpen', () => true);
+    }
+
+    case actions.CLOSE_ADD_ADDRESS_DIALOG: {
+      return state.update('isAddAddressDialogOpen', () => false);
+    }
+
+
   }
 
   return state;

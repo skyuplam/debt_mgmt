@@ -4,24 +4,24 @@ import { connect } from 'react-redux';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import Dialog from 'material-ui/lib/dialog';
 import FlatButton from 'material-ui/lib/flat-button';
-import { closeAddContactNumberDialog } from '../../common/ui/actions';
+import { closeAddAddressDialog } from '../../common/ui/actions';
 import SelectField from 'material-ui/lib/select-field';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import TextField from 'material-ui/lib/text-field';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
-import { addAddress } from '../../common/contactNumbers/actions';
+import { addNewAddress } from '../../common/addresses/actions';
 
 
 class AddContactNumberDialog extends Component {
   static propTypes = {
     msg: PropTypes.object.isRequired,
-    isAddContactNumberDialogOpen: PropTypes.bool.isRequired,
-    closeAddContactNumberDialog: PropTypes.func.isRequired,
+    isAddAddressDialogOpen: PropTypes.bool.isRequired,
+    closeAddAddressDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     setField: PropTypes.func.isRequired,
-    addAddress: PropTypes.func.isRequired,
+    addNewAddress: PropTypes.func.isRequired,
   }
 
   constructor(props, context) {
@@ -32,71 +32,55 @@ class AddContactNumberDialog extends Component {
     this.handleSelectedType = this.handleSelectedType.bind(this);
     this.handleSelectedSource = this.handleSelectedSource.bind(this);
     this.isValid = this.isValid.bind(this);
-    this.showingAreaCode = this.showingAreaCode.bind(this);
     this.showingExt = this.showingExt.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   handleClose() {
-    const { closeAddContactNumberDialog } = this.props;
-    closeAddContactNumberDialog();
+    const { closeAddAddressDialog } = this.props;
+    closeAddAddressDialog();
   }
 
   handleNew() {
-    const { closeAddContactNumberDialog, debtorId, fields, addAddress } = this.props;
-
-    addAddress({
-      contactNumber: fields.contactNumber.value.trim(),
-      contactNumberType: fields.contactNumberType.value,
-      countryCode: fields.countryCode.value.trim(),
-      areaCode: fields.areaCode.value.trim(),
-      ext: fields.ext.value.trim(),
+    const { closeAddAddressDialog, debtorId, fields, addNewAddress } = this.props;
+    addNewAddress({
+      address: fields.address.value.trim(),
+      county: fields.county.value.trim(),
+      city: fields.city.value.trim(),
+      province: fields.province.value.trim(),
+      addressType: fields.addressType.value,
+      country: fields.country.value.trim(),
       source: fields.source.value,
       debtorId,
     });
 
     fields.$reset();
-    closeAddContactNumberDialog();
+    closeAddAddressDialog();
   }
 
   handleSelectedType(event, index, value) {
     const { setField } = this.props;
-    setField(['AddContactNumberDialog', 'contactNumberType'], value);
+    setField(['AddAddressDialog', 'addressType'], value);
   }
 
   handleSelectedSource(event, index, value) {
     const { setField } = this.props;
-    setField(['AddContactNumberDialog', 'source'], value);
+    setField(['AddAddressDialog', 'source'], value);
   }
 
   isValid() {
     const { fields } = this.props;
-    const contactNumber = fields.contactNumber.value.trim();
+    const address = fields.address.value.trim();
     const source = fields.source.value;
-    const contactNumberType = fields.contactNumberType.value;
-    if (contactNumber && contactNumber.length >= 8 &&
+    const addressType = fields.addressType.value;
+    if (address && address.length >= 4 &&
       source > 0 &&
-      contactNumberType > 0) {
+      addressType > 0) {
       return true;
     }
 
     return false;
-  }
-
-  showingAreaCode() {
-    const { msg, fields } = this.props;
-    if (fields.contactNumberType.value !== 1) {
-      return (
-        <TextField
-          hintText={'755'}
-          floatingLabelText={msg.areaCode}
-          {...fields.areaCode}
-        />
-      );
-    }
-
-    return (<div></div>);
   }
 
   showingExt() {
@@ -115,7 +99,7 @@ class AddContactNumberDialog extends Component {
   }
 
   render() {
-    const { msg, isAddContactNumberDialogOpen, fields } = this.props;
+    const { msg, isAddAddressDialogOpen, fields } = this.props;
     const actions = [
       <FlatButton
         label={msg.cancel}
@@ -141,48 +125,56 @@ class AddContactNumberDialog extends Component {
     };
     return (
       <Dialog
-        title={msg.addNewContact}
+        title={msg.addNewAddress}
         actions={actions}
         modal
-        open={isAddContactNumberDialogOpen}
+        open={isAddAddressDialogOpen}
         onRequestClose={this.handleClose}
         autoScrollBodyContent
         contentStyle={styles.contentStyle}
       >
+        <TextField
+          hintText={'中路南光大厦2517'}
+          floatingLabelText={msg.address}
+          {...fields.address}
+        /><br />
+        <TextField
+          hintText={'福田区'}
+          floatingLabelText={msg.county}
+          {...fields.county}
+        /><br />
+        <TextField
+          hintText={'深圳市'}
+          floatingLabelText={msg.city}
+          {...fields.city}
+        /><br />
+        <TextField
+          hintText={'广东省'}
+          floatingLabelText={msg.province}
+          {...fields.province}
+        /><br />
+        <TextField
+          hintText={'中国'}
+          floatingLabelText={msg.country}
+          {...fields.country}
+        /><br />
         <SelectField
           hintText={msg.contactNumberType1}
-          floatingLabelText={msg.contactNumberType}
+          floatingLabelText={msg.addressType}
           onChange={this.handleSelectedType}
-          value={fields.contactNumberType.value}
+          value={fields.addressType.value}
         >
           <MenuItem
             value={1}
-            label={msg.contactNumberType1}
-            primaryText={msg.contactNumberType1}
+            label={msg.Home}
+            primaryText={msg.Home}
           />
           <MenuItem
             value={2}
-            label={msg.contactNumberType2}
-            primaryText={msg.contactNumberType2}
-          />
-          <MenuItem
-            value={3}
-            label={msg.contactNumberType3}
-            primaryText={msg.contactNumberType3}
+            label={msg.Work}
+            primaryText={msg.Work}
           />
         </SelectField><br />
-        <TextField
-          hintText={'+86'}
-          floatingLabelText={msg.countryCode}
-          {...fields.countryCode}
-        /><br />
-        {this.showingAreaCode()}
-        <TextField
-          hintText={'13723456789'}
-          floatingLabelText={msg.contactNumber}
-          {...fields.contactNumber}
-        /><br />
-        {this.showingExt()}
         <SelectField
           hintText={msg.source}
           floatingLabelText={msg.source}
@@ -221,23 +213,24 @@ class AddContactNumberDialog extends Component {
 }
 
 AddContactNumberDialog = fields(AddContactNumberDialog, {
-  path: 'AddContactNumberDialog',
+  path: 'AddAddressDialog',
   fields: [
-    'countryCode',
-    'areaCode',
-    'contactNumber',
-    'ext',
-    'source',
-    'contactNumberType',
+    'address',
+    'county',
+    'city',
+    'province',
+    'addressType',
+    'country',
+    'source'
   ]
 });
 
 
 export default connect(state => ({
   msg: state.intl.msg.contacts,
-  isAddContactNumberDialogOpen: state.ui.isAddContactNumberDialogOpen,
+  isAddAddressDialogOpen: state.ui.isAddAddressDialogOpen,
 }), {
-  closeAddContactNumberDialog,
+  closeAddAddressDialog,
   setField,
-  addAddress,
+  addNewAddress,
 })(AddContactNumberDialog);

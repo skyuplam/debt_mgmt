@@ -122,6 +122,16 @@
       "description": ""
     }
   ],
+  "addressTypes": [
+    {
+      "type": "Home",
+      "description": ""
+    },
+    {
+      "type": "Work",
+      "description": ""
+    }
+  ],
   "sources": [
     {
       "source": "Originator",
