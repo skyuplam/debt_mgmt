@@ -93,6 +93,10 @@ export default [
     "defaultMessage": "市"
   },
   {
+    "id": "contacts.Codebtor",
+    "defaultMessage": "共同贷款人"
+  },
+  {
     "id": "contacts.Colleague",
     "defaultMessage": "同事"
   },
@@ -171,6 +175,10 @@ export default [
   {
     "id": "contacts.Friend",
     "defaultMessage": "朋友"
+  },
+  {
+    "id": "contacts.Guarantor",
+    "defaultMessage": "担保人"
   },
   {
     "id": "contacts.Home",

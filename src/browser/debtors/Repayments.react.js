@@ -43,13 +43,13 @@ class Repayments extends Component {
 
   formatdate(date) {
     return (
-      <p>
+      <div>
         {moment(date).isValid() ? (
           <FormattedDate
             value={moment(date)}
           />
         ) : ''}
-      </p>
+      </div>
     );
   }
 
@@ -61,13 +61,13 @@ class Repayments extends Component {
 
   _cellRenderer(cellData) {
     return (
-      <p>
+      <div>
         {moment(cellData).isValid() ? (
           <FormattedDate
             value={moment(cellData)}
           />
         ) : ''}
-      </p>
+      </div>
     );
   }
 
@@ -85,7 +85,7 @@ class Repayments extends Component {
     let repaymentbtnLb;
     const repay = intl.formatMessage(repaymentsMessages.repay);
     if (this._checkIfPaid(rowData.repaymentStatusId)) {
-      repaymentbtnLb = this.formatdate(rowData.repaidAt);
+      repaymentbtnLb = intl.formatDate(rowData.repaidAt);
     } else {
       repaymentbtnLb = repay;
     }
@@ -95,8 +95,8 @@ class Repayments extends Component {
           label={repaymentbtnLb}
           primary
           fullWidth
-          onTouchEnd={e => this._handleRepayAction(rowData)}
-          onMouseUp={e => this._handleRepayAction(rowData)}
+          onTouchEnd={() => this._handleRepayAction(rowData)}
+          onMouseUp={() => this._handleRepayAction(rowData)}
           disabled={this._checkIfPaid(rowData.repaymentStatusId) ||
             this._isRepaymentPlanCanceledOrCompleted(rowData.repaymentPlanStatus)}
         />
