@@ -4,6 +4,7 @@ import Footer from './Footer.react';
 import Header from './Header.react';
 import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
+import start from '../../common/app/start';
 import { connect } from 'react-redux';
 import { onAppComponentDidMount } from '../../common/app/actions';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
@@ -22,26 +23,19 @@ class App extends Component {
 
   static propTypes = {
     children: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    currentLocale: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired
   };
 
-  // Note pattern how actions related to app start are dispatched.
-  // componentDidMount is not called in ReactDOMServer.renderToString, so it's
-  // the right place to dispatch client only (e.g. Firebase) actions.
-  // Firebase can be used on the server as well, but it's over of this example.
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(onAppComponentDidMount());
-  }
-
   render() {
-    const { children, location } = this.props;
+    const { children, currentLocale, location } = this.props;
 
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="page">
-          <Helmet />
+          <Helmet
+            htmlAttributes={{ lang: currentLocale }}
+          />
           {/* Pass location to ensure header active links are updated. */}
           <Header location={location} />
           {children}
@@ -53,5 +47,8 @@ class App extends Component {
 
 }
 
-// Just inject dispatch.
-export default connect()(App);
+App = start(App);
+
+export default connect(state => ({
+  currentLocale: state.intl.currentLocale
+}))(App);

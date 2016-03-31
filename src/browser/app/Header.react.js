@@ -39,7 +39,7 @@ class Header extends Component {
           className="app-bar"
           onLeftIconButtonTouchTap={toggleSideMenu}
         />
-      <NaviMenu open={isSideMenuOpen} />
+        <NaviMenu open={isSideMenuOpen} />
       </header>
     );
   }

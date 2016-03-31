@@ -1,12 +1,17 @@
 import Component from 'react-pure-render/component';
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+// import { FormattedHTMLMessage, defineMessages } from 'react-intl';
 
-class Footer extends Component {
+// Messages collocation ftw.
+// https://github.com/yahoo/react-intl/wiki/API#definemessages
+// const messages = defineMessages({
+//   madeByHtml: {
+//     defaultMessage: 'made by <a href="https://twitter.com/steida">steida</a>',
+//     id: 'footer.madeByHtml'
+//   }
+// });
 
-  static propTypes = {
-    msg: PropTypes.object.isRequired
-  };
+export default class Footer extends Component {
 
   render() {
     return (
@@ -16,7 +21,3 @@ class Footer extends Component {
   }
 
 }
-
-export default connect(state => ({
-  msg: state.intl.msg.app.footer
-}))(Footer);

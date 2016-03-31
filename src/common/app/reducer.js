@@ -17,7 +17,7 @@ import contactNumbers from '../contactNumbers/reducer';
 import addresses from '../addresses/reducer';
 import notes from '../notes/reducer';
 
-const appReducer = combineReducers({
+export default combineReducers({
   auth,
   config,
   device,
@@ -35,5 +35,3 @@ const appReducer = combineReducers({
   ui,
   users
 });
-
-export default appReducer;
