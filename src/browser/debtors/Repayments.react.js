@@ -14,7 +14,7 @@ import RepaymentDialog from './RepaymentDialog.react';
 import { openRepaymentDialog } from '../../common/ui/actions';
 import { injectIntl, intlShape } from 'react-intl';
 import repaymentsMessages from '../../common/repayments/repaymentsMessages';
-
+import moment from 'moment';
 
 class Repayments extends Component {
   static propTypes = {
@@ -42,12 +42,13 @@ class Repayments extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   formatdate(date) {
-    const theDate = date ? new Date(date) : null;
     return (
       <p>
-        <FormattedDate
-          value={theDate}
-        />
+        {moment(date).isValid() ? (
+          <FormattedDate
+            value={moment(date)}
+          />
+        ) : ''}
       </p>
     );
   }
@@ -59,11 +60,14 @@ class Repayments extends Component {
   }
 
   _cellRenderer(cellData) {
-    const date = cellData ? new Date(cellData) : null;
     return (
-      <FormattedDate
-        value={date}
-      />
+      <p>
+        {moment(cellData).isValid() ? (
+          <FormattedDate
+            value={moment(cellData)}
+          />
+        ) : ''}
+      </p>
     );
   }
 

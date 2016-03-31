@@ -13,9 +13,9 @@ import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import AddNoteDialog from './AddNoteDialog';
 import { openAddNoteDialog } from '../../common/ui/actions';
 import { FormattedDate } from 'react-intl';
-import { isDate } from 'validator';
 import { injectIntl, intlShape } from 'react-intl';
 import debtorsMessages from '../../common/debtors/debtorsMessages';
+import moment from 'moment';
 
 class DebtorInfo extends Component {
   static propTypes = {
@@ -33,12 +33,13 @@ class DebtorInfo extends Component {
   }
 
   formatDate(date) {
-    const theDate = isDate(date) ? new Date(date) : null;
     return (
       <p>
-        <FormattedDate
-          value={theDate}
-        />
+        {moment(date).isValid() ? (
+          <FormattedDate
+            value={moment(date)}
+          />
+        ) : ''}
       </p>
     );
   }

@@ -8,9 +8,9 @@ import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import GridList from 'material-ui/lib/grid-list/grid-list';
 import { FormattedNumber, FormattedDate } from 'react-intl';
-import { isDate, isAlphanumeric } from 'validator';
 import { injectIntl, intlShape } from 'react-intl';
 import loansMessages from '../../common/loans/loansMessages';
+import moment from 'moment';
 
 class LoanDetailDialog extends Component {
   static propTypes = {
@@ -52,12 +52,13 @@ class LoanDetailDialog extends Component {
   }
 
   _formatDate(date) {
-    const theDate = date ? Date.parse(date) : null;
     return (
       <p>
-        <FormattedDate
-          value={theDate}
-        />
+        {moment(date).isValid() ? (
+          <FormattedDate
+            value={moment(date)}
+          />
+        ) : ''}
       </p>
     );
   }

@@ -10,7 +10,7 @@ import TextField from 'material-ui/lib/text-field';
 import { toFloat } from 'validator';
 import { injectIntl, intlShape } from 'react-intl';
 import repaymentsMessages from '../../common/repayments/repaymentsMessages';
-
+import moment from 'moment';
 
 class RepaymentList extends Component {
   static propTypes = {
@@ -29,11 +29,14 @@ class RepaymentList extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   _randerDateCell(cellData) {
-    const theDate = cellData ? new Date(cellData) : '';
     return (
-      <FormattedDate
-        value={theDate}
-      />
+      <p>
+        {moment(cellData).isValid() ? (
+          <FormattedDate
+            value={moment(cellData)}
+          />
+        ) : ''}
+      </p>
     );
   }
 
