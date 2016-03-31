@@ -565,6 +565,30 @@ export default [
     "defaultMessage": "贷款详细"
   },
   {
+    "id": "loans.loanStatus",
+    "defaultMessage": "贷款状态"
+  },
+  {
+    "id": "loans.loanStatus1",
+    "defaultMessage": "新貸款"
+  },
+  {
+    "id": "loans.loanStatus2",
+    "defaultMessage": "还款中"
+  },
+  {
+    "id": "loans.loanStatus3",
+    "defaultMessage": "延缓还款"
+  },
+  {
+    "id": "loans.loanStatus4",
+    "defaultMessage": "协商结清"
+  },
+  {
+    "id": "loans.loanStatus5",
+    "defaultMessage": "结清"
+  },
+  {
     "id": "loans.managementFeeRate",
     "defaultMessage": "管理费率"
   },
@@ -769,6 +793,10 @@ export default [
     "defaultMessage": "本金"
   },
   {
+    "id": "repayments.repaidAmount",
+    "defaultMessage": "已还金额"
+  },
+  {
     "id": "repayments.repaidAt",
     "defaultMessage": "还款于"
   },
@@ -786,7 +814,7 @@ export default [
   },
   {
     "id": "repayments.repaymentAmt",
-    "defaultMessage": "还款金额"
+    "defaultMessage": "应还金额"
   },
   {
     "id": "repayments.repaymentPlan",

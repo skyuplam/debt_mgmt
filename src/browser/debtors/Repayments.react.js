@@ -149,6 +149,13 @@ class Repayments extends Component {
                     <FlexColumn
                       label={intl.formatMessage(repaymentsMessages.principal)}
                       dataKey="principal"
+                      cellRenderer={cellData => intl.formatNumber(cellData)}
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={intl.formatMessage(repaymentsMessages.repaidAmount)}
+                      dataKey="repaidAmount"
+                      cellRenderer={cellData => intl.formatNumber(cellData)}
                       width={100}
                     />
                     <FlexColumn
@@ -195,6 +202,13 @@ class Repayments extends Component {
                     <FlexColumn
                       label={intl.formatMessage(repaymentsMessages.repaymentAmt)}
                       dataKey="principal"
+                      cellRenderer={cellData => intl.formatNumber(cellData)}
+                      width={100}
+                    />
+                    <FlexColumn
+                      label={intl.formatMessage(repaymentsMessages.repaidAmount)}
+                      dataKey="paidAmount"
+                      cellRenderer={cellData => intl.formatNumber(cellData)}
                       width={100}
                     />
                     <FlexColumn
@@ -202,14 +216,6 @@ class Repayments extends Component {
                       dataKey="expectedRepaidAt"
                       cellRenderer={this._cellRenderer}
                       width={100}
-                    />
-                    <FlexColumn
-                      label={intl.formatMessage(repaymentsMessages.repaymentStatus)}
-                      dataKey="repaymentStatusId"
-                      cellRenderer={
-                        (cellData) => `${intl.formatMessage(repaymentsMessages['repaymentStatus'+cellData])}`
-                      }
-                      width={80}
                     />
                     <FlexColumn
                       label={intl.formatMessage(repaymentsMessages.repay)}

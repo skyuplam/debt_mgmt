@@ -85,8 +85,20 @@ export default [
     "defaultMessage": "取消"
   },
   {
+    "id": "contacts.Child",
+    "defaultMessage": "子女"
+  },
+  {
     "id": "contacts.city",
     "defaultMessage": "市"
+  },
+  {
+    "id": "contacts.Codebtor",
+    "defaultMessage": "共同贷款人"
+  },
+  {
+    "id": "contacts.Colleague",
+    "defaultMessage": "同事"
   },
   {
     "id": "contacts.contactNumber",
@@ -109,6 +121,10 @@ export default [
     "defaultMessage": "工作"
   },
   {
+    "id": "contacts.contactPerson",
+    "defaultMessage": "联系人"
+  },
+  {
     "id": "contacts.contacts",
     "defaultMessage": "联络电话"
   },
@@ -123,6 +139,10 @@ export default [
   {
     "id": "contacts.county",
     "defaultMessage": "区"
+  },
+  {
+    "id": "contacts.Customer",
+    "defaultMessage": "客户"
   },
   {
     "id": "contacts.DCA",
@@ -141,20 +161,56 @@ export default [
     "defaultMessage": "贷款人家属"
   },
   {
+    "id": "contacts.EmployerWorker",
+    "defaultMessage": "雇主雇员"
+  },
+  {
     "id": "contacts.ext",
     "defaultMessage": "分机号"
+  },
+  {
+    "id": "contacts.Family",
+    "defaultMessage": "亲戚"
+  },
+  {
+    "id": "contacts.Friend",
+    "defaultMessage": "朋友"
+  },
+  {
+    "id": "contacts.Guarantor",
+    "defaultMessage": "担保人"
   },
   {
     "id": "contacts.Home",
     "defaultMessage": "家庭"
   },
   {
+    "id": "contacts.Landlor",
+    "defaultMessage": "房东"
+  },
+  {
+    "id": "contacts.Lover",
+    "defaultMessage": "情人"
+  },
+  {
     "id": "contacts.Mobile",
     "defaultMessage": "手机"
   },
   {
+    "id": "contacts.Neighbor",
+    "defaultMessage": "邻居"
+  },
+  {
     "id": "contacts.Originator",
     "defaultMessage": "原转让机构"
+  },
+  {
+    "id": "contacts.Parent",
+    "defaultMessage": "父母"
+  },
+  {
+    "id": "contacts.Personal",
+    "defaultMessage": "本人"
   },
   {
     "id": "contacts.province",
@@ -165,8 +221,32 @@ export default [
     "defaultMessage": "公共来源"
   },
   {
+    "id": "contacts.relationship",
+    "defaultMessage": "关系"
+  },
+  {
+    "id": "contacts.Sibling",
+    "defaultMessage": "兄弟姊妹"
+  },
+  {
     "id": "contacts.source",
     "defaultMessage": "来源"
+  },
+  {
+    "id": "contacts.Spouse",
+    "defaultMessage": "夫妻"
+  },
+  {
+    "id": "contacts.Subordinate",
+    "defaultMessage": "下属"
+  },
+  {
+    "id": "contacts.Superordinate",
+    "defaultMessage": "上司"
+  },
+  {
+    "id": "contacts.Tenant",
+    "defaultMessage": "房客"
   },
   {
     "id": "contacts.Work",
@@ -485,6 +565,30 @@ export default [
     "defaultMessage": "贷款详细"
   },
   {
+    "id": "loans.loanStatus",
+    "defaultMessage": "贷款状态"
+  },
+  {
+    "id": "loans.loanStatus1",
+    "defaultMessage": "新貸款"
+  },
+  {
+    "id": "loans.loanStatus2",
+    "defaultMessage": "还款中"
+  },
+  {
+    "id": "loans.loanStatus3",
+    "defaultMessage": "延缓还款"
+  },
+  {
+    "id": "loans.loanStatus4",
+    "defaultMessage": "协商结清"
+  },
+  {
+    "id": "loans.loanStatus5",
+    "defaultMessage": "结清"
+  },
+  {
     "id": "loans.managementFeeRate",
     "defaultMessage": "管理费率"
   },
@@ -689,6 +793,10 @@ export default [
     "defaultMessage": "本金"
   },
   {
+    "id": "repayments.repaidAmount",
+    "defaultMessage": "已还金额"
+  },
+  {
     "id": "repayments.repaidAt",
     "defaultMessage": "还款于"
   },
@@ -706,7 +814,7 @@ export default [
   },
   {
     "id": "repayments.repaymentAmt",
-    "defaultMessage": "还款金额"
+    "defaultMessage": "应还金额"
   },
   {
     "id": "repayments.repaymentPlan",

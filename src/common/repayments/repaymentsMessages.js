@@ -13,6 +13,10 @@ export default defineMessages({
     id: 'repayments.paid',
     defaultMessage: '已还款',
   },
+  repaidAmount: {
+    id: 'repayments.repaidAmount',
+    defaultMessage: '已还金额',
+  },
   repayments: {
     id: 'repayments.repayments',
     defaultMessage: '还款计划详细',
@@ -23,7 +27,7 @@ export default defineMessages({
   },
   repaymentAmt: {
     id: 'repayments.repaymentAmt',
-    defaultMessage: '还款金额',
+    defaultMessage: '应还金额',
   },
   apr: {
     id: 'repayments.apr',

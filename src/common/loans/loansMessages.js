@@ -45,6 +45,10 @@ export default defineMessages({
     defaultMessage: '管理费率',
     id: 'loans.managementFeeRate',
   },
+  loanStatus: {
+    defaultMessage: '贷款状态',
+    id: 'loans.loanStatus',
+  },
   handlingFeeRate: {
     defaultMessage: '手续费率',
     id: 'loans.handlingFeeRate',
@@ -140,5 +144,25 @@ export default defineMessages({
   confirmNewRepaymentPlanContent: {
     defaultMessage: '是否要新增还款计划?',
     id: 'loans.confirmNewRepaymentPlanContent',
-  }
+  },
+  loanStatus1: {
+    defaultMessage: '新貸款',
+    id: 'loans.loanStatus1',
+  },
+  loanStatus2: {
+    defaultMessage: '还款中',
+    id: 'loans.loanStatus2',
+  },
+  loanStatus3: {
+    defaultMessage: '延缓还款',
+    id: 'loans.loanStatus3',
+  },
+  loanStatus4: {
+    defaultMessage: '协商结清',
+    id: 'loans.loanStatus4',
+  },
+  loanStatus5: {
+    defaultMessage: '结清',
+    id: 'loans.loanStatus5',
+  },
 });

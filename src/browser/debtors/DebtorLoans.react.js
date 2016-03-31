@@ -148,6 +148,14 @@ class DebtorLoans extends Component {
                   width={100}
                 />
                 <FlexColumn
+                  label={intl.formatMessage(loansMessages.loanStatus)}
+                  dataKey="loanStatusId"
+                  cellRenderer={
+                    cellData => intl.formatMessage(loansMessages[`loanStatus${cellData}`])
+                  }
+                  width={100}
+                />
+                <FlexColumn
                   label={intl.formatMessage(loansMessages.agency)}
                   dataKey="agency"
                   width={100}
