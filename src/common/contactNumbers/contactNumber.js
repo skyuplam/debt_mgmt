@@ -3,6 +3,9 @@ import { Record } from 'immutable';
 const ContactNumber = Record({
   id: '',
   contactNumber: '',
+  contactPerson: '',
+  relationship: '',
+  relationshipId: null,
   countryCode: '',
   contactNumberType: '',
   contactNumberTypeId: '',
@@ -11,6 +14,7 @@ const ContactNumber = Record({
   verifiedAt: null,
   verifiedBy: '',
   source: '',
+  sourceId: null,
   debtorId: null,
 });
 

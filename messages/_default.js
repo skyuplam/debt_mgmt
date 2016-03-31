@@ -85,8 +85,16 @@ export default [
     "defaultMessage": "取消"
   },
   {
+    "id": "contacts.Child",
+    "defaultMessage": "子女"
+  },
+  {
     "id": "contacts.city",
     "defaultMessage": "市"
+  },
+  {
+    "id": "contacts.Colleague",
+    "defaultMessage": "同事"
   },
   {
     "id": "contacts.contactNumber",
@@ -109,6 +117,10 @@ export default [
     "defaultMessage": "工作"
   },
   {
+    "id": "contacts.contactPerson",
+    "defaultMessage": "联系人"
+  },
+  {
     "id": "contacts.contacts",
     "defaultMessage": "联络电话"
   },
@@ -123,6 +135,10 @@ export default [
   {
     "id": "contacts.county",
     "defaultMessage": "区"
+  },
+  {
+    "id": "contacts.Customer",
+    "defaultMessage": "客户"
   },
   {
     "id": "contacts.DCA",
@@ -141,20 +157,52 @@ export default [
     "defaultMessage": "贷款人家属"
   },
   {
+    "id": "contacts.EmployerWorker",
+    "defaultMessage": "雇主雇员"
+  },
+  {
     "id": "contacts.ext",
     "defaultMessage": "分机号"
+  },
+  {
+    "id": "contacts.Family",
+    "defaultMessage": "亲戚"
+  },
+  {
+    "id": "contacts.Friend",
+    "defaultMessage": "朋友"
   },
   {
     "id": "contacts.Home",
     "defaultMessage": "家庭"
   },
   {
+    "id": "contacts.Landlor",
+    "defaultMessage": "房东"
+  },
+  {
+    "id": "contacts.Lover",
+    "defaultMessage": "情人"
+  },
+  {
     "id": "contacts.Mobile",
     "defaultMessage": "手机"
   },
   {
+    "id": "contacts.Neighbor",
+    "defaultMessage": "邻居"
+  },
+  {
     "id": "contacts.Originator",
     "defaultMessage": "原转让机构"
+  },
+  {
+    "id": "contacts.Parent",
+    "defaultMessage": "父母"
+  },
+  {
+    "id": "contacts.Personal",
+    "defaultMessage": "本人"
   },
   {
     "id": "contacts.province",
@@ -165,8 +213,32 @@ export default [
     "defaultMessage": "公共来源"
   },
   {
+    "id": "contacts.relationship",
+    "defaultMessage": "关系"
+  },
+  {
+    "id": "contacts.Sibling",
+    "defaultMessage": "兄弟姊妹"
+  },
+  {
     "id": "contacts.source",
     "defaultMessage": "来源"
+  },
+  {
+    "id": "contacts.Spouse",
+    "defaultMessage": "夫妻"
+  },
+  {
+    "id": "contacts.Subordinate",
+    "defaultMessage": "下属"
+  },
+  {
+    "id": "contacts.Superordinate",
+    "defaultMessage": "上司"
+  },
+  {
+    "id": "contacts.Tenant",
+    "defaultMessage": "房客"
   },
   {
     "id": "contacts.Work",

@@ -20,6 +20,7 @@ class AddContactNumberDialog extends Component {
     isAddContactNumberDialogOpen: PropTypes.bool.isRequired,
     closeAddContactNumberDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
+    relationships: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     setField: PropTypes.func.isRequired,
     addNewContactNumber: PropTypes.func.isRequired,
@@ -32,9 +33,11 @@ class AddContactNumberDialog extends Component {
     this.handleNew = this.handleNew.bind(this);
     this.handleSelectedType = this.handleSelectedType.bind(this);
     this.handleSelectedSource = this.handleSelectedSource.bind(this);
+    this.handleSelectedRelationship = this.handleSelectedRelationship.bind(this);
     this.isValid = this.isValid.bind(this);
     this.showingAreaCode = this.showingAreaCode.bind(this);
     this.showingExt = this.showingExt.bind(this);
+    this.showingContactPersonField = this.showingContactPersonField.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -49,6 +52,8 @@ class AddContactNumberDialog extends Component {
 
     addNewContactNumber({
       contactNumber: fields.contactNumber.value.trim(),
+      contactPerson: fields.contactPerson.value.trim(),
+      relationship: fields.relationship.value,
       contactNumberType: fields.contactNumberType.value,
       countryCode: fields.countryCode.value.trim(),
       areaCode: fields.areaCode.value.trim(),
@@ -66,6 +71,11 @@ class AddContactNumberDialog extends Component {
     setField(['AddContactNumberDialog', 'contactNumberType'], value);
   }
 
+  handleSelectedRelationship(event, index, value) {
+    const { setField } = this.props;
+    setField(['AddContactNumberDialog', 'relationship'], value);
+  }
+
   handleSelectedSource(event, index, value) {
     const { setField } = this.props;
     setField(['AddContactNumberDialog', 'source'], value);
@@ -74,15 +84,38 @@ class AddContactNumberDialog extends Component {
   isValid() {
     const { fields } = this.props;
     const contactNumber = fields.contactNumber.value.trim();
+    const contactPerson = fields.contactPerson.value.trim();
+    const relationship = fields.relationship.value;
     const source = fields.source.value;
     const contactNumberType = fields.contactNumberType.value;
     if (contactNumber && contactNumber.length >= 8 &&
+      relationship > 0 &&
       source > 0 &&
       contactNumberType > 0) {
+      if (relationship !== 1 &&
+        !contactPerson
+      ) {
+        return false;
+      }
       return true;
     }
 
     return false;
+  }
+
+  showingContactPersonField() {
+    const { intl, fields } = this.props;
+
+    if (fields.relationship.value !== 1) {
+      return (
+        <TextField
+          floatingLabelText={intl.formatMessage(contactsMessages.contactPerson)}
+          {...fields.contactPerson}
+        />
+      );
+    }
+
+    return (<div></div>);
   }
 
   showingAreaCode() {
@@ -117,7 +150,12 @@ class AddContactNumberDialog extends Component {
   }
 
   render() {
-    const { intl, isAddContactNumberDialogOpen, fields } = this.props;
+    const {
+      intl,
+      isAddContactNumberDialogOpen,
+      fields,
+      relationships
+    } = this.props;
     const actions = [
       <FlatButton
         label={intl.formatMessage(contactsMessages.cancel)}
@@ -151,6 +189,25 @@ class AddContactNumberDialog extends Component {
         autoScrollBodyContent
         contentStyle={styles.contentStyle}
       >
+        <SelectField
+          floatingLabelText={intl.formatMessage(contactsMessages.relationship)}
+          onChange={this.handleSelectedRelationship}
+          value={fields.relationship.value}
+          maxHeight={300}
+        >
+          {
+            relationships.map(relationship => (
+              <MenuItem
+                value={relationship.id}
+                label={intl.formatMessage(contactsMessages[relationship.relationship])}
+                primaryText={
+                  intl.formatMessage(contactsMessages[relationship.relationship])
+                }
+              />
+            ))
+          }
+        </SelectField><br />
+        {this.showingContactPersonField()}
         <SelectField
           hintText={intl.formatMessage(contactsMessages.contactNumberType1)}
           floatingLabelText={intl.formatMessage(contactsMessages.contactNumberType)}
@@ -226,6 +283,8 @@ AddContactNumberDialog = fields(AddContactNumberDialog, {
   path: 'AddContactNumberDialog',
   fields: [
     'countryCode',
+    'contactPerson',
+    'relationship',
     'areaCode',
     'contactNumber',
     'ext',
@@ -238,6 +297,7 @@ AddContactNumberDialog = injectIntl(AddContactNumberDialog);
 
 export default connect(state => ({
   isAddContactNumberDialogOpen: state.ui.isAddContactNumberDialogOpen,
+  relationships: state.categories.relationships,
 }), {
   closeAddContactNumberDialog,
   setField,

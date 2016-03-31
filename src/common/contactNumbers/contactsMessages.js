@@ -21,6 +21,14 @@ export default defineMessages({
     defaultMessage: '电话号码',
     id: 'contacts.contactNumber',
   },
+  contactPerson: {
+    defaultMessage: '联系人',
+    id: 'contacts.contactPerson',
+  },
+  relationship: {
+    defaultMessage: '关系',
+    id: 'contacts.relationship',
+  },
   countryCode: {
     defaultMessage: '国际电话区号',
     id: 'contacts.countryCode',
@@ -120,5 +128,77 @@ export default defineMessages({
   PublicSource: {
     defaultMessage: '公共来源',
     id: 'contacts.PublicSource',
-  }
+  },
+  Personal: {
+    defaultMessage: '本人',
+    id: 'contacts.Personal',
+  },
+  Codebtor: {
+    defaultMessage: '共同贷款人',
+    id: 'contacts.Codebtor',
+  },
+  Guarantor: {
+    defaultMessage: '担保人',
+    id: 'contacts.Guarantor',
+  },
+  Spouse: {
+    defaultMessage: '夫妻',
+    id: 'contacts.Spouse',
+  },
+  Parent: {
+    defaultMessage: '父母',
+    id: 'contacts.Parent',
+  },
+  Child: {
+    defaultMessage: '子女',
+    id: 'contacts.Child',
+  },
+  Sibling: {
+    defaultMessage: '兄弟姊妹',
+    id: 'contacts.Sibling',
+  },
+  Family: {
+    defaultMessage: '亲戚',
+    id: 'contacts.Family',
+  },
+  Neighbor: {
+    defaultMessage: '邻居',
+    id: 'contacts.Neighbor',
+  },
+  Friend: {
+    defaultMessage: '朋友',
+    id: 'contacts.Friend',
+  },
+  Lover: {
+    defaultMessage: '情人',
+    id: 'contacts.Lover',
+  },
+  EmployerWorker: {
+    defaultMessage: '雇主雇员',
+    id: 'contacts.EmployerWorker',
+  },
+  Colleague: {
+    defaultMessage: '同事',
+    id: 'contacts.Colleague',
+  },
+  Subordinate: {
+    defaultMessage: '下属',
+    id: 'contacts.Subordinate',
+  },
+  Superordinate: {
+    defaultMessage: '上司',
+    id: 'contacts.Superordinate',
+  },
+  Landlor: {
+    defaultMessage: '房东',
+    id: 'contacts.Landlor',
+  },
+  Tenant: {
+    defaultMessage: '房客',
+    id: 'contacts.Tenant',
+  },
+  Customer: {
+    defaultMessage: '客户',
+    id: 'contacts.Customer',
+  },
 });

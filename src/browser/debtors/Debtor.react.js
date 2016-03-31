@@ -12,6 +12,7 @@ import { fetchNotes } from '../../common/notes/actions';
 import { fetchRepamentPlans } from '../../common/repaymentPlans/actions';
 import { fetchContactNumbers } from '../../common/contactNumbers/actions';
 import { fetchAddresses } from '../../common/addresses/actions';
+import { fetchRelationships } from '../../common/categories/actions';
 import fetch from '../../common/components/fetch';
 import { injectIntl, intlShape } from 'react-intl';
 import debtorsMessages from '../../common/debtors/debtorsMessages';
@@ -54,7 +55,8 @@ Debtor = fetch(
   fetchRepamentPlans,
   fetchContactNumbers,
   fetchNotes,
-  fetchAddresses
+  fetchAddresses,
+  fetchRelationships
 )(Debtor);
 
 Debtor = injectIntl(Debtor);

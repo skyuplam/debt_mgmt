@@ -157,5 +157,79 @@
       "source": "Public Source",
       "description": ""
     }
+  ],
+  "relationships": [
+    {
+      "relationship": "Personal",
+      "description": ""
+    },
+    {
+      "relationship": "Codebtor",
+      "description": ""
+    },
+    {
+      "relationship": "Guarantor",
+      "description": ""
+    },
+    {
+      "relationship": "Spouse",
+      "description": ""
+    },
+    {
+      "relationship": "Parent",
+      "description": ""
+    },
+    {
+      "relationship": "Child",
+      "description": ""
+    },
+    {
+      "relationship": "Sibling",
+      "description": ""
+    },
+    {
+      "relationship": "Family",
+      "description": ""
+    },
+    {
+      "relationship": "Neighbor",
+      "description": ""
+    },
+    {
+      "relationship": "Friend",
+      "description": ""
+    },
+    {
+      "relationship": "Lover",
+      "description": ""
+    },
+    {
+      "relationship": "EmployerWorker",
+      "description": ""
+    },
+    {
+      "relationship": "Colleague",
+      "description": ""
+    },
+    {
+      "relationship": "Subordinate",
+      "description": ""
+    },
+    {
+      "relationship": "Superordinate",
+      "description": ""
+    },
+    {
+      "relationship": "Landlor",
+      "description": ""
+    },
+    {
+      "relationship": "Tenant",
+      "description": ""
+    },
+    {
+      "relationship": "Customer",
+      "description": ""
+    }
   ]
 }

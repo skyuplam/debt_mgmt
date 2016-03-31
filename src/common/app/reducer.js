@@ -16,6 +16,7 @@ import repayments from '../repayments/reducer';
 import contactNumbers from '../contactNumbers/reducer';
 import addresses from '../addresses/reducer';
 import notes from '../notes/reducer';
+import categories from '../categories/reducer';
 
 export default combineReducers({
   auth,
@@ -32,6 +33,7 @@ export default combineReducers({
   contactNumbers,
   addresses,
   notes,
+  categories,
   ui,
   users
 });

@@ -341,6 +341,8 @@ router.route('/:debtorId/contactNumbers')
         cn.*,
         cnt.type contactNumberType,
         s.source,
+        pcn.contactPerson,
+        pcn.relationshipId,
         pcn.verifiedAt,
         pcn.verifiedBy,
         pcn.personId debtorId
@@ -361,6 +363,8 @@ router.route('/:debtorId/contactNumbers')
     const {
       contactNumber,
       contactNumberType,
+      contactPerson,
+      relationship,
       countryCode,
       areaCode,
       ext,
@@ -396,7 +400,9 @@ router.route('/:debtorId/contactNumbers')
           }
           return theContactNumber;
         }).then(theContactNumber =>
-          models.personContactNumber.create({}, {
+          models.personContactNumber.create({
+            contactPerson
+          }, {
             transaction: t
           }).then(personContactNumber =>
             models.source.findById(source, {
@@ -412,9 +418,19 @@ router.route('/:debtorId/contactNumbers')
                 personContactNumber.setContactNumber(theContactNumber, {
                   transaction: t
                 })
+              ).then(personContactNumber =>
+                models.relationship.findById(relationship, {
+                  transaction: t
+                }).then(theRelationship =>
+                  personContactNumber.setRelationship(theRelationship, {
+                    transaction: t
+                  })
+                )
               ).then(personContactNumber => {
                 const cn = theContactNumber.toJSON();
                 cn.source = theSource.source;
+                cn.contactPerson = personContactNumber.contactPerson;
+                cn.relationshipId = personContactNumber.relationshipId;
                 cn.sourceId = personContactNumber.sourceId;
                 cn.debtorId = personContactNumber.personId;
                 return cn;
@@ -437,6 +453,8 @@ router.route('/:debtorId/addresses')
         ad.*,
         adt.type addressType,
         s.source,
+        pad.contactPerson,
+        pad.relationshipId,
         pad.verifiedAt,
         pad.verifiedBy,
         pad.personId debtorId
@@ -461,7 +479,9 @@ router.route('/:debtorId/addresses')
       province,
       addressType,
       country,
-      source
+      source,
+      contactPerson,
+      relationship,
     } = req.body;
     const longAddress = `${province}${city}${county}${address}`;
     return models.sequelize.transaction(t =>
@@ -481,7 +501,9 @@ router.route('/:debtorId/addresses')
         }).all().then(([theAddress]) =>
           theAddress
         ).then(theAddress =>
-          models.personAddress.create({}, {
+          models.personAddress.create({
+            contactPerson
+          }, {
             transaction: t
           }).then(personAddress =>
             models.source.findById(source, {
@@ -584,9 +606,19 @@ router.route('/:debtorId/addresses')
                     personAddress.setAddress(theAddress, {
                       transaction: t
                     })
+                  ).then(personAddress =>
+                    models.relationship.findById(relationship, {
+                      transaction: t
+                    }).then(theRelationship =>
+                      personAddress.setRelationship(theRelationship, {
+                        transaction: t
+                      })
+                    )
                   ).then(personAddress => {
                     const addr = theAddress.toJSON();
                     addr.source = theSource.source;
+                    addr.contactPerson = personAddress.contactPerson;
+                    addr.relationshipId = personAddress.relationshipId;
                     addr.addressType = theAddressType.type;
                     addr.sourceId = personAddress.sourceId;
                     addr.debtorId = personAddress.personId;

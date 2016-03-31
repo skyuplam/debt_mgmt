@@ -19,6 +19,7 @@ class Addresses extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     addresses: PropTypes.object.isRequired,
+    relationships: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     openAddAddressDialog: PropTypes.func.isRequired,
     isAddAddressDialogOpen: PropTypes.bool.isRequired,
@@ -28,6 +29,8 @@ class Addresses extends Component {
     super(props, context);
 
     this.handleAddAddress = this.handleAddAddress.bind(this);
+    this.formatAddress = this.formatAddress.bind(this);
+    this.formatSource = this.formatSource.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -36,6 +39,24 @@ class Addresses extends Component {
     const { openAddAddressDialog } = this.props;
     // Show Dialog for adding contactNumber
     openAddAddressDialog();
+  }
+
+  formatAddress(address) {
+    let theAddress = '';
+    if (address.contactPerson) {
+      theAddress = `${address.contactPerson}-`;
+    }
+    return `${theAddress}${address.longAddress}`;
+  }
+
+  formatSource(address) {
+    const { relationships, intl } = this.props;
+    let theAddress = '';
+    if (address.contactPerson) {
+      const relationship = relationships.get(address.relationshipId).relationship;
+      theAddress = `${intl.formatMessage(contactsMessages[relationship])}-`;
+    }
+    return `${theAddress}${intl.formatMessage(contactsMessages[address.source])}`;
   }
 
   render() {
@@ -69,8 +90,10 @@ class Addresses extends Component {
               addressList.map(address => (
                 <ListItem
                   leftIcon={<HomeIcon />}
-                  primaryText={address.longAddress}
-                  secondaryText={intl.formatMessage(contactsMessages[address.source])}
+                  primaryText={
+                    this.formatAddress(address)
+                  }
+                  secondaryText={this.formatSource(address)}
                 />
               ))
             }
@@ -94,6 +117,7 @@ Addresses = injectIntl(Addresses);
 
 export default connect(state => ({
   addresses: state.addresses.map,
+  relationships: state.categories.relationships,
 }), {
   openAddAddressDialog
 })(Addresses);

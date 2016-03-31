@@ -1,8 +1,10 @@
 import { Record } from 'immutable';
 
-const ContactNumber = Record({
+const Address = Record({
   id: '',
   address: '',
+  contactPerson: '',
+  relationshipId: null,
   longAddress: '',
   county: '',
   city: '',
@@ -12,8 +14,9 @@ const ContactNumber = Record({
   manicipality: '',
   debtorId: null,
   source: '',
+  sourceId: null,
   verifiedAt: null,
   verifiedBy: '',
 });
 
-export default ContactNumber;
+export default Address;

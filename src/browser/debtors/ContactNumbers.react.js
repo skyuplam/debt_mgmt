@@ -20,6 +20,7 @@ class ContactNumbers extends Component {
     intl: intlShape.isRequired,
     debtorId: PropTypes.number.isRequired,
     contactNumbers: PropTypes.object.isRequired,
+    relationships: PropTypes.object.isRequired,
     openAddContactNumberDialog: PropTypes.func.isRequired,
   }
 
@@ -27,6 +28,8 @@ class ContactNumbers extends Component {
     super(props, context);
 
     this.handleAddContactNumber = this.handleAddContactNumber.bind(this);
+    this.formatSource = this.formatSource.bind(this);
+    this.formatContact = this.formatContact.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -35,6 +38,24 @@ class ContactNumbers extends Component {
     const { openAddContactNumberDialog } = this.props;
     // Show Dialog for adding contactNumber
     openAddContactNumberDialog();
+  }
+
+  formatContact(contact) {
+    let theContact = '';
+    if (contact.contactPerson) {
+      theContact = `${contact.contactPerson}-`;
+    }
+    return `${theContact}${contact.contactNumber}`;
+  }
+
+  formatSource(contactNumber) {
+    const { relationships, intl } = this.props;
+    let theContactNumber = '';
+    if (contactNumber.contactPerson) {
+      const relationship = relationships.get(contactNumber.relationshipId).relationship;
+      theContactNumber = `${intl.formatMessage(contactsMessages[relationship])}-`;
+    }
+    return `${theContactNumber}${intl.formatMessage(contactsMessages[contactNumber.source])}`;
   }
 
   render() {
@@ -68,9 +89,9 @@ class ContactNumbers extends Component {
               theContacts.map(contact => (
                 <ListItem
                   leftIcon={<CommunicationCall />}
-                  primaryText={contact.contactNumber}
+                  primaryText={this.formatContact(contact)}
                   secondaryText={
-                    intl.formatMessage(contactsMessages[`contactNumberType${contact.contactNumberTypeId}`])
+                    this.formatSource(contact)
                   }
                 />
               ))
@@ -95,6 +116,7 @@ ContactNumbers = injectIntl(ContactNumbers);
 
 export default connect(state => ({
   contactNumbers: state.contactNumbers.map,
+  relationships: state.categories.relationships,
 }), {
   openAddContactNumberDialog
 })(ContactNumbers);

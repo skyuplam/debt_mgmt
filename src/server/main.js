@@ -31,6 +31,7 @@ models.sequelize.sync({ force: !isProduction }).then(() => {
     contactNumberTypes,
     addressTypes,
     sources,
+    relationships,
   } = typesAndStatus;
 
   models.sequelize.transaction(t2 =>
@@ -72,6 +73,11 @@ models.sequelize.sync({ force: !isProduction }).then(() => {
       ),
       sources.map(source =>
         models.source.create(source, {
+          transaction: t2
+        })
+      ),
+      relationships.map(relationship =>
+        models.relationship.create(relationship, {
           transaction: t2
         })
       ),

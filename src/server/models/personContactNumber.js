@@ -1,5 +1,8 @@
 export default function (sequelize, DataTypes) {
   const PersonContactNumber = sequelize.define('personContactNumber', {
+    contactPerson: {
+      type: DataTypes.STRING,
+    },
     verifiedAt: {
       type: DataTypes.DATE,
     },
@@ -12,6 +15,7 @@ export default function (sequelize, DataTypes) {
         PersonContactNumber.belongsTo(models.contactNumber);
         PersonContactNumber.belongsTo(models.person);
         PersonContactNumber.belongsTo(models.source);
+        PersonContactNumber.belongsTo(models.relationship);
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
