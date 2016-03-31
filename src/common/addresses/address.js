@@ -3,7 +3,7 @@ import { Record } from 'immutable';
 const ContactNumber = Record({
   id: '',
   address: '',
-  postalCode: '',
+  longAddress: '',
   county: '',
   city: '',
   province: '',

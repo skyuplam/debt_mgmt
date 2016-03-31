@@ -69,8 +69,8 @@ class Addresses extends Component {
               addressList.map(address => (
                 <ListItem
                   leftIcon={<HomeIcon />}
-                  primaryText={address.address}
-                  secondaryText={address.addressType}
+                  primaryText={address.longAddress}
+                  secondaryText={intl.formatMessage(contactsMessages[address.source])}
                 />
               ))
             }

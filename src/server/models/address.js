@@ -3,7 +3,7 @@ export default function (sequelize, DataTypes) {
     address: {
       type: DataTypes.STRING,
     },
-    postalCode: {
+    longAddress: {
       type: DataTypes.STRING,
     }
   }, {

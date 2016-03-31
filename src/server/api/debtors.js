@@ -463,6 +463,7 @@ router.route('/:debtorId/addresses')
       country,
       source
     } = req.body;
+    const longAddress = `${province}${city}${county}${address}`;
     return models.sequelize.transaction(t =>
       models.person.findById(debtorId, {
         transaction: t
@@ -470,9 +471,11 @@ router.route('/:debtorId/addresses')
         models.address.findOrCreate({
           where: {
             address,
+            longAddress
           },
           default: {
-            address
+            address,
+            longAddress
           },
           transaction: t
         }).all().then(([theAddress]) =>
