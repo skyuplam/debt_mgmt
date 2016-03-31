@@ -1,28 +1,12 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  intl: {
-    defaultMessage: 'Intl',
-    id: 'app.links.intl'
-  },
-  firebase: {
-    defaultMessage: 'Firebase',
-    id: 'app.links.firebase'
-  },
   home: {
-    defaultMessage: 'Home',
+    defaultMessage: '贷后管理系统',
     id: 'app.links.home'
   },
-  login: {
-    defaultMessage: 'Login',
-    id: 'app.links.login'
-  },
-  me: {
-    defaultMessage: 'Me',
-    id: 'app.links.me'
-  },
-  todos: {
-    defaultMessage: 'Todos',
-    id: 'app.links.todos'
+  debtors: {
+    defaultMessage: '借款人管理',
+    id: 'app.links.debtors'
   }
 });

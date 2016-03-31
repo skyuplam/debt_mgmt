@@ -23,7 +23,7 @@ export default function repaymentPlansReducer(state = initialState, action) {
   switch (action.type) {
 
     case actions.FETCH_REPAYMENT_PLANS_SUCCESS: {
-      if (!action.payload.repaymentPlans){
+      if (!action.payload.repaymentPlans) {
         return state.update('map', map => Map());
       }
       const repaymentPlans = action.payload.repaymentPlans.reduce((repaymentPlans, json) =>

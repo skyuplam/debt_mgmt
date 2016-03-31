@@ -14,10 +14,12 @@ import AddNoteDialog from './AddNoteDialog';
 import { openAddNoteDialog } from '../../common/ui/actions';
 import { FormattedDate } from 'react-intl';
 import { isDate } from 'validator';
+import { injectIntl, intlShape } from 'react-intl';
+import debtorsMessages from '../../common/debtors/debtorsMessages';
 
 class DebtorInfo extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     notes: PropTypes.object.isRequired,
     debtor: PropTypes.object.isRequired,
     openAddNoteDialog: PropTypes.func.isRequired,
@@ -47,7 +49,7 @@ class DebtorInfo extends Component {
   }
 
   render() {
-    const { msg, debtor, notes } = this.props;
+    const { intl, debtor, notes } = this.props;
     const theNotes = notes ? notes.filter(note =>
       note.personId === debtor.id
     ) : [];
@@ -81,16 +83,18 @@ class DebtorInfo extends Component {
           style={styles.card}
         >
           <CardHeader
-            title={`${msg.debtorDetail} - ${debtor ? debtor.name : ''}`}
+            title={
+              `${intl.formatMessage(debtorsMessages.debtorDetail)} - ${debtor ? debtor.name : ''}`
+            }
           />
           <div className="debtor-info">
             <TextField
-              floatingLabelText={msg.idCard}
+              floatingLabelText={intl.formatMessage(debtorsMessages.idCard)}
               disabled
               value={debtor ? debtor.idNumber : ''}
             />
             <TextField
-              floatingLabelText={msg.maritalStatus}
+              floatingLabelText={intl.formatMessage(debtorsMessages.maritalStatus)}
               disabled
               value={debtor ? debtor.maritalStatus : ''}
             />
@@ -100,7 +104,7 @@ class DebtorInfo extends Component {
           style={styles.card}
         >
           <CardHeader
-            title={`${msg.note}`}
+            title={`${intl.formatMessage(debtorsMessages.note)}`}
           />
           <List
             style={styles.list}
@@ -122,7 +126,7 @@ class DebtorInfo extends Component {
           >
             <ContentAdd />
           </FloatingActionButton>
-          <AddNoteDialog debtorId={debtor.id} />
+          <AddNoteDialog debtorId={debtor ? debtor.id : 0} />
         </Card>
       </GridList>
     );
@@ -130,9 +134,9 @@ class DebtorInfo extends Component {
 
 }
 
+DebtorInfo = injectIntl(DebtorInfo);
 
 export default connect(state => ({
-  msg: state.intl.msg.debtors,
   notes: state.notes.map,
 }), {
   openAddNoteDialog

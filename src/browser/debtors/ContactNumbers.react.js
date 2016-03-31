@@ -12,11 +12,12 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import AddContactNumberDialog from './AddContactNumberDialog.react';
 import { openAddContactNumberDialog } from '../../common/ui/actions';
+import { injectIntl, intlShape } from 'react-intl';
+import contactsMessages from '../../common/contactNumbers/contactsMessages';
 
-
-class ContactList extends Component {
+class ContactNumbers extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     debtorId: PropTypes.number.isRequired,
     contactNumbers: PropTypes.object.isRequired,
     openAddContactNumberDialog: PropTypes.func.isRequired,
@@ -37,7 +38,7 @@ class ContactList extends Component {
   }
 
   render() {
-    const { msg, contactNumbers, debtorId } = this.props;
+    const { intl, contactNumbers, debtorId } = this.props;
     const theContacts = contactNumbers ? contactNumbers.filter(contactNumber =>
       contactNumber.debtorId === debtorId
     ) : [];
@@ -59,7 +60,7 @@ class ContactList extends Component {
     return (
       <Card>
         <CardHeader
-          title={msg.contacts}
+          title={intl.formatMessage(contactsMessages.contacts)}
         />
         <CardActions style={styles.container}>
           <List style={styles.list}>
@@ -68,7 +69,9 @@ class ContactList extends Component {
                 <ListItem
                   leftIcon={<CommunicationCall />}
                   primaryText={contact.contactNumber}
-                  secondaryText={msg[`contactNumberType${contact.contactNumberTypeId}`]}
+                  secondaryText={
+                    intl.formatMessage(contactsMessages[`contactNumberType${contact.contactNumberTypeId}`])
+                  }
                 />
               ))
             }
@@ -88,9 +91,10 @@ class ContactList extends Component {
   }
 }
 
+ContactNumbers = injectIntl(ContactNumbers);
+
 export default connect(state => ({
-  msg: state.intl.msg.contacts,
   contactNumbers: state.contactNumbers.map,
 }), {
   openAddContactNumberDialog
-})(ContactList);
+})(ContactNumbers);

@@ -4,23 +4,35 @@ import Helmet from 'react-helmet';
 // import NewTodo from './NewTodo.react';
 import React, { PropTypes } from 'react';
 import Debtors from './Debtors.react';
-import fetch from '../../common/components/fetch';
-import { connect } from 'react-redux';
 import { fetchDebtors } from '../../common/debtors/actions';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import fetch from '../../common/components/fetch';
+
+const messages = defineMessages({
+  title: {
+    id: 'debtors.page.title',
+    defaultMessage: '借款人管理'
+  }
+});
 
 class Page extends Component {
-
   static propTypes = {
-    msg: PropTypes.object,
+    intl: intlShape.isRequired,
     children: PropTypes.object
   };
 
-  render() {
-    const { msg, children } = this.props;
+  static loadProps(params, cb) {
+    fetchDebtors().then(debtors =>
+      cb(null, { debtors })
+    );
+  }
 
+  render() {
+    const { children, intl } = this.props;
+    const title = intl.formatMessage(messages.title);
     return (
       <div className="debtors-page">
-        <Helmet title={msg.title} />
+        <Helmet title={title} />
         {children || <Debtors />}
       </div>
     );
@@ -28,10 +40,6 @@ class Page extends Component {
 
 }
 
-// Truly universal (not only isomorphic) data fetching.
-// One higher order component for browser, server, and mobile.
 Page = fetch(fetchDebtors)(Page);
 
-export default connect(state => ({
-  msg: state.intl.msg.todos
-}))(Page);
+export default injectIntl(Page);

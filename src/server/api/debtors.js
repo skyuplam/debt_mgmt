@@ -1,5 +1,6 @@
 import express from 'express';
 import models from '../models';
+import moment from 'moment';
 
 
 const router = express.Router();
@@ -238,12 +239,9 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId
     return models.repayment.findById(repaymentId).then(repayment =>
       models.sequelize.transaction(t => {
         // Repayment Status
-        const expected = new Date(repayment.expectedRepaidAt);
-        const actual = new Date(repaidAt);
         let rpStatus;
-        if (actual.getFullYear() <= expected.getFullYear() &&
-            actual.getMonth() <= expected.getMonth() &&
-            actual.getDay() <= expected.getDay()) {
+        if (moment(repaidAt).isBefore(repayment.expectedRepaidAt, 'day') ||
+            moment(repaidAt).isSame(repayment.expectedRepaidAt, 'day')) {
           // On Time
           if (amount < repayment.principal) {
             rpStatus = 'Partial Paid';

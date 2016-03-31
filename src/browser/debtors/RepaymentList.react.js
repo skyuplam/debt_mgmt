@@ -8,10 +8,13 @@ import { FormattedDate } from 'react-intl';
 import { updateRepayment } from '../../common/repaymentPlans/actions';
 import TextField from 'material-ui/lib/text-field';
 import { toFloat } from 'validator';
+import { injectIntl, intlShape } from 'react-intl';
+import repaymentsMessages from '../../common/repayments/repaymentsMessages';
+
 
 class RepaymentList extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     repayments: PropTypes.object.isRequired,
     updateRepayment: PropTypes.func.isRequired,
   };
@@ -58,7 +61,7 @@ class RepaymentList extends Component {
   }
 
   render() {
-    const { msg, repayments } = this.props;
+    const { intl, repayments } = this.props;
 
     return (
       <AutoSizer disableHeight>
@@ -72,18 +75,18 @@ class RepaymentList extends Component {
               rowGetter={index => repayments.get(index + 1)}
             >
               <FlexColumn
-                label={msg.term}
+                label={intl.formatMessage(repaymentsMessages.term)}
                 dataKey="term"
                 width={50}
               />
               <FlexColumn
-                label={msg.repaymentAmt}
+                label={intl.formatMessage(repaymentsMessages.repaymentAmt)}
                 dataKey="principal"
                 width={120}
                 cellRenderer={this._randerNumberCell}
               />
               <FlexColumn
-                label={msg.expectedRepaidAt}
+                label={intl.formatMessage(repaymentsMessages.expectedRepaidAt)}
                 dataKey="expectedRepaidAt"
                 width={120}
                 cellRenderer={this._randerDateCell}
@@ -96,8 +99,9 @@ class RepaymentList extends Component {
 
 }
 
+RepaymentList = injectIntl(RepaymentList);
+
 export default connect(state => ({
-  msg: state.intl.msg.newRepaymentPlanDialog,
   repayments: state.repaymentPlans.newRepaymentPlan.repayments,
 }), {
   updateRepayment

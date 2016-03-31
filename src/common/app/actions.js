@@ -10,7 +10,7 @@ export function updateAppStateFromStorage() {
       } else if (process.env.IS_SERVERLESS) {
         // TODO: Add a reliable client side only locale detection with failback
         // to config defaultLocale.
-        dispatch(setCurrentLocale('en'));
+        dispatch(setCurrentLocale('zh'));
       }
     });
     return {

@@ -1,4 +1,5 @@
 import { Range } from 'immutable';
+import moment from 'moment';
 export const FETCH_REPAYMENT_PLANS_START = 'FETCH_REPAYMENT_PLANS_START';
 export const FETCH_REPAYMENT_PLANS_FAILURE = 'FETCH_REPAYMENT_PLANS_FAILURE';
 export const FETCH_REPAYMENT_PLANS_SUCCESS = 'FETCH_REPAYMENT_PLANS_SUCCESS';
@@ -83,8 +84,9 @@ export function addRepayments(repaymentPlan) {
     }
 
     const unitAmt = Math.round(amount / terms / 100) * 100;
-    const repayAt = repayDate ? new Date(repayDate) : new Date();
-    repayAt.setMonth(repayAt.getMonth() + term);
+    const repayAt = moment(repayDate).isValid() ? moment(repayDate) : moment();
+    // repayAt.setMonth(repayAt.getMonth() + term);
+    repayAt.add(term, 'months');
     const repayment = {
       principal: term === terms - 1 ? amount - unitAmt * term : unitAmt,
       term: term + 1,

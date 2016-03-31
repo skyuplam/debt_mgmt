@@ -12,11 +12,12 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import AddAddressDialog from './AddAddressDialog.react';
 import { openAddAddressDialog } from '../../common/ui/actions';
+import { injectIntl, intlShape } from 'react-intl';
+import contactsMessages from '../../common/contactNumbers/contactsMessages';
 
-
-class ContactList extends Component {
+class Addresses extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     addresses: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     openAddAddressDialog: PropTypes.func.isRequired,
@@ -38,7 +39,7 @@ class ContactList extends Component {
   }
 
   render() {
-    const { msg, addresses, debtorId } = this.props;
+    const { intl, addresses, debtorId } = this.props;
     const addressList = addresses.filter(address =>
       address.debtorId === debtorId
     );
@@ -60,7 +61,7 @@ class ContactList extends Component {
     return (
       <Card>
         <CardHeader
-          title={msg.addresses}
+          title={intl.formatMessage(contactsMessages.addresses)}
         />
       <CardActions style={styles.container}>
           <List style={styles.list}>
@@ -89,9 +90,10 @@ class ContactList extends Component {
   }
 }
 
+Addresses = injectIntl(Addresses);
+
 export default connect(state => ({
-  msg: state.intl.msg.contacts,
   addresses: state.addresses.map,
 }), {
   openAddAddressDialog
-})(ContactList);
+})(Addresses);

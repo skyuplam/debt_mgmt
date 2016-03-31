@@ -4,12 +4,15 @@ import { connect } from 'react-redux';
 import AppBar from 'material-ui/lib/app-bar';
 import NaviMenu from './NaviMenu.react';
 import * as uiActions from '../../common/ui/actions';
+import linksMessages from '../../common/app/linksMessages';
+import { injectIntl, intlShape } from 'react-intl';
+
 
 class Header extends Component {
 
   static propTypes = {
-    msg: PropTypes.object.isRequired,
     viewer: PropTypes.object,
+    intl: intlShape.isRequired,
     onSideMenuChange: PropTypes.func.isRequired,
     toggleSideMenu: PropTypes.func.isRequired,
     isSideMenuOpen: PropTypes.bool.isRequired,
@@ -30,12 +33,13 @@ class Header extends Component {
   }
 
   render() {
-    const { msg, isSideMenuOpen, toggleSideMenu } = this.props;
+    const { isSideMenuOpen, toggleSideMenu, intl } = this.props;
 
+    const appBarTitle = intl.formatMessage(linksMessages.home);
     return (
       <header>
         <AppBar
-          title={msg.home}
+          title={appBarTitle}
           className="app-bar"
           onLeftIconButtonTouchTap={toggleSideMenu}
         />
@@ -46,7 +50,8 @@ class Header extends Component {
 
 }
 
+Header = injectIntl(Header);
+
 export default connect(state => ({
-  msg: state.intl.msg.app.links,
   isSideMenuOpen: state.ui.isSideMenuOpen
 }), uiActions)(Header);

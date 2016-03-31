@@ -9,21 +9,25 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import { addLocaleData } from 'react-intl';
 import { browserHistory } from 'react-router';
+import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
+import AsyncProps from 'async-props';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-import cs from 'react-intl/locale-data/cs';
-import de from 'react-intl/locale-data/de';
-import en from 'react-intl/locale-data/en';
-import es from 'react-intl/locale-data/es';
-import fr from 'react-intl/locale-data/fr';
-import no from 'react-intl/locale-data/no';
-import pt from 'react-intl/locale-data/pt';
-import ro from 'react-intl/locale-data/ro';
+import zh from 'react-intl/locale-data/zh';
+
 
 // http://bluebirdjs.com/docs/why-bluebird.html
 window.Promise = Bluebird;
 
+
+// Needed for onTouchTap
+// Can go away when react 1.0 release
+// Check this repo:
+// https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin();
+
 // github.com/yahoo/react-intl/wiki/Upgrade-Guide#add-call-to-addlocaledata-in-browser
-[cs, de, es, en, fr, no, pt, ro].forEach(addLocaleData);
+addLocaleData(zh);
 
 const store = configureStore({
   createEngine,
@@ -35,7 +39,15 @@ const routes = createRoutes(store.getState);
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
+    <Router
+      history={history}
+      render={(props) => (
+        <AsyncProps
+          {...props}
+          renderLoading={() => <div>Loading...</div>}
+        />
+      )}
+    >
       {routes}
     </Router>
   </Provider>

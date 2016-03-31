@@ -10,12 +10,15 @@ import { setField } from '../../common/lib/redux-fields/actions';
 import { closeRepaymentDialog } from '../../common/ui/actions';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
 import { payRepayment } from '../../common/repayments/actions';
-import { dateFormat } from '../../common/intl/format';
+// import { dateFormat } from '../../common/intl/format';
 import Checkbox from 'material-ui/lib/checkbox';
+import { injectIntl, intlShape } from 'react-intl';
+import repaymentsMessages from '../../common/repayments/repaymentsMessages';
+
 
 class RepaymentDialog extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     repayment: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
@@ -112,26 +115,26 @@ class RepaymentDialog extends Component {
   }
 
   formatDate(date) {
+    const { intl } = this.props;
     const theDate = date ? new Date(date) : null;
-    return dateFormat(theDate, ['zh']);
+    return intl.formatDate(theDate);
   }
 
   render() {
     const {
-      msg,
+      intl,
       isRepaymentDialogOpen,
       repayment,
-      fields,
     } = this.props;
 
     const actions = [
       <FlatButton
-        label={msg.cancel}
+        label={intl.formatMessage(repaymentsMessages.cancel)}
         secondary
         onTouchTap={this.handleCloseOfDialog}
       />,
       <FlatButton
-        label={msg.confirm}
+        label={intl.formatMessage(repaymentsMessages.confirm)}
         primary
         onTouchTap={this.handleRepayRequest}
         disabled={this.isInvalidAmount()}
@@ -140,41 +143,41 @@ class RepaymentDialog extends Component {
 
     return (
       <Dialog
-        title={msg.title}
+        title={intl.formatMessage(repaymentsMessages.title)}
         actions={actions}
         modal
         open={isRepaymentDialogOpen}
       >
         <TextField
           hintText={repayment.term}
-          floatingLabelText={msg.term}
+          floatingLabelText={intl.formatMessage(repaymentsMessages.term)}
           type="number"
           value={repayment.term}
           disabled
         /><br />
         <TextField
           hintText={repayment.principal}
-          floatingLabelText={msg.repayAmount}
+          floatingLabelText={intl.formatMessage(repaymentsMessages.repayAmount)}
           type="number"
           defaultValue={repayment.principal}
           onChange={this.handleChangeAmount}
         /><br />
         <TextField
-          floatingLabelText={msg.expectedRepayAt}
+          floatingLabelText={intl.formatMessage(repaymentsMessages.expectedRepayAt)}
           value={this.formatDate(repayment.expectedRepaidAt)}
           disabled
         />
         <DatePicker
-          hintText={msg.repaidAt}
-          floatingLabelText={msg.repaidAt}
+          hintText={intl.formatMessage(repaymentsMessages.repaidAt)}
+          floatingLabelText={intl.formatMessage(repaymentsMessages.repaidAt)}
           locale="zh"
           DateTimeFormat={global.Intl.DateTimeFormat}
           onChange={this.handleChangeOfRepaidAt}
-          cancelLabel={msg.cancel}
-          okLabel={msg.confirm}
+          cancelLabel={intl.formatMessage(repaymentsMessages.cancel)}
+          okLabel={intl.formatMessage(repaymentsMessages.confirm)}
         />
       <Checkbox
-        label={msg.paidInFull}
+        label={intl.formatMessage(repaymentsMessages.paidInFull)}
         defaultChecked={repayment.terms === repayment.term}
         onCheck={this.onCheckPaidInFull}
       />
@@ -192,8 +195,9 @@ RepaymentDialog = fields(RepaymentDialog, {
   ],
 });
 
+RepaymentDialog = injectIntl(RepaymentDialog);
+
 export default connect(state => ({
-  msg: state.intl.msg.repaymentDialog,
   isRepaymentDialogOpen: state.ui.isRepaymentDialogOpen,
   repayment: state.ui.currentRepayment,
 }), {

@@ -11,11 +11,12 @@ import TextField from 'material-ui/lib/text-field';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import { addNewContactNumber } from '../../common/contactNumbers/actions';
-
+import { injectIntl, intlShape } from 'react-intl';
+import contactsMessages from '../../common/contactNumbers/contactsMessages';
 
 class AddContactNumberDialog extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     isAddContactNumberDialogOpen: PropTypes.bool.isRequired,
     closeAddContactNumberDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
@@ -85,12 +86,13 @@ class AddContactNumberDialog extends Component {
   }
 
   showingAreaCode() {
-    const { msg, fields } = this.props;
+    const { intl, fields } = this.props;
+    const areaCode = intl.formatMessage(contactsMessages.areaCode);
     if (fields.contactNumberType.value !== 1) {
       return (
         <TextField
           hintText={'755'}
-          floatingLabelText={msg.areaCode}
+          floatingLabelText={areaCode}
           {...fields.areaCode}
         />
       );
@@ -100,12 +102,12 @@ class AddContactNumberDialog extends Component {
   }
 
   showingExt() {
-    const { msg, fields } = this.props;
+    const { intl, fields } = this.props;
     if (fields.contactNumberType.value !== 1) {
       return (
         <TextField
           hintText={'001'}
-          floatingLabelText={msg.ext}
+          floatingLabelText={intl.formatMessage(contactsMessages.ext)}
           {...fields.ext}
         />
       );
@@ -115,15 +117,15 @@ class AddContactNumberDialog extends Component {
   }
 
   render() {
-    const { msg, isAddContactNumberDialogOpen, fields } = this.props;
+    const { intl, isAddContactNumberDialogOpen, fields } = this.props;
     const actions = [
       <FlatButton
-        label={msg.cancel}
+        label={intl.formatMessage(contactsMessages.cancel)}
         secondary
         onTouchTap={this.handleClose}
       />,
       <FlatButton
-        label={msg.add}
+        label={intl.formatMessage(contactsMessages.add)}
         primary
         keyboardFocused
         onTouchTap={this.handleNew}
@@ -141,7 +143,7 @@ class AddContactNumberDialog extends Component {
     };
     return (
       <Dialog
-        title={msg.addNewContact}
+        title={intl.formatMessage(contactsMessages.addNewContact)}
         actions={actions}
         modal
         open={isAddContactNumberDialogOpen}
@@ -150,69 +152,69 @@ class AddContactNumberDialog extends Component {
         contentStyle={styles.contentStyle}
       >
         <SelectField
-          hintText={msg.contactNumberType1}
-          floatingLabelText={msg.contactNumberType}
+          hintText={intl.formatMessage(contactsMessages.contactNumberType1)}
+          floatingLabelText={intl.formatMessage(contactsMessages.contactNumberType)}
           onChange={this.handleSelectedType}
           value={fields.contactNumberType.value}
         >
           <MenuItem
             value={1}
-            label={msg.contactNumberType1}
-            primaryText={msg.contactNumberType1}
+            label={intl.formatMessage(contactsMessages.contactNumberType1)}
+            primaryText={intl.formatMessage(contactsMessages.contactNumberType1)}
           />
           <MenuItem
             value={2}
-            label={msg.contactNumberType2}
-            primaryText={msg.contactNumberType2}
+            label={intl.formatMessage(contactsMessages.contactNumberType2)}
+            primaryText={intl.formatMessage(contactsMessages.contactNumberType2)}
           />
           <MenuItem
             value={3}
-            label={msg.contactNumberType3}
-            primaryText={msg.contactNumberType3}
+            label={intl.formatMessage(contactsMessages.contactNumberType3)}
+            primaryText={intl.formatMessage(contactsMessages.contactNumberType3)}
           />
         </SelectField><br />
         <TextField
           hintText={'+86'}
-          floatingLabelText={msg.countryCode}
+          floatingLabelText={intl.formatMessage(contactsMessages.countryCode)}
           {...fields.countryCode}
         /><br />
         {this.showingAreaCode()}
         <TextField
           hintText={'13723456789'}
-          floatingLabelText={msg.contactNumber}
+          floatingLabelText={intl.formatMessage(contactsMessages.contactNumber)}
           {...fields.contactNumber}
         /><br />
         {this.showingExt()}
         <SelectField
-          hintText={msg.source}
-          floatingLabelText={msg.source}
+          hintText={intl.formatMessage(contactsMessages.source)}
+          floatingLabelText={intl.formatMessage(contactsMessages.source)}
           onChange={this.handleSelectedSource}
           value={fields.source.value}
         >
           <MenuItem
             value={1}
-            label={msg.Originator}
-            primaryText={msg.Originator}
+            label={intl.formatMessage(contactsMessages.Originator)}
+            primaryText={intl.formatMessage(contactsMessages.Originator)}
           />
           <MenuItem
             value={2}
-            label={msg.DCA}
-            primaryText={msg.DCA}
+            label={intl.formatMessage(contactsMessages.DCA)}
+            primaryText={intl.formatMessage(contactsMessages.DCA)}
           />
           <MenuItem
             value={3}
-            label={msg.Debtor}
-            primaryText={msg.Debtor}
+            label={intl.formatMessage(contactsMessages.Debtor)}
+            primaryText={intl.formatMessage(contactsMessages.Debtor)}
           />
           <MenuItem
             value={4}
-            label={msg.DebtorRelatives}
-            primaryText={msg.DebtorRelatives}
+            label={intl.formatMessage(contactsMessages.DebtorRelatives)}
+            primaryText={intl.formatMessage(contactsMessages.DebtorRelatives)}
           />
           <MenuItem
             value={5}
-            label={msg.DebtorFriends}
-            primaryText={msg.DebtorFriends}
+            label={intl.formatMessage(contactsMessages.DebtorFriends)}
+            primaryText={intl.formatMessage(contactsMessages.DebtorFriends)}
           />
         </SelectField><br />
       </Dialog>
@@ -232,9 +234,9 @@ AddContactNumberDialog = fields(AddContactNumberDialog, {
   ]
 });
 
+AddContactNumberDialog = injectIntl(AddContactNumberDialog);
 
 export default connect(state => ({
-  msg: state.intl.msg.contacts,
   isAddContactNumberDialogOpen: state.ui.isAddContactNumberDialogOpen,
 }), {
   closeAddContactNumberDialog,

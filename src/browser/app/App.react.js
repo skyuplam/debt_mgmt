@@ -6,7 +6,7 @@ import Helmet from 'react-helmet';
 import React, { PropTypes } from 'react';
 import start from '../../common/app/start';
 import { connect } from 'react-redux';
-import { onAppComponentDidMount } from '../../common/app/actions';
+// import { onAppComponentDidMount } from '../../common/app/actions';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
 import { cyan500 } from 'material-ui/lib/styles/colors';

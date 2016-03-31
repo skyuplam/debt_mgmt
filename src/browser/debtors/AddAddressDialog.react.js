@@ -11,11 +11,12 @@ import TextField from 'material-ui/lib/text-field';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import { addNewAddress } from '../../common/addresses/actions';
+import { injectIntl, intlShape } from 'react-intl';
+import contactsMessages from '../../common/contactNumbers/contactsMessages';
 
-
-class AddContactNumberDialog extends Component {
+class AddAddressDialog extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     isAddAddressDialogOpen: PropTypes.bool.isRequired,
     closeAddAddressDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
@@ -93,12 +94,12 @@ class AddContactNumberDialog extends Component {
   }
 
   showingExt() {
-    const { msg, fields } = this.props;
+    const { intl, fields } = this.props;
     if (fields.contactNumberType.value !== 1) {
       return (
         <TextField
           hintText={'001'}
-          floatingLabelText={msg.ext}
+          floatingLabelText={intl.formatMessage(contactsMessages.ext)}
           {...fields.ext}
         />
       );
@@ -108,15 +109,15 @@ class AddContactNumberDialog extends Component {
   }
 
   render() {
-    const { msg, isAddAddressDialogOpen, fields } = this.props;
+    const { intl, isAddAddressDialogOpen, fields } = this.props;
     const actions = [
       <FlatButton
-        label={msg.cancel}
+        label={intl.formatMessage(contactsMessages.cancel)}
         secondary
         onTouchTap={this.handleClose}
       />,
       <FlatButton
-        label={msg.add}
+        label={intl.formatMessage(contactsMessages.add)}
         primary
         keyboardFocused
         onTouchTap={this.handleNew}
@@ -134,7 +135,7 @@ class AddContactNumberDialog extends Component {
     };
     return (
       <Dialog
-        title={msg.addNewAddress}
+        title={intl.formatMessage(contactsMessages.addNewAddress)}
         actions={actions}
         modal
         open={isAddAddressDialogOpen}
@@ -144,76 +145,76 @@ class AddContactNumberDialog extends Component {
       >
         <TextField
           hintText={'中路南光大厦2517'}
-          floatingLabelText={msg.address}
+          floatingLabelText={intl.formatMessage(contactsMessages.address)}
           {...fields.address}
         /><br />
         <TextField
           hintText={'福田区'}
-          floatingLabelText={msg.county}
+          floatingLabelText={intl.formatMessage(contactsMessages.county)}
           {...fields.county}
         /><br />
         <TextField
           hintText={'深圳市'}
-          floatingLabelText={msg.city}
+          floatingLabelText={intl.formatMessage(contactsMessages.city)}
           {...fields.city}
         /><br />
         <TextField
           hintText={'广东省'}
-          floatingLabelText={msg.province}
+          floatingLabelText={intl.formatMessage(contactsMessages.province)}
           {...fields.province}
         /><br />
         <TextField
           hintText={'中国'}
-          floatingLabelText={msg.country}
+          floatingLabelText={intl.formatMessage(contactsMessages.country)}
           {...fields.country}
         /><br />
         <SelectField
-          hintText={msg.contactNumberType1}
-          floatingLabelText={msg.addressType}
+          hintText={intl.formatMessage(contactsMessages.contactNumberType1)}
+          floatingLabelText={intl.formatMessage(contactsMessages.addressType)}
           onChange={this.handleSelectedType}
           value={fields.addressType.value}
         >
           <MenuItem
             value={1}
-            label={msg.Home}
-            primaryText={msg.Home}
+            label={intl.formatMessage(contactsMessages.Home)}
+            primaryText={intl.formatMessage(contactsMessages.Home)}
           />
           <MenuItem
             value={2}
-            label={msg.Work}
-            primaryText={msg.Work}
+            label={intl.formatMessage(contactsMessages.Work)}
+            primaryText={intl.formatMessage(contactsMessages.Work)}
           />
         </SelectField><br />
         <SelectField
-          hintText={msg.source}
-          floatingLabelText={msg.source}
+          hintText={intl.formatMessage(contactsMessages.source)}
+          floatingLabelText={intl.formatMessage(contactsMessages.source)}
           onChange={this.handleSelectedSource}
           value={fields.source.value}
         >
           <MenuItem
             value={1}
-            label={msg.Originator}
-            primaryText={msg.Originator}
+            label={intl.formatMessage(contactsMessages.Originator)}
+            primaryText={intl.formatMessage(contactsMessages.Originator)}
           />
           <MenuItem
             value={2}
-            label={msg.DCA}
-            primaryText={msg.DCA}
+            label={intl.formatMessage(contactsMessages.DCA)}
+            primaryText={intl.formatMessage(contactsMessages.DCA)}
           />
           <MenuItem
             value={3}
-            label={msg.Debtor}
-            primaryText={msg.Debtor}
+            label={intl.formatMessage(contactsMessages.Debtor)}
+            primaryText={intl.formatMessage(contactsMessages.Debtor)}
           />
           <MenuItem
             value={4}
-            label={msg.DebtorRelatives}
-            primaryText={msg.DebtorRelatives}
+            label={intl.formatMessage(contactsMessages.DebtorRelatives)}
+            primaryText={intl.formatMessage(contactsMessages.DebtorRelatives)}
           />
           <MenuItem
             value={5}
-            label={msg.DebtorFriends}
-            primaryText={msg.DebtorFriends}
+            label={intl.formatMessage(contactsMessages.DebtorFriends)}
+            primaryText={intl.formatMessage(contactsMessages.DebtorFriends)}
           />
         </SelectField><br />
       </Dialog>
@@ -221,7 +222,7 @@ class AddContactNumberDialog extends Component {
   }
 }
 
-AddContactNumberDialog = fields(AddContactNumberDialog, {
+AddAddressDialog = fields(AddAddressDialog, {
   path: 'AddAddressDialog',
   fields: [
     'address',
@@ -235,11 +236,12 @@ AddContactNumberDialog = fields(AddContactNumberDialog, {
 });
 
 
+AddAddressDialog = injectIntl(AddAddressDialog);
+
 export default connect(state => ({
-  msg: state.intl.msg.contacts,
   isAddAddressDialogOpen: state.ui.isAddAddressDialogOpen,
 }), {
   closeAddAddressDialog,
   setField,
   addNewAddress,
-})(AddContactNumberDialog);
+})(AddAddressDialog);

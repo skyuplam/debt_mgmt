@@ -1,6 +1,5 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import GridList from 'material-ui/lib/grid-list/grid-list';
 import ContactNumbers from './ContactNumbers.react';
@@ -33,6 +32,4 @@ class ContactList extends Component {
   }
 }
 
-export default connect(state => ({
-  msg: state.intl.msg.contacts,
-}))(ContactList);
+export default ContactList;

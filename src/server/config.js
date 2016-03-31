@@ -17,7 +17,7 @@ nconf.env('__');
 // Use environment variables for production, and secrets.json for development.
 nconf.defaults({
   appName,
-  defaultLocale: 'en',
+  defaultLocale: 'zh',
   firebaseUrl: 'https://este.firebaseio.com',
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction,
@@ -39,7 +39,7 @@ nconf.defaults({
       storage: './db.development.sqlite'
     }
   },
-  locales: ['cs', 'de', 'es', 'en', 'fr', 'no', 'pt', 'ro'],
+  locales: ['zh'],
 });
 
 export default nconf.get();

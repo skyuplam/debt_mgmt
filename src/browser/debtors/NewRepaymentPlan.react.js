@@ -18,6 +18,8 @@ import {
 } from '../../common/repaymentPlans/actions';
 import RepaymentList from './RepaymentList.react';
 import { toFloat } from 'validator';
+import { injectIntl, intlShape } from 'react-intl';
+import repaymentsMessages from '../../common/repayments/repaymentsMessages';
 
 const customContentStyle = {
   width: '600px',
@@ -28,7 +30,7 @@ const customContentStyle = {
 
 class NewRepaymentPlan extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     closeNewRepyamnetPlanDialog: PropTypes.func.isRequired,
     isNewRepaymentPlan: PropTypes.bool.isRequired,
     fields: PropTypes.object.isRequired,
@@ -94,7 +96,9 @@ class NewRepaymentPlan extends Component {
 
   _handleGenerate() {
     const { addRepayments, fields } = this.props;
-    if (!parseFloat(fields.amount.value.trim())) return;
+    if (!parseFloat(fields.amount.value.trim()) ||
+        !parseFloat(fields.amount.value.trim()) ||
+        (fields.amount.value / fields.terms.value) < 100) return;
     addRepayments({
       terms: fields.terms.value,
       amount: fields.amount.value,
@@ -139,7 +143,7 @@ class NewRepaymentPlan extends Component {
 
   render() {
     const {
-      msg,
+      intl,
       closeNewRepyamnetPlanDialog,
       isNewRepaymentPlan,
       fields
@@ -147,12 +151,12 @@ class NewRepaymentPlan extends Component {
 
     const actions = [
       <FlatButton
-        label={msg.cancel}
+        label={intl.formatMessage(repaymentsMessages.cancel)}
         secondary
         onTouchTap={closeNewRepyamnetPlanDialog}
       />,
       <FlatButton
-        label={msg.submit}
+        label={intl.formatMessage(repaymentsMessages.submit)}
         primary
         onTouchTap={this.onHandlingSubmit}
         disabled={this._isInvalidRepaymentsAmt()}
@@ -161,7 +165,7 @@ class NewRepaymentPlan extends Component {
 
     return (
       <Dialog
-        title={msg.newRepaymentPlanTitle}
+        title={intl.formatMessage(repaymentsMessages.newRepaymentPlanTitle)}
         actions={actions}
         modal
         contentStyle={customContentStyle}
@@ -174,7 +178,7 @@ class NewRepaymentPlan extends Component {
             />
           )}
           type="number"
-          floatingLabelText={msg.amount}
+          floatingLabelText={intl.formatMessage(repaymentsMessages.amount)}
           {...fields.amount}
         />
         <TextField
@@ -184,22 +188,22 @@ class NewRepaymentPlan extends Component {
             />
           )}
           type="number"
-          floatingLabelText={msg.terms}
+          floatingLabelText={intl.formatMessage(repaymentsMessages.terms)}
           {...fields.terms}
         />
         <DatePicker
-          hintText={msg.repayDate}
-          floatingLabelText={msg.repayDate}
+          hintText={intl.formatMessage(repaymentsMessages.repayDate)}
+          floatingLabelText={intl.formatMessage(repaymentsMessages.repayDate)}
           locale="zh"
           defaultDate={fields.repayDate.value ? fields.repayDate.value : new Date()}
           DateTimeFormat={global.Intl.DateTimeFormat}
           onChange={this._handleOnChange}
-          cancelLabel={msg.cancel}
-          okLabel={msg.ok}
+          cancelLabel={intl.formatMessage(repaymentsMessages.cancel)}
+          okLabel={intl.formatMessage(repaymentsMessages.ok)}
         />
       <div style={{ textAlign: 'right' }}>
           <FlatButton
-            label={msg.generateRepayments}
+            label={intl.formatMessage(repaymentsMessages.generateRepayments)}
             secondary
             keyboardFocused
             onTouchTap={this._handleGenerate}
@@ -223,8 +227,9 @@ NewRepaymentPlan = fields(NewRepaymentPlan, {
   ]
 });
 
+NewRepaymentPlan = injectIntl(NewRepaymentPlan);
+
 export default connect(state => ({
-  msg: state.intl.msg.newRepaymentPlanDialog,
   loans: state.loans.map,
   repayments: state.repaymentPlans.newRepaymentPlan.repayments,
   currentLoanId: state.ui.currentLoanId,

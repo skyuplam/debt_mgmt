@@ -10,8 +10,6 @@ class Debtors extends Component {
 
   static propTypes = {
     children: PropTypes.object,
-    msg: PropTypes.object.isRequired,
-    debtors: PropTypes.object.isRequired,
   };
 
   // Example how to measure component update.
@@ -25,8 +23,6 @@ class Debtors extends Component {
   // }
 
   render() {
-    const { children, msg, debtors } = this.props;
-
     return (
       <div>
         <DebtorList />
@@ -36,7 +32,4 @@ class Debtors extends Component {
 
 }
 
-export default connect(state => ({
-  msg: state.intl.msg.debtors,
-  debtors: state.debtors.map
-}), debtorsActions)(Debtors);
+export default connect(null, debtorsActions)(Debtors);

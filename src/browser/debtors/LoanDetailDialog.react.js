@@ -9,10 +9,12 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import GridList from 'material-ui/lib/grid-list/grid-list';
 import { FormattedNumber, FormattedDate } from 'react-intl';
 import { isDate, isAlphanumeric } from 'validator';
+import { injectIntl, intlShape } from 'react-intl';
+import loansMessages from '../../common/loans/loansMessages';
 
 class LoanDetailDialog extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     closeLoanDetailDialog: PropTypes.func.isRequired,
     isLoanDetailDialogOpen: PropTypes.bool.isRequired,
     loan: PropTypes.object.isRequired,
@@ -62,7 +64,7 @@ class LoanDetailDialog extends Component {
 
   render() {
     const {
-      msg,
+      intl,
       loan,
       isLoanDetailDialogOpen,
       closeLoanDetailDialog,
@@ -87,72 +89,72 @@ class LoanDetailDialog extends Component {
 
     return (
       <Dialog
-        title={`${msg.loanDetail}-${loan.originatedAgreementNo}`}
+        title={`${intl.formatMessage(loansMessages.loanDetail)}-${loan.originatedAgreementNo}`}
         open={isLoanDetailDialogOpen}
         onRequestClose={closeLoanDetailDialog}
       >
         <GridList cellHeight={400} style={styles.gridList}>
           <List>
             <ListItem
-              primaryText={msg.amount}
+              primaryText={intl.formatMessage(loansMessages.amount)}
               secondaryText={this._formatNumber(loan.amount)}
             />
             <ListItem
-              primaryText={msg.issuedAt}
+              primaryText={intl.formatMessage(loansMessages.issuedAt)}
               secondaryText={this._formatDate(loan.issuedAt)}
             />
             <ListItem
-              primaryText={msg.terms}
+              primaryText={intl.formatMessage(loansMessages.terms)}
               secondaryText={loan.terms}
             />
             <ListItem
-              primaryText={msg.repaidTerms}
+              primaryText={intl.formatMessage(loansMessages.repaidTerms)}
               secondaryText={loan.repaidTerms}
             />
             <ListItem
-              primaryText={msg.transferredAt}
+              primaryText={intl.formatMessage(loansMessages.transferredAt)}
               secondaryText={
                 this._formatDate(loan.transferredAt)
               }
             />
             <ListItem
-              primaryText={`${msg.delinquentAt} - ${daysOfDelinq}${msg.days}`}
+              primaryText={`${intl.formatMessage(loansMessages.delinquentAt)} - ${daysOfDelinq}${intl.formatMessage(loansMessages.days)}`}
               secondaryText={
                 this._formatDate(loan.delinquentAt)
               }
             />
             <ListItem
-              primaryText={msg.agency}
+              primaryText={intl.formatMessage(loansMessages.agency)}
               secondaryText={loan.agency}
             />
           </List>
           <List>
             <ListItem
-              primaryText={msg.collectablePrincipal}
+              primaryText={intl.formatMessage(loansMessages.collectablePrincipal)}
               secondaryText={this._formatNumber(loan.collectablePrincipal)}
             />
             <ListItem
-              primaryText={msg.collectableInterest}
+              primaryText={intl.formatMessage(loansMessages.collectableInterest)}
               secondaryText={this._formatNumber(loan.collectableInterest)}
             />
             <ListItem
-              primaryText={msg.collectableMgmtFee}
+              primaryText={intl.formatMessage(loansMessages.collectableMgmtFee)}
               secondaryText={this._formatNumber(loan.collectableMgmtFee)}
             />
             <ListItem
-              primaryText={msg.collectableHandlingFee}
+              primaryText={intl.formatMessage(loansMessages.collectableHandlingFee)}
               secondaryText={this._formatNumber(loan.collectableHandlingFee)}
             />
             <ListItem
-              primaryText={msg.collectableLateFee}
+              primaryText={intl.formatMessage(loansMessages.collectableLateFee)}
               secondaryText={this._formatNumber(loan.collectableLateFee)}
             />
             <ListItem
-              primaryText={msg.collectablePenaltyFee}
+              primaryText={intl.formatMessage(loansMessages.collectablePenaltyFee)}
               secondaryText={this._formatNumber(loan.collectablePenaltyFee)}
             />
             <ListItem
-              primaryText={msg.placementServicingFeeRate}
+              primaryText={intl.formatMessage(loansMessages.placementServicingFeeRate)}
               secondaryText={this._formatPercentage(loan.placementServicingFeeRate)}
             />
           </List>
@@ -162,8 +164,9 @@ class LoanDetailDialog extends Component {
   }
 }
 
+LoanDetailDialog = injectIntl(LoanDetailDialog);
+
 export default connect(state => ({
-  msg: state.intl.msg.loans,
   isLoanDetailDialogOpen: state.ui.isLoanDetailDialogOpen,
   loan: state.ui.currentLoan,
 }), {

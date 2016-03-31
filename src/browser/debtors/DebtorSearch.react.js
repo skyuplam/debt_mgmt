@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import * as debtorsActions from '../../common/debtors/actions';
 import RaisedButton from 'material-ui/lib/raised-button';
 import FontIcon from 'material-ui/lib/font-icon';
+import { injectIntl, intlShape } from 'react-intl';
+import debtorsMessages from '../../common/debtors/debtorsMessages';
 
 const styles = {
   button: {
@@ -29,8 +31,9 @@ const styles = {
 class DebtorSearch extends Component {
   static propTypes = {
     searchDebtors: PropTypes.func.isRequired,
-    msg: PropTypes.object.isRequired,
-    fields: PropTypes.object.isRequired
+    intl: intlShape.isRequired,
+    fields: PropTypes.object.isRequired,
+    debtors: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -38,9 +41,9 @@ class DebtorSearch extends Component {
     this.onPressedSearch = this.onPressedSearch.bind(this);
   }
 
-  onPressedSearch(e) {
+  onPressedSearch() {
     // if (e.key !== 'Enter') return;
-    const { searchDebtors, fields, debtors } = this.props;
+    const { searchDebtors, fields } = this.props;
     if (!(fields.idCard.value.trim() ||
         fields.name.value.trim() ||
         fields.originatedAgreementNo.value.trim())) return;
@@ -53,31 +56,31 @@ class DebtorSearch extends Component {
   }
 
   render() {
-    const { msg, fields } = this.props;
+    const { fields, intl } = this.props;
     return (
       <div style={styles.padding}>
         <TextField
-          floatingLabelText={msg.idCard}
-          hintText={msg.idCard}
+          floatingLabelText={intl.formatMessage(debtorsMessages.idCard)}
+          hintText={intl.formatMessage(debtorsMessages.idCard)}
           {...fields.idCard}
         />
         <TextField
-          floatingLabelText={msg.name}
-          hintText={msg.name}
+          floatingLabelText={intl.formatMessage(debtorsMessages.name)}
+          hintText={intl.formatMessage(debtorsMessages.name)}
           {...fields.name}
         />
         <TextField
-          floatingLabelText={msg.originatedAgreementNo}
-          hintText={msg.originatedAgreementNo}
+          floatingLabelText={intl.formatMessage(debtorsMessages.originatedAgreementNo)}
+          hintText={intl.formatMessage(debtorsMessages.originatedAgreementNo)}
           {...fields.originatedAgreementNo}
         />
         <RaisedButton
-          label={msg.search}
+          label={intl.formatMessage(debtorsMessages.search)}
           onMouseUp={this.onPressedSearch}
           onTouchEnd={this.onPressedSearch}
-          secondary={true}
+          secondary
           style={styles.button}
-          icon={<FontIcon className="muidocs-icon-search"/>}
+          icon={<FontIcon className="muidocs-icon-search" />}
         />
       </div>
     );
@@ -90,7 +93,8 @@ DebtorSearch = fields(DebtorSearch, {
   fields: ['idCard', 'name', 'originatedAgreementNo']
 });
 
+DebtorSearch = injectIntl(DebtorSearch);
+
 export default connect(state => ({
-  msg: state.intl.msg.debtors,
   debtors: state.debtors.map
 }), debtorsActions)(DebtorSearch);

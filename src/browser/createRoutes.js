@@ -8,7 +8,6 @@ import NotFound from './notfound/Page.react';
 import Profile from './me/Profile.react';
 import React from 'react';
 import Settings from './me/Settings.react';
-import Todos from './todos/Page.react';
 import Debtors from './debtors/Page.react';
 import Debtor from './debtors/Debtor.react';
 import { Redirect, IndexRoute, Route } from 'react-router';
@@ -34,7 +33,6 @@ export default function createRoutes(getState) {
         <Route component={Profile} path="profile" />
         <Route component={Settings} path="settings" />
       </Route>
-      <Route component={Todos} path="todos" />
       <Route component={Debtors} path="debtorList">
         <Route component={Debtor} path="/debtors/:id" />
         <Redirect from="debtors/:id" to="/debtors/:id" />

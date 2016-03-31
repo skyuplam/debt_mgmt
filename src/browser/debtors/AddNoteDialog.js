@@ -9,11 +9,12 @@ import TextField from 'material-ui/lib/text-field';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import { addNewNote } from '../../common/notes/actions';
-
+import { injectIntl, intlShape } from 'react-intl';
+import notesMessages from '../../common/notes/notesMessages';
 
 class AddNoteDialog extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     isAddNoteDialogOpen: PropTypes.bool.isRequired,
     closeAddNoteDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
@@ -59,15 +60,16 @@ class AddNoteDialog extends Component {
   }
 
   render() {
-    const { msg, isAddNoteDialogOpen, fields } = this.props;
+    const { intl, isAddNoteDialogOpen, fields } = this.props;
+
     const actions = [
       <FlatButton
-        label={msg.cancel}
+        label={intl.formatMessage(notesMessages.cancel)}
         secondary
         onTouchTap={this.handleClose}
       />,
       <FlatButton
-        label={msg.add}
+        label={intl.formatMessage(notesMessages.add)}
         primary
         keyboardFocused
         onTouchTap={this.handleNew}
@@ -85,7 +87,7 @@ class AddNoteDialog extends Component {
     };
     return (
       <Dialog
-        title={msg.newNote}
+        title={intl.formatMessage(notesMessages.newNote)}
         actions={actions}
         modal
         open={isAddNoteDialogOpen}
@@ -94,7 +96,7 @@ class AddNoteDialog extends Component {
         contentStyle={styles.contentStyle}
       >
         <TextField
-          floatingLabelText={msg.note}
+          floatingLabelText={intl.formatMessage(notesMessages.note)}
           multiLine
           rows={2}
           rowsMax={4}
@@ -112,9 +114,9 @@ AddNoteDialog = fields(AddNoteDialog, {
   ]
 });
 
+AddNoteDialog = injectIntl(AddNoteDialog);
 
 export default connect(state => ({
-  msg: state.intl.msg.notes,
   isAddNoteDialogOpen: state.ui.isAddNoteDialogOpen,
 }), {
   closeAddNoteDialog,

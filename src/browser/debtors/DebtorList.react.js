@@ -11,17 +11,18 @@ import TableBody from 'material-ui/lib/table/table-body';
 import Card from 'material-ui/lib/card/card';
 import CardHeader from 'material-ui/lib/card/card-header';
 import CardText from 'material-ui/lib/card/card-text';
-import FlatButton from 'material-ui/lib/flat-button';
 import CardActions from 'material-ui/lib/card/card-actions';
 import DebtorSearch from './DebtorSearch.react';
 import { browserHistory } from 'react-router';
+import { injectIntl, intlShape } from 'react-intl';
+import debtorsMessages from '../../common/debtors/debtorsMessages';
 
 
 // Container component.
 class Debtors extends Component {
 
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     debtors: PropTypes.object.isRequired,
   };
 
@@ -41,37 +42,41 @@ class Debtors extends Component {
   }
 
   onRowSelected(selectedRow) {
-    if(!!!selectedRow.length) return;
+    if (!!!selectedRow.length) return;
     const { debtors } = this.props;
     const debtorId = debtors.toArray()[selectedRow[0]].id;
     browserHistory.push(`/debtors/${debtorId}`);
   }
 
   render() {
-    const { msg, debtors } = this.props;
+    const { intl, debtors } = this.props;
     // Big lists should be sorted in reducer.
     const list = debtors.toList();
 
     return (
       <Card>
-        <CardHeader title={msg.headerTitle} />
+        <CardHeader title={intl.formatMessage(debtorsMessages.headerTitle)} />
         <CardActions>
           <DebtorSearch />
         </CardActions>
         <CardText>
           <Table
-            onRowSelection={this.onRowSelected}>
+            onRowSelection={this.onRowSelected}
+          >
             <TableHeader>
               <TableRow>
-                <TableHeaderColumn>{msg.idCard}</TableHeaderColumn>
-                <TableHeaderColumn>{msg.name}</TableHeaderColumn>
-                <TableHeaderColumn>{msg.originatedAgreementNo}</TableHeaderColumn>
+                <TableHeaderColumn>{intl.formatMessage(debtorsMessages.idCard)}</TableHeaderColumn>
+                <TableHeaderColumn>{intl.formatMessage(debtorsMessages.name)}</TableHeaderColumn>
+                <TableHeaderColumn>
+                  {intl.formatMessage(debtorsMessages.originatedAgreementNo)}
+                </TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody>
               {list.map(debtor =>
                 <TableRow
-                  key={debtor.id}>
+                  key={debtor.id}
+                >
                   <TableRowColumn>{debtor.idNumber}</TableRowColumn>
                   <TableRowColumn>{debtor.name}</TableRowColumn>
                   <TableRowColumn>{debtor.originatedAgreementNo}</TableRowColumn>
@@ -86,7 +91,8 @@ class Debtors extends Component {
 
 }
 
+Debtors = injectIntl(Debtors);
+
 export default connect(state => ({
-  msg: state.intl.msg.debtors,
   debtors: state.debtors.map
 }), debtorsActions)(Debtors);

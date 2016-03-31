@@ -14,6 +14,28 @@ import { queryFirebaseServer } from '../../common/lib/redux-firebase/queryFireba
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 
 const messages = loadMessages();
+
+const fetchComponentDataAsync = async (dispatch, renderProps) => {
+  const { components, location, params } = renderProps;
+  const promises = components
+    .reduce((actions, component) => {
+      if (typeof component === 'function') {
+        actions = actions.concat(component.fetchActions || []);
+      } else {
+        Object.keys(component).forEach(c => {
+          actions = actions.concat(component[c].fetchActions || []);
+        });
+      }
+      return actions;
+    }, [])
+    .map(action =>
+      // Server side fetching can use only router location and params props.
+      // There is no easy way how to support custom component props.
+      dispatch(action({ location, params })).payload.promise
+    );
+  await Promise.all(promises);
+};
+
 const intlPolyfillFeatures = config.locales
   .map(locale => `Intl.~locale.${locale}`)
   .join();
@@ -115,6 +137,7 @@ export default function render(req, res, next) {
       if (!process.env.IS_SERVERLESS) {
         await queryFirebaseServer(() => renderApp(store, renderProps));
       }
+      await fetchComponentDataAsync(store.dispatch, renderProps);
       const html = renderPage(store, renderProps, req);
       const status = renderProps.routes
         .some(route => route.path === '*') ? 404 : 200;

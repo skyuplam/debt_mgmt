@@ -12,11 +12,13 @@ import { fetchRepaments, payRepayment } from '../../common/repayments/actions';
 import RaisedButton from 'material-ui/lib/raised-button';
 import RepaymentDialog from './RepaymentDialog.react';
 import { openRepaymentDialog } from '../../common/ui/actions';
+import { injectIntl, intlShape } from 'react-intl';
+import repaymentsMessages from '../../common/repayments/repaymentsMessages';
 
 
 class Repayments extends Component {
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     repaymentPlans: PropTypes.object.isRequired,
     debtorId: PropTypes.number,
     fetchRepaments: PropTypes.func.isRequired,
@@ -75,13 +77,13 @@ class Repayments extends Component {
   }
 
   _handleRepaymentCellRender(cellData, cellDataKey, rowData) {
-    const { msg } = this.props;
+    const { intl } = this.props;
     let repaymentbtnLb;
-
+    const repay = intl.formatMessage(repaymentsMessages.repay);
     if (this._checkIfPaid(rowData.repaymentStatusId)) {
       repaymentbtnLb = this.formatdate(rowData.repaidAt);
     } else {
-      repaymentbtnLb = msg.repay;
+      repaymentbtnLb = repay;
     }
     return (
       <div>
@@ -108,7 +110,7 @@ class Repayments extends Component {
   }
 
   render() {
-    const { msg, repaymentPlans, repayments, debtorId } = this.props;
+    const { intl, repaymentPlans, repayments, debtorId } = this.props;
     const repaymentPlanList = repaymentPlans ? repaymentPlans.toArray() : [];
     const repaymentList = repayments ? repayments.filter(repayment =>
       repaymentPlans.find(repaymentPlan =>
@@ -122,7 +124,7 @@ class Repayments extends Component {
           padding={1}
         >
           <Card>
-            <CardTitle title={msg.repaymentPlan} />
+            <CardTitle title={intl.formatMessage(repaymentsMessages.repaymentPlan)} />
             <CardActions>
               <AutoSizer disableHeight>
                 {({ width }) => (
@@ -141,26 +143,26 @@ class Repayments extends Component {
                       width={100}
                     />
                     <FlexColumn
-                      label={msg.principal}
+                      label={intl.formatMessage(repaymentsMessages.principal)}
                       dataKey="principal"
                       width={100}
                     />
                     <FlexColumn
-                      label={msg.terms}
+                      label={intl.formatMessage(repaymentsMessages.terms)}
                       dataKey="terms"
                       width={60}
                     />
                     <FlexColumn
-                      label={msg.startedAt}
+                      label={intl.formatMessage(repaymentsMessages.startedAt)}
                       cellRenderer={this._cellRenderer}
                       dataKey="startedAt"
                       width={100}
                     />
                     <FlexColumn
-                      label={msg.status}
+                      label={intl.formatMessage(repaymentsMessages.status)}
                       cellRenderer={this._cellRenderer}
                       dataKey="repaymentPlanStatusId"
-                      cellRenderer={(cellData) => `${msg['repaymentPlanStatus'+cellData]}`}
+                      cellRenderer={(cellData) => `${intl.formatMessage(repaymentsMessages['repaymentPlanStatus'+cellData])}`}
                       width={100}
                     />
                   </FlexTable>
@@ -169,7 +171,7 @@ class Repayments extends Component {
             </CardActions>
           </Card>
           <Card>
-            <CardTitle title={msg.repayments} />
+            <CardTitle title={intl.formatMessage(repaymentsMessages.repayments)} />
             <CardActions>
               <AutoSizer disableHeight>
                 {({ width }) => (
@@ -182,29 +184,31 @@ class Repayments extends Component {
                     rowGetter={index => repaymentList[index]}
                   >
                     <FlexColumn
-                      label={msg.term}
+                      label={intl.formatMessage(repaymentsMessages.term)}
                       dataKey="term"
                       width={50}
                     />
                     <FlexColumn
-                      label={msg.repaymentAmt}
+                      label={intl.formatMessage(repaymentsMessages.repaymentAmt)}
                       dataKey="principal"
                       width={100}
                     />
                     <FlexColumn
-                      label={msg.expectedRepaidAt}
+                      label={intl.formatMessage(repaymentsMessages.expectedRepaidAt)}
                       dataKey="expectedRepaidAt"
                       cellRenderer={this._cellRenderer}
                       width={100}
                     />
                     <FlexColumn
-                      label={msg.repaymentStatus}
+                      label={intl.formatMessage(repaymentsMessages.repaymentStatus)}
                       dataKey="repaymentStatusId"
-                      cellRenderer={(cellData) => `${msg['repaymentStatus'+cellData]}`}
+                      cellRenderer={
+                        (cellData) => `${intl.formatMessage(repaymentsMessages['repaymentStatus'+cellData])}`
+                      }
                       width={80}
                     />
                     <FlexColumn
-                      label={msg.repay}
+                      label={intl.formatMessage(repaymentsMessages.repay)}
                       dataKey="id"
                       cellRenderer={this._handleRepaymentCellRender}
                       width={100}
@@ -223,8 +227,9 @@ class Repayments extends Component {
 }
 
 
+Repayments = injectIntl(Repayments);
+
 export default connect(state => ({
-  msg: state.intl.msg.repayments,
   repayments: state.repayments.map,
 }), {
   fetchRepaments,

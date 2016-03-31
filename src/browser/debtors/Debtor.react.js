@@ -13,18 +13,20 @@ import { fetchRepamentPlans } from '../../common/repaymentPlans/actions';
 import { fetchContactNumbers } from '../../common/contactNumbers/actions';
 import { fetchAddresses } from '../../common/addresses/actions';
 import fetch from '../../common/components/fetch';
+import { injectIntl, intlShape } from 'react-intl';
+import debtorsMessages from '../../common/debtors/debtorsMessages';
 
 class Debtor extends Component {
 
   static propTypes = {
-    msg: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     debtors: PropTypes.object.isRequired,
     repaymentPlans: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
   };
 
   render() {
-    const { msg, params, debtors, repaymentPlans } = this.props;
+    const { intl, params, debtors, repaymentPlans } = this.props;
     const debtorId = parseInt(params.id, 10);
     const debtor = debtors.get(debtorId);
     const newRepaymentPlans = repaymentPlans.filter(repaymentPlan =>
@@ -32,7 +34,7 @@ class Debtor extends Component {
     );
     return (
       <div className="debtor-detail">
-        <Helmet title={msg.debtorDetail} />
+        <Helmet title={intl.formatMessage(debtorsMessages.debtorDetail)} />
         <DebtorInfo debtor={debtor} />
         <DebtorLoans debtorId={debtorId} />
         <Repayments
@@ -55,8 +57,9 @@ Debtor = fetch(
   fetchAddresses
 )(Debtor);
 
+Debtor = injectIntl(Debtor);
+
 export default connect(state => ({
-  msg: state.intl.msg.debtors,
   debtors: state.debtors.map,
   repaymentPlans: state.repaymentPlans.map,
 }))(Debtor);

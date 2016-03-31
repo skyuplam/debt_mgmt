@@ -3,14 +3,14 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import LeftNav from 'material-ui/lib/left-nav';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import * as uiActions from '../../common/ui/actions';
+import { toggleSideMenu } from '../../common/ui/actions';
 import { browserHistory } from 'react-router';
+import linksMessages from '../../common/app/linksMessages';
+import { FormattedMessage } from 'react-intl';
 
-
-class Header extends Component {
+class NaviMenu extends Component {
 
   static propTypes = {
-    msg: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     toggleSideMenu: PropTypes.func.isRequired
   };
@@ -18,6 +18,7 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.goToDebtors = this.goToDebtors.bind(this);
+    this.goHome = this.goHome.bind(this);
   }
 
   goToDebtors() {
@@ -28,13 +29,30 @@ class Header extends Component {
     toggleSideMenu();
   }
 
+  goHome() {
+    const { toggleSideMenu } = this.props;
+    browserHistory.push('/');
+
+    // Close SideMenu
+    toggleSideMenu();
+  }
+
   render() {
-    const { msg, open } = this.props;
+    const { open } = this.props;
 
     return (
       <div>
         <LeftNav open={open}>
-          <MenuItem onTouchTap={this.goToDebtors}>{msg.debtors}</MenuItem>
+          <MenuItem onTouchTap={this.goHome}>
+            <FormattedMessage
+              {...linksMessages.home}
+            />
+          </MenuItem>
+          <MenuItem onTouchTap={this.goToDebtors}>
+            <FormattedMessage
+              {...linksMessages.debtors}
+            />
+          </MenuItem>
         </LeftNav>
       </div>
     );
@@ -42,6 +60,6 @@ class Header extends Component {
 
 }
 
-export default connect(state => ({
-  msg: state.intl.msg.app.links,
-}), uiActions)(Header);
+export default connect(null, {
+  toggleSideMenu
+})(NaviMenu);

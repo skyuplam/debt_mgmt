@@ -14,12 +14,12 @@ import shouldPureComponentUpdate from 'react-pure-render/function';
 import { fetchLoans } from '../../common/loans/actions';
 import { FormattedNumber, FormattedDate } from 'react-intl';
 import LoanDetailDialog from './LoanDetailDialog.react';
-import { isDate } from 'validator';
-
+import { injectIntl, intlShape } from 'react-intl';
+import loansMessages from '../../common/loans/loansMessages';
 
 class DebtorLoans extends Component {
   static propTypes = {
-    msg: PropTypes.object,
+    intl: intlShape.isRequired,
     loans: PropTypes.object.isRequired,
     currentLoanId: PropTypes.number,
     openNewRepyamnetPlanDialog: PropTypes.func.isRequired,
@@ -49,10 +49,11 @@ class DebtorLoans extends Component {
   }
 
   _cellRenderer(cellData, cellDataKey, rowData) {
-    const { msg } = this.props;
+    const { intl } = this.props;
+    const add = intl.formatMessage(loansMessages.add);
     return (
       <RaisedButton
-        label={msg.add}
+        label={add}
         secondary
         fullWidth
         onMouseDown={() => this._onBtnClick(rowData.id)}
@@ -103,13 +104,13 @@ class DebtorLoans extends Component {
   }
 
   render() {
-    const { msg, loans, debtorId } = this.props;
+    const { intl, loans, debtorId } = this.props;
     const loanList = loans.toArray();
 
     return (
       <Card>
         <CardTitle
-          title={`${msg.headerTitle}`}
+          title={`${intl.formatMessage(loansMessages.headerTitle)}`}
         />
         <CardActions>
           <AutoSizer disableHeight>
@@ -124,53 +125,53 @@ class DebtorLoans extends Component {
                 onRowClick={(rowIdx) => this._handleRowClicked(loanList[rowIdx])}
               >
                 <FlexColumn
-                  label={msg.originatedAgreementNo}
+                  label={intl.formatMessage(loansMessages.originatedAgreementNo)}
                   dataKey="originatedAgreementNo"
                   width={100}
                 />
                 <FlexColumn
-                  label={msg.collectablePrincipal}
+                  label={intl.formatMessage(loansMessages.collectablePrincipal)}
                   dataKey="collectablePrincipal"
                   cellRenderer={(cellData) => this._formatNumberCell(cellData)}
                   width={80}
                 />
                 <FlexColumn
-                  label={msg.collectableInterest}
+                  label={intl.formatMessage(loansMessages.collectableInterest)}
                   dataKey="collectableInterest"
                   cellRenderer={(cellData) => this._formatNumberCell(cellData)}
                   width={80}
                 />
                 <FlexColumn
-                  label={msg.totalCollectableFee}
+                  label={intl.formatMessage(loansMessages.totalCollectableFee)}
                   dataKey="totalCollectableFee"
                   cellRenderer={this._handleTotalFeeRender}
                   width={100}
                 />
                 <FlexColumn
-                  label={msg.agency}
+                  label={intl.formatMessage(loansMessages.agency)}
                   dataKey="agency"
                   width={100}
                 />
                 <FlexColumn
-                  label={msg.placementServicingFeeRate}
+                  label={intl.formatMessage(loansMessages.placementServicingFeeRate)}
                   dataKey="placementServicingFeeRate"
                   cellRenderer={this._formatPercentageCell}
                   width={100}
                 />
                 <FlexColumn
-                  label={msg.placedAt}
+                  label={intl.formatMessage(loansMessages.placedAt)}
                   dataKey="placedAt"
                   cellRenderer={this._formatDateCell}
                   width={100}
                 />
                 <FlexColumn
-                  label={msg.expectedRecalledAt}
+                  label={intl.formatMessage(loansMessages.expectedRecalledAt)}
                   dataKey="expectedRecalledAt"
                   cellRenderer={this._formatDateCell}
                   width={100}
                 />
                 <FlexColumn
-                  label={msg.repaymentPlan}
+                  label={intl.formatMessage(loansMessages.repaymentPlan)}
                   dataKey="loanStatusId"
                   cellRenderer={this._cellRenderer}
                   width={100}
@@ -189,9 +190,9 @@ class DebtorLoans extends Component {
 
 }
 
+DebtorLoans = injectIntl(DebtorLoans);
 
 export default connect(state => ({
-  msg: state.intl.msg.loans,
   currentLoanId: state.ui.currentLoanId,
   loans: state.loans.map,
 }), {
