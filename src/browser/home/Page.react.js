@@ -7,8 +7,7 @@ const messages = defineMessages({
   intro: {
     defaultMessage: `
       <p>
-        Ahoy, this is
-        <a target="_blank" href="https://github.com/este/este">Este</a> dev stack.
+        贷后管理系统
       </p>
     `,
     id: 'home.intro'
@@ -33,8 +32,6 @@ class Page extends Component {
       <div className="home-page">
         <Helmet title={title} />
         <FormattedHTMLMessage {...messages.intro} />
-        {/* Use require for assets. It's super useful for CDN. */}
-        <img alt="50x50 placeholder" src={require('./50x50.png')} />
       </div>
     );
   }

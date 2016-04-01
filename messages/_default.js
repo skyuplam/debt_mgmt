@@ -458,7 +458,7 @@ export default [
   },
   {
     "id": "home.intro",
-    "defaultMessage": "<p>\n        Ahoy, this is\n        <a target=\"_blank\" href=\"https://github.com/este/este\">Este</a> dev stack.\n      </p>"
+    "defaultMessage": "<p>\n        贷后管理系统\n      </p>"
   },
   {
     "id": "home.native.intro",
@@ -683,6 +683,10 @@ export default [
   {
     "id": "notes.note",
     "defaultMessage": "备注"
+  },
+  {
+    "id": "notes.preview",
+    "defaultMessage": "预览"
   },
   {
     "id": "notFound.continue",
