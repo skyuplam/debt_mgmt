@@ -4,9 +4,9 @@ import Helmet from 'react-helmet';
 // import NewTodo from './NewTodo.react';
 import React, { PropTypes } from 'react';
 import Debtors from './Debtors.react';
-import { fetchDebtors } from '../../common/debtors/actions';
+// import { fetchDebtors } from '../../common/debtors/actions';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import fetch from '../../common/components/fetch';
+// import fetch from '../../common/components/fetch';
 
 const messages = defineMessages({
   title: {
@@ -35,6 +35,6 @@ class Page extends Component {
 
 }
 
-Page = fetch(fetchDebtors)(Page);
+// Page = fetch(fetchDebtors)(Page);
 
 export default injectIntl(Page);
