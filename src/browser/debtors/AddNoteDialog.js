@@ -11,6 +11,7 @@ import { setField } from '../../common/lib/redux-fields/actions';
 import { addNewNote } from '../../common/notes/actions';
 import { injectIntl, intlShape } from 'react-intl';
 import notesMessages from '../../common/notes/notesMessages';
+import ReactMarkdown from 'react-markdown';
 
 class AddNoteDialog extends Component {
   static propTypes = {
@@ -82,7 +83,10 @@ class AddNoteDialog extends Component {
         overflowY: 'auto'
       },
       contentStyle: {
-        width: 400,
+        width: 600,
+      },
+      h4: {
+        color: 'rgba(0, 0, 0, 0.27)'
       }
     };
     return (
@@ -95,11 +99,20 @@ class AddNoteDialog extends Component {
         autoScrollBodyContent
         contentStyle={styles.contentStyle}
       >
+        <h4
+          style={styles.h4}
+        >
+          {intl.formatMessage(notesMessages.preview)}
+        </h4>
+        <ReactMarkdown
+          source={fields.note.value}
+          skipHtml
+        />
         <TextField
           floatingLabelText={intl.formatMessage(notesMessages.note)}
           multiLine
           rows={2}
-          rowsMax={4}
+          fullWidth
           {...fields.note}
         /><br />
       </Dialog>

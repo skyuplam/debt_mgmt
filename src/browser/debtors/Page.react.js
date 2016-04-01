@@ -21,11 +21,6 @@ class Page extends Component {
     children: PropTypes.object
   };
 
-  static loadProps(params, cb) {
-    fetchDebtors().then(debtors =>
-      cb(null, { debtors })
-    );
-  }
 
   render() {
     const { children, intl } = this.props;

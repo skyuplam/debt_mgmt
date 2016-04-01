@@ -10,7 +10,6 @@ import { Router } from 'react-router';
 import { addLocaleData } from 'react-intl';
 import { browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
-import AsyncProps from 'async-props';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import zh from 'react-intl/locale-data/zh';
@@ -41,12 +40,6 @@ ReactDOM.render(
   <Provider store={store}>
     <Router
       history={history}
-      render={(props) => (
-        <AsyncProps
-          {...props}
-          renderLoading={() => <div>Loading...</div>}
-        />
-      )}
     >
       {routes}
     </Router>

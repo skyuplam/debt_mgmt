@@ -62,6 +62,9 @@ export default function makeConfig(isDevelopment) {
         loader: 'url-loader?limit=100000',
         test: /\.(ttf|eot|woff(2)?)(\?[a-z0-9]+)?$/
       }, {
+        test: /\.json$/,
+        loader: 'json'
+      }, {
         test: /\.js$/,
         exclude: constants.NODE_MODULES_DIR,
         loader: 'babel',

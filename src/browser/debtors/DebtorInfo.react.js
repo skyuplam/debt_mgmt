@@ -11,11 +11,13 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import AddNoteDialog from './AddNoteDialog';
-import { openAddNoteDialog } from '../../common/ui/actions';
+import { openAddNoteDialog, toggleNoteDialog } from '../../common/ui/actions';
 import { FormattedDate } from 'react-intl';
 import { injectIntl, intlShape } from 'react-intl';
 import debtorsMessages from '../../common/debtors/debtorsMessages';
 import moment from 'moment';
+import NoteDialog from './NoteDialog.react';
+
 
 class DebtorInfo extends Component {
   static propTypes = {
@@ -23,6 +25,7 @@ class DebtorInfo extends Component {
     notes: PropTypes.object.isRequired,
     debtor: PropTypes.object.isRequired,
     openAddNoteDialog: PropTypes.func.isRequired,
+    toggleNoteDialog: PropTypes.func.isRequired,
   };
 
   constructor(props, context) {
@@ -30,6 +33,7 @@ class DebtorInfo extends Component {
 
     this.handleAddNote = this.handleAddNote.bind(this);
     this.formatDate = this.formatDate.bind(this);
+    this.handleOpenNote = this.handleOpenNote.bind(this);
   }
 
   formatDate(date) {
@@ -47,6 +51,11 @@ class DebtorInfo extends Component {
   handleAddNote() {
     const { openAddNoteDialog } = this.props;
     openAddNoteDialog();
+  }
+
+  handleOpenNote(note) {
+    const { toggleNoteDialog } = this.props;
+    toggleNoteDialog(note);
   }
 
   render() {
@@ -115,6 +124,7 @@ class DebtorInfo extends Component {
                 <ListItem
                   primaryText={note.note}
                   secondaryText={this.formatDate(note.createdAt)}
+                  onTouchTap={() => this.handleOpenNote(note)}
                 />
               ))
             }
@@ -128,6 +138,7 @@ class DebtorInfo extends Component {
             <ContentAdd />
           </FloatingActionButton>
           <AddNoteDialog debtorId={debtor ? debtor.id : 0} />
+          <NoteDialog />
         </Card>
       </GridList>
     );
@@ -140,5 +151,6 @@ DebtorInfo = injectIntl(DebtorInfo);
 export default connect(state => ({
   notes: state.notes.map,
 }), {
-  openAddNoteDialog
+  openAddNoteDialog,
+  toggleNoteDialog
 })(DebtorInfo);

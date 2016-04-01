@@ -2,6 +2,7 @@ import * as actions from './actions';
 import { Record } from 'immutable';
 import Repayment from '../repayments/repayment';
 import Loan from '../loans/loan';
+import Note from '../notes/note';
 
 const InitialState = Record({
   isSideMenuOpen: false,
@@ -15,6 +16,8 @@ const InitialState = Record({
   isAddContactNumberDialogOpen: false,
   isAddAddressDialogOpen: false,
   isAddNoteDialogOpen: false,
+  isNoteDialogOpen: false,
+  selectedNote: Note(),
 });
 const initialState = new InitialState;
 
@@ -91,6 +94,13 @@ export default function uiReducer(state = initialState, action) {
       return state.update('isAddNoteDialogOpen', () => false);
     }
 
+    case actions.TOGGLE_NOTE_DIALOG: {
+      const theState = state.update('isNoteDialogOpen', isNoteDialogOpen => !isNoteDialogOpen);
+      if (action.payload) {
+        return theState.update('selectedNote', () => new Note(action.payload));
+      }
+      return theState;
+    }
 
   }
 
