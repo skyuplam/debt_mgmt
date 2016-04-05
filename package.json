@@ -10,7 +10,8 @@
     "build": "gulp build",
     "install": "gulp fix-react-native",
     "postinstall": "gulp build --production",
-    "test": "gulp test"
+    "test": "gulp test",
+    "start": "gulp -p"
   },
   "engines": {
     "node": ">=5"

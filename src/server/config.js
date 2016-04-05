@@ -35,8 +35,11 @@ nconf.defaults({
       dialect: 'postgres'
     },
     production: {
-      dialect: 'sqlite',
-      storage: './db.development.sqlite'
+      username: 'postgres',
+      password: 'dockerDtmgmt20160401',
+      database: 'loan',
+      host: '192.168.99.100',
+      dialect: 'postgres'
     }
   },
   locales: ['zh'],
