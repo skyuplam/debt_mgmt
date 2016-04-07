@@ -35,6 +35,7 @@ class NewRepaymentPlan extends Component {
     isNewRepaymentPlan: PropTypes.bool.isRequired,
     fields: PropTypes.object.isRequired,
     loans: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     repayments: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     currentLoanId: PropTypes.number.isRequired,
@@ -65,6 +66,7 @@ class NewRepaymentPlan extends Component {
       repayments,
       resetRepyments,
       debtorId,
+      viewer,
     } = this.props;
 
     if (!(fields.amount.value.trim() ||
@@ -81,7 +83,7 @@ class NewRepaymentPlan extends Component {
       terms: fields.terms.value,
       startedAt: fields.repayDate.value ? fields.repayDate.value : new Date(),
       repayments: repayments.toArray()
-    }, debtorId);
+    }, debtorId, viewer);
 
     closeNewRepyamnetPlanDialog();
     fields.$reset();
@@ -234,6 +236,7 @@ export default connect(state => ({
   repayments: state.repaymentPlans.newRepaymentPlan.repayments,
   currentLoanId: state.ui.currentLoanId,
   isNewRepaymentPlan: state.ui.isNewRepaymentPlan,
+  viewer: state.users.viewer,
 }), {
   closeNewRepyamnetPlanDialog,
   setField,

@@ -21,6 +21,7 @@ class AddContactNumberDialog extends Component {
     closeAddContactNumberDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     relationships: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     setField: PropTypes.func.isRequired,
     addNewContactNumber: PropTypes.func.isRequired,
@@ -48,7 +49,9 @@ class AddContactNumberDialog extends Component {
   }
 
   handleNew() {
-    const { closeAddContactNumberDialog, debtorId, fields, addNewContactNumber } = this.props;
+    const {
+      closeAddContactNumberDialog, debtorId, fields, addNewContactNumber, viewer
+    } = this.props;
 
     addNewContactNumber({
       contactNumber: fields.contactNumber.value.trim(),
@@ -60,7 +63,7 @@ class AddContactNumberDialog extends Component {
       ext: fields.ext.value.trim(),
       source: fields.source.value,
       debtorId,
-    });
+    }, viewer);
 
     fields.$reset();
     closeAddContactNumberDialog();
@@ -298,6 +301,7 @@ AddContactNumberDialog = injectIntl(AddContactNumberDialog);
 export default connect(state => ({
   isAddContactNumberDialogOpen: state.ui.isAddContactNumberDialogOpen,
   relationships: state.categories.relationships,
+  viewer: state.users.viewer,
 }), {
   closeAddContactNumberDialog,
   setField,

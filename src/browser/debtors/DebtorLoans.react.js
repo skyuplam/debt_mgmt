@@ -11,7 +11,6 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import NewRepaymentPlan from './NewRepaymentPlan.react';
 import { openNewRepyamnetPlanDialog, openLoanDetailDialog } from '../../common/ui/actions';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import { fetchLoans } from '../../common/loans/actions';
 import { FormattedNumber, FormattedDate } from 'react-intl';
 import LoanDetailDialog from './LoanDetailDialog.react';
 import { injectIntl, intlShape } from 'react-intl';
@@ -21,6 +20,7 @@ class DebtorLoans extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     loans: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     currentLoanId: PropTypes.number,
     openNewRepyamnetPlanDialog: PropTypes.func.isRequired,
     openLoanDetailDialog: PropTypes.func.isRequired,
@@ -203,8 +203,8 @@ DebtorLoans = injectIntl(DebtorLoans);
 export default connect(state => ({
   currentLoanId: state.ui.currentLoanId,
   loans: state.loans.map,
+  viewer: state.users.viewer,
 }), {
   openNewRepyamnetPlanDialog,
   openLoanDetailDialog,
-  fetchLoans,
 })(DebtorLoans);

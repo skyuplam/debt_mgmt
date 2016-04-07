@@ -1,32 +1,26 @@
 import { Strategy } from 'passport-local';
-import bcrypt from 'bcrypt';
+import bcrypt from '../bcrypt';
 import models from '../../models';
 
-const strategy = new Strategy('local', (username, password, done) => {
+const strategy = new Strategy('local', (username, password, done) =>
   models.user.findOne({
     where: {
       username
     }
   }).then(user => {
-    if (user) {
-      const storedPwd = user.password;
-
-      bcrypt.compare(password, storedPwd, (err, isVerified) => {
-        if (!err && isVerified) {
-          done(null, user);
-        } else {
-          done(null, false, {
-            message: 'Incorrect password'
-          });
-        }
-      });
-    } else {
-      done(null, false, {
-        message: 'Incorrect username'
-      });
+    if (!user) {
+      return done(null, false);
     }
-  });
-});
+    const storedPwd = user.password;
+    return bcrypt.compareAsync(password, storedPwd)
+    .then(verified => {
+      if (verified) {
+        return done(null, user.toJSON());
+      }
+      return done(null, false);
+    });
+  })
+);
 
 
 export default strategy;

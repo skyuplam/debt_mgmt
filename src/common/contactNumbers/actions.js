@@ -5,11 +5,13 @@ export const NEW_CONTACT_NUMBER_START = 'NEW_CONTACT_NUMBER_START';
 export const NEW_CONTACT_NUMBER_FAILURE = 'NEW_CONTACT_NUMBER_FAILURE';
 export const NEW_CONTACT_NUMBER_SUCCESS = 'NEW_CONTACT_NUMBER_SUCCESS';
 
+import { translateHttpError } from '../lib/error/error';
 
 const API_VERSION = '/api/v1';
 
 
-export function fetchContactNumbers(locParams) {
+export function fetchContactNumbers(locParams, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -19,13 +21,14 @@ export function fetchContactNumbers(locParams) {
             method: 'get',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              Authorization
             }
           });
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'fetchContactNumbers' });
       }
     }
     return {
@@ -37,7 +40,8 @@ export function fetchContactNumbers(locParams) {
   };
 }
 
-export function addNewContactNumber(contactNumber) {
+export function addNewContactNumber(contactNumber, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -47,14 +51,15 @@ export function addNewContactNumber(contactNumber) {
             method: 'post',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              Authorization
             },
             body: JSON.stringify(contactNumber)
           });
         if (response.status !== 201) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'addNewContactNumber' });
       }
     }
     return {

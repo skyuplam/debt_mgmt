@@ -8,7 +8,7 @@ import CardTitle from 'material-ui/lib/card/card-title';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { FormattedDate } from 'react-intl';
-import { fetchRepaments, payRepayment } from '../../common/repayments/actions';
+import { fetchRepaments } from '../../common/repayments/actions';
 import RaisedButton from 'material-ui/lib/raised-button';
 import RepaymentDialog from './RepaymentDialog.react';
 import { openRepaymentDialog } from '../../common/ui/actions';
@@ -20,6 +20,7 @@ class Repayments extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     repaymentPlans: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     debtorId: PropTypes.number,
     fetchRepaments: PropTypes.func.isRequired,
     payRepayment: PropTypes.func.isRequired,
@@ -105,11 +106,11 @@ class Repayments extends Component {
   }
 
   _handleRepaymentPlanRowClick(rowIndex) {
-    const { repaymentPlans, fetchRepaments } = this.props;
+    const { repaymentPlans, fetchRepaments, viewer } = this.props;
     const repaymentPlanList = repaymentPlans ? repaymentPlans.toArray() : [];
     if (repaymentPlanList) {
       const selectedRepaymentPlan = repaymentPlanList[rowIndex];
-      fetchRepaments(selectedRepaymentPlan.id, selectedRepaymentPlan.debtorId);
+      fetchRepaments(selectedRepaymentPlan.id, selectedRepaymentPlan.debtorId, viewer);
     }
   }
 
@@ -241,8 +242,8 @@ Repayments = injectIntl(Repayments);
 
 export default connect(state => ({
   repayments: state.repayments.map,
+  viewer: state.users.viewer,
 }), {
   fetchRepaments,
-  payRepayment,
   openRepaymentDialog,
 })(Repayments);

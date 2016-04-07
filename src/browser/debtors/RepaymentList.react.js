@@ -16,6 +16,7 @@ class RepaymentList extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     repayments: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     updateRepayment: PropTypes.func.isRequired,
   };
 
@@ -40,11 +41,11 @@ class RepaymentList extends Component {
     );
   }
 
-  _onChangeRepayAmt({ rowData, cellDataKey, value }) {
+  _onChangeRepayAmt({ rowData, cellDataKey, value, viewer }) {
     const { updateRepayment } = this.props;
     const repayment = rowData.toJS();
     repayment[cellDataKey] = value;
-    updateRepayment(repayment);
+    updateRepayment(repayment, viewer);
   }
 
   _randerNumberCell(cellData, cellDataKey, rowData) {
@@ -106,6 +107,7 @@ RepaymentList = injectIntl(RepaymentList);
 
 export default connect(state => ({
   repayments: state.repaymentPlans.newRepaymentPlan.repayments,
+  viewer: state.users.viewer,
 }), {
   updateRepayment
 })(RepaymentList);

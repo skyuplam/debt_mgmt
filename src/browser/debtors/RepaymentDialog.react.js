@@ -21,6 +21,7 @@ class RepaymentDialog extends Component {
     intl: intlShape.isRequired,
     repayment: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     isRepaymentDialogOpen: PropTypes.bool.isRequired,
     closeRepaymentDialog: PropTypes.func.isRequired,
@@ -68,7 +69,7 @@ class RepaymentDialog extends Component {
   }
 
   handleRepayRequest() {
-    const { closeRepaymentDialog, repayment, debtorId, fields, payRepayment } = this.props;
+    const { closeRepaymentDialog, repayment, debtorId, fields, payRepayment, viewer } = this.props;
 
     let paidInFull;
     if (fields.paidInFull.value === null) {
@@ -88,7 +89,7 @@ class RepaymentDialog extends Component {
       amount: this.getValueOfAmount(),
       repaidAt: this.getValueOfRepaidAt(),
       paidInFull
-    });
+    }, viewer);
 
     closeRepaymentDialog();
     fields.$reset();
@@ -200,6 +201,7 @@ RepaymentDialog = injectIntl(RepaymentDialog);
 export default connect(state => ({
   isRepaymentDialogOpen: state.ui.isRepaymentDialogOpen,
   repayment: state.ui.currentRepayment,
+  viewer: state.users.viewer,
 }), {
   closeRepaymentDialog,
   setField,

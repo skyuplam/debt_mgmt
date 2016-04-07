@@ -73,13 +73,18 @@ router.route('/')
     });
 
 router.route('/')
-  .post(authRequired(), (req, res) => {
-    const { idCard, originatedAgreementNo, name } = req.body;
+  .post((req, res) => {
+    passport.authenticate('bearer', { session: false }, (err, user) => {
+      if (err && Object.keys(err) > 0) {
+        res.status(400).json(err);
+      }
+      const { idCard, originatedAgreementNo, name } = req.body;
 
-    getDebtors({ idCard, originatedAgreementNo, name }).then(people => {
-      const debtors = people;
-      return res.status(200).send({ debtors }).end();
-    });
+      getDebtors({ idCard, originatedAgreementNo, name }).then(people => {
+        const debtors = people;
+        res.status(200).send({ debtors }).end();
+      });
+    })(req, res);
   });
 
 router.route('/:debtorId')

@@ -20,9 +20,10 @@ export default function fetch(...actions) {
 
     // For client side fetching.
     componentDidMount() {
-      const { store: { dispatch } } = this.context;
+      const { store: { dispatch, getState } } = this.context;
       const { location, params } = this.props;
-      actions.forEach(action => dispatch(action({ location, params })));
+      const viewer = getState().users.viewer;
+      actions.forEach(action => dispatch(action({ location, params }, viewer)));
     }
 
     render() {

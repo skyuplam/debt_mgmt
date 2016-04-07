@@ -119,7 +119,10 @@ class LoanDetailDialog extends Component {
               }
             />
             <ListItem
-              primaryText={`${intl.formatMessage(loansMessages.delinquentAt)} - ${daysOfDelinq}${intl.formatMessage(loansMessages.days)}`}
+              primaryText={
+                // eslint-disable-next-line no-alert, max-len
+                `${intl.formatMessage(loansMessages.delinquentAt)} - ${daysOfDelinq}${intl.formatMessage(loansMessages.days)}`
+              }
               secondaryText={
                 this._formatDate(loan.delinquentAt)
               }

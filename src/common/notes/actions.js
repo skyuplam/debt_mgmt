@@ -5,11 +5,13 @@ export const ADD_NEW_NOTE_START = 'ADD_NEW_NOTE_START';
 export const ADD_NEW_NOTE_FAILURE = 'ADD_NEW_NOTE_FAILURE';
 export const ADD_NEW_NOTE_SUCCESS = 'ADD_NEW_NOTE_SUCCESS';
 
+import { translateHttpError } from '../lib/error/error';
 
 const API_VERSION = '/api/v1';
 
 
-export function fetchNotes(locParams) {
+export function fetchNotes(locParams, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -19,13 +21,14 @@ export function fetchNotes(locParams) {
             method: 'get',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              Authorization
             }
           });
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'fetchNotes' });
       }
     }
     return {
@@ -37,7 +40,8 @@ export function fetchNotes(locParams) {
   };
 }
 
-export function addNewNote(note) {
+export function addNewNote(note, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -47,14 +51,15 @@ export function addNewNote(note) {
             method: 'post',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              Authorization
             },
             body: JSON.stringify(note)
           });
         if (response.status !== 201) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'addNewNote' });
       }
     }
     return {

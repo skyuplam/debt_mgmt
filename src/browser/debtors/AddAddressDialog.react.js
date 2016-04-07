@@ -21,6 +21,7 @@ class AddAddressDialog extends Component {
     closeAddAddressDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
     relationships: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     setField: PropTypes.func.isRequired,
     addNewAddress: PropTypes.func.isRequired,
@@ -46,7 +47,7 @@ class AddAddressDialog extends Component {
   }
 
   handleNew() {
-    const { closeAddAddressDialog, debtorId, fields, addNewAddress } = this.props;
+    const { closeAddAddressDialog, debtorId, fields, addNewAddress, viewer } = this.props;
     addNewAddress({
       address: fields.address.value.trim(),
       county: fields.county.value.trim(),
@@ -58,7 +59,7 @@ class AddAddressDialog extends Component {
       country: fields.country.value.trim(),
       source: fields.source.value,
       debtorId,
-    });
+    }, viewer);
 
     fields.$reset();
     closeAddAddressDialog();
@@ -284,6 +285,7 @@ AddAddressDialog = injectIntl(AddAddressDialog);
 export default connect(state => ({
   isAddAddressDialogOpen: state.ui.isAddAddressDialogOpen,
   relationships: state.categories.relationships,
+  viewer: state.users.viewer,
 }), {
   closeAddAddressDialog,
   setField,

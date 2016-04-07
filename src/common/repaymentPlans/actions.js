@@ -10,9 +10,13 @@ export const ADD_REPAYMENTS = 'ADD_REPAYMENTS';
 export const UPDATE_REPAYMENT = 'UPDATE_REPAYMENT';
 export const RESET_REPAYMENTS = 'RESET_REPAYMENTS';
 
+import { translateHttpError } from '../lib/error/error';
+
+
 const API_VERSION = '/api/v1';
 
-export function newRepaymentPlan(repaymentPlan, debtorId) {
+export function newRepaymentPlan(repaymentPlan, debtorId, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -20,14 +24,15 @@ export function newRepaymentPlan(repaymentPlan, debtorId) {
           method: 'post',
           headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization
           },
           body: JSON.stringify(repaymentPlan)
         });
         if (response.status !== 201) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'newRepaymentPlan' });
       }
     }
     return {
@@ -40,7 +45,8 @@ export function newRepaymentPlan(repaymentPlan, debtorId) {
 }
 
 
-export function fetchRepamentPlans(locParams) {
+export function fetchRepamentPlans(locParams, debtorId, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -50,13 +56,14 @@ export function fetchRepamentPlans(locParams) {
             method: 'get',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              Authorization
             }
           });
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'newRepaymentPlan' });
       }
     }
     return {

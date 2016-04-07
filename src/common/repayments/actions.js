@@ -5,24 +5,29 @@ export const PAY_REPAYMENT_START = 'PAY_REPAYMENT_START';
 export const PAY_REPAYMENT_FAILURE = 'PAY_REPAYMENT_FAILURE';
 export const PAY_REPAYMENT_SUCCESS = 'PAY_REPAYMENT_SUCCESS';
 
+import { translateHttpError } from '../lib/error/error';
+
 const API_VERSION = '/api/v1';
 
 
-export function fetchRepaments(repaymentPlanId, debtorId) {
+export function fetchRepaments(repaymentPlanId, debtorId, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
-    async function getPromise(fields) {
+    async function getPromise() {
       try {
+        // eslint-disable-next-line no-alert, max-len
         const response = await fetch(`${API_VERSION}/debtors/${debtorId}/repaymentPlans/${repaymentPlanId}/repayments`, {
           method: 'get',
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization
           }
         });
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'fetchRepaments' });
       }
     }
     return {
@@ -34,26 +39,37 @@ export function fetchRepaments(repaymentPlanId, debtorId) {
   };
 }
 
-export function payRepayment({ repaymentPlanId, debtorId, repaymentId, amount, repaidAt, paidInFull }) {
+export function payRepayment({
+  repaymentPlanId,
+  debtorId,
+  repaymentId,
+  amount,
+  repaidAt,
+  paidInFull
+}, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
-    async function getPromise(fields) {
+    async function getPromise() {
       try {
-        const response = await fetch(`${API_VERSION}/debtors/${debtorId}/repaymentPlans/${repaymentPlanId}/repayments/${repaymentId}/pay`, {
-          method: 'post',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            amount: amount,
-            repaidAt: repaidAt,
-            paidInFull: paidInFull,
-          })
-        });
+        // eslint-disable-next-line no-alert, max-len
+        const response = await fetch(`${API_VERSION}/debtors/${debtorId}/repaymentPlans/${repaymentPlanId}/repayments/${repaymentId}/pay`,
+          {
+            method: 'post',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization
+            },
+            body: JSON.stringify({
+              amount,
+              repaidAt,
+              paidInFull,
+            })
+          });
         if (response.status !== 201) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'payRepayment' });
       }
     }
     return {

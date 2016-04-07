@@ -19,6 +19,7 @@ class AddNoteDialog extends Component {
     isAddNoteDialogOpen: PropTypes.bool.isRequired,
     closeAddNoteDialog: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     setField: PropTypes.func.isRequired,
     addNewNote: PropTypes.func.isRequired,
@@ -40,11 +41,11 @@ class AddNoteDialog extends Component {
   }
 
   handleNew() {
-    const { closeAddNoteDialog, debtorId, fields, addNewNote } = this.props;
+    const { closeAddNoteDialog, debtorId, fields, addNewNote, viewer } = this.props;
     addNewNote({
       note: fields.note.value.trim(),
       debtorId,
-    });
+    }, viewer);
 
     fields.$reset();
     closeAddNoteDialog();
@@ -131,6 +132,7 @@ AddNoteDialog = injectIntl(AddNoteDialog);
 
 export default connect(state => ({
   isAddNoteDialogOpen: state.ui.isAddNoteDialogOpen,
+  viewer: state.users.viewer,
 }), {
   closeAddNoteDialog,
   setField,

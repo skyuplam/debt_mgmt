@@ -1,13 +1,14 @@
 import { Strategy } from 'passport-http-bearer';
 import models from '../../models';
-import jwt from 'jsonwebtoken';
+import { verifyAsync } from '../jwt';
 import config from '../../config';
+
 
 const { isProduction, secretKey } = config;
 
 const strategy = new Strategy((token, done) => {
   const key = isProduction ? process.env.SECRET_KEY : secretKey;
-  jwt.verify(token, key, (err, decoded) => {
+  return verifyAsync(token, key).then(decoded =>
     models.user.findOne({
       where: {
         username: decoded.username
@@ -17,8 +18,8 @@ const strategy = new Strategy((token, done) => {
         return done(null, user);
       }
       return done(null, false);
-    }).catch(err => done(err));
-  });
+    })
+  );
 });
 
 export default strategy;

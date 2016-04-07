@@ -1,4 +1,4 @@
-import AuthorizationError from '../lib/validation/AuthorizationError';
+import { translateHttpError } from '../lib/error/error';
 
 export const FETCH_DEBTORS_START = 'FETCH_DEBTORS_START';
 export const FETCH_DEBTORS_ERROR = 'FETCH_DEBTORS_ERROR';
@@ -13,11 +13,16 @@ export const FETCH_DEBTOR_SUCCESS = 'FETCH_DEBTOR_SUCCESS';
 const API_VERSION = '/api/v1';
 
 
-export function fetchDebtors() {
+export function fetchDebtors(user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => ({
     type: 'FETCH_DEBTORS',
     payload: {
-      promise: fetch(`${API_VERSION}/debtors`)
+      promise: fetch(`${API_VERSION}/debtors`, {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization
+      })
         .then(response => response.json())
     }
   });
@@ -40,10 +45,7 @@ export function searchDebtors(criteria, user = {}) {
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
-        if (error.status === 401) {
-          throw new AuthorizationError('searchDebtors');
-        }
-        throw error;
+        throw translateHttpError(error, { action: 'searchDebtors' });
       }
     }
     return {
@@ -56,7 +58,8 @@ export function searchDebtors(criteria, user = {}) {
 }
 
 
-export function fetchDebtor(locParams) {
+export function fetchDebtor(locParams, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -64,13 +67,14 @@ export function fetchDebtor(locParams) {
           method: 'get',
           headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization
           }
         });
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
-        throw error;
+        throw translateHttpError(error, { action: 'fetchDebtor' });
       }
     }
     return {

@@ -9,7 +9,8 @@ export const ADD_NEW_ADDRESS_SUCCESS = 'ADD_NEW_ADDRESS_SUCCESS';
 const API_VERSION = '/api/v1';
 
 
-export function fetchAddresses(locParams) {
+export function fetchAddresses(locParams, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -19,7 +20,8 @@ export function fetchAddresses(locParams) {
             method: 'get',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              Authorization
             }
           });
         if (response.status !== 200) throw response;
@@ -37,7 +39,8 @@ export function fetchAddresses(locParams) {
   };
 }
 
-export function addNewAddress(address) {
+export function addNewAddress(address, user = {}) {
+  const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
@@ -47,7 +50,8 @@ export function addNewAddress(address) {
             method: 'post',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              Authorization
             },
             body: JSON.stringify(address)
           });
