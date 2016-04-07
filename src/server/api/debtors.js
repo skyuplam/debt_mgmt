@@ -5,6 +5,10 @@ import passport from 'passport';
 
 const router = express.Router();
 
+function authRequired() {
+  return passport.authenticate('bearer', { session: false });
+}
+
 function getDebtors(criteria) {
   let condition = '';
   if (criteria) {
@@ -59,7 +63,7 @@ function getDebtor(debtorId) {
 }
 
 router.route('/')
-  .get(passport.authenticate('bearer', { session: false }),
+  .get(authRequired(),
     (req, res) => {
       getDebtors().then(people => {
       // console.log(`Debtors Count:${people.length}`);
@@ -69,7 +73,7 @@ router.route('/')
     });
 
 router.route('/')
-  .post(passport.authenticate('bearer', { session: false }), (req, res) => {
+  .post(authRequired(), (req, res) => {
     const { idCard, originatedAgreementNo, name } = req.body;
 
     getDebtors({ idCard, originatedAgreementNo, name }).then(people => {
@@ -79,7 +83,7 @@ router.route('/')
   });
 
 router.route('/:debtorId')
-  .get((req, res) => {
+  .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     getDebtor(debtorId).then(debtors =>
       res.status(200).send({ debtors }).end()
@@ -87,7 +91,7 @@ router.route('/:debtorId')
   });
 
 router.route('/:debtorId/loans')
-  .get((req, res) => {
+  .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     models.sequelize.query(`
       SELECT
@@ -110,7 +114,7 @@ router.route('/:debtorId/loans')
   });
 
 router.route('/:debtorId/repaymentPlans')
-  .get((req, res) => {
+  .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     models.sequelize.query(`
       SELECT
@@ -132,7 +136,7 @@ router.route('/:debtorId/repaymentPlans')
   });
 
 router.route('/:debtorId/repaymentPlans')
-  .post((req, res) => {
+  .post(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     const {
       loanId,
@@ -208,7 +212,7 @@ router.route('/:debtorId/repaymentPlans')
   });
 
 router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
-  .get((req, res) => {
+  .get(authRequired(), (req, res) => {
     const { repaymentPlanId } = req.params;
     models.sequelize.query(`
       SELECT
@@ -228,7 +232,7 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
   });
 
 router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId/pay')
-  .post((req, res) => {
+  .post(authRequired(), (req, res) => {
     const { repaymentId, repaymentPlanId } = req.params;
     const { amount, repaidAt, paidInFull } = req.body;
 
@@ -330,7 +334,7 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId
   });
 
 router.route('/:debtorId/contactNumbers')
-  .get((req, res) => {
+  .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     models.sequelize.query(`
       SELECT
@@ -354,7 +358,7 @@ router.route('/:debtorId/contactNumbers')
   });
 
 router.route('/:debtorId/contactNumbers')
-  .post((req, res) => {
+  .post(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     const {
       contactNumber,
@@ -442,7 +446,7 @@ router.route('/:debtorId/contactNumbers')
 
 
 router.route('/:debtorId/addresses')
-  .get((req, res) => {
+  .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     models.sequelize.query(`
       SELECT
@@ -466,7 +470,7 @@ router.route('/:debtorId/addresses')
   });
 
 router.route('/:debtorId/addresses')
-  .post((req, res) => {
+  .post(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     const {
       address,
@@ -632,7 +636,7 @@ router.route('/:debtorId/addresses')
   });
 
 router.route('/:debtorId/notes')
-  .get((req, res) => {
+  .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     models.note.findAll({
       where: {
@@ -644,7 +648,7 @@ router.route('/:debtorId/notes')
   });
 
 router.route('/:debtorId/notes')
-  .post((req, res) => {
+  .post(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
     const {
       note

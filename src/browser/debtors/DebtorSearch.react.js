@@ -13,16 +13,6 @@ const styles = {
   button: {
     margin: 12,
   },
-  exampleImageInput: {
-    cursor: 'pointer',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    width: '100%',
-    opacity: 0,
-  },
   padding: {
     padding: 8
   }
@@ -34,6 +24,7 @@ class DebtorSearch extends Component {
     intl: intlShape.isRequired,
     fields: PropTypes.object.isRequired,
     debtors: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -43,16 +34,20 @@ class DebtorSearch extends Component {
 
   onPressedSearch() {
     // if (e.key !== 'Enter') return;
-    const { searchDebtors, fields } = this.props;
+    const { searchDebtors, fields, viewer } = this.props;
     if (!(fields.idCard.value.trim() ||
         fields.name.value.trim() ||
         fields.originatedAgreementNo.value.trim())) return;
+
     searchDebtors({
       idCard: fields.idCard.value,
       name: fields.name.value,
       originatedAgreementNo: fields.originatedAgreementNo.value
+    }, {
+      token: viewer.token
     });
-    // fields.$reset();
+
+    fields.$reset();
   }
 
   render() {
@@ -96,5 +91,6 @@ DebtorSearch = fields(DebtorSearch, {
 DebtorSearch = injectIntl(DebtorSearch);
 
 export default connect(state => ({
-  debtors: state.debtors.map
+  debtors: state.debtors.map,
+  viewer: state.users.viewer,
 }), debtorsActions)(DebtorSearch);

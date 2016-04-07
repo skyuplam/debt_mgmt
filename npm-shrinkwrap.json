@@ -3125,7 +3125,7 @@
     },
     "eventemitter3": {
       "version": "1.2.0",
-      "from": "eventemitter3@>=1.1.1 <2.0.0",
+      "from": "eventemitter3@latest",
       "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-1.2.0.tgz"
     },
     "events": {
@@ -6983,6 +6983,11 @@
       "from": "react-native-side-menu@>=0.18.0 <0.19.0",
       "resolved": "https://registry.npmjs.org/react-native-side-menu/-/react-native-side-menu-0.18.0.tgz"
     },
+    "react-notification-system": {
+      "version": "0.2.6",
+      "from": "react-notification-system@latest",
+      "resolved": "https://registry.npmjs.org/react-notification-system/-/react-notification-system-0.2.6.tgz"
+    },
     "react-proxy": {
       "version": "1.1.8",
       "from": "react-proxy@>=1.1.7 <2.0.0",
@@ -7009,18 +7014,6 @@
           "version": "4.6.1",
           "from": "lodash@>=4.2.0 <5.0.0",
           "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.6.1.tgz"
-        }
-      }
-    },
-    "react-redux-toastr": {
-      "version": "3.0.4",
-      "from": "react-redux-toastr@latest",
-      "resolved": "https://registry.npmjs.org/react-redux-toastr/-/react-redux-toastr-3.0.4.tgz",
-      "dependencies": {
-        "fbjs": {
-          "version": "0.8.0",
-          "from": "fbjs@>=0.8.0-alpha.3 <0.9.0",
-          "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.0.tgz"
         }
       }
     },

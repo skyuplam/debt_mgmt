@@ -8,11 +8,20 @@ import Login from './auth/Login.react';
 import { Redirect, IndexRoute, Route } from 'react-router';
 
 export default function createRoutes(getState) {
+  const requireAuth = (nextState, replace) => {
+    const loggedInUser = getState().users.viewer;
+    if (!loggedInUser) {
+      replace({
+        pathname: '/login',
+        state: { nextPathname: nextState.location.pathname }
+      });
+    }
+  };
   return (
     <Route component={App} path="/">
-      <IndexRoute component={Home} />
+      <IndexRoute component={Home} onEnter={requireAuth} />
       <Route component={Login} path="/login" />
-      <Route component={Debtors} path="debtorList">
+      <Route component={Debtors} onEnter={requireAuth} path="debtorList">
         <Route component={Debtor} path="/debtors/:id" />
         <Redirect from="debtors/:id" to="/debtors/:id" />
       </Route>

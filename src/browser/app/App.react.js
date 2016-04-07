@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
 import { cyan500 } from 'material-ui/lib/styles/colors';
-
+import NotificationSystem from 'react-notification-system';
+import { EE } from '../../common/eventEmitter/eventEmitter';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -28,6 +29,25 @@ class App extends Component {
     location: PropTypes.object.isRequired,
   };
 
+  constructor() {
+    super();
+
+    this.addNotification = this.addNotification.bind(this);
+  }
+
+  componentDidMount() {
+    this._notificationSystem = this.refs.notificationSystem;
+    EE.on('add/notification', this.addNotification);
+  }
+
+  componentWillUnmount() {
+    EE.removeListener('add/notification');
+  }
+
+  addNotification(notification) {
+    this._notificationSystem.addNotification(notification);
+  }
+
   render() {
     const { children, currentLocale, location } = this.props;
 
@@ -41,6 +61,7 @@ class App extends Component {
           <Header location={location} />
           {children}
           <Footer />
+          <NotificationSystem ref="notificationSystem" />
         </div>
       </MuiThemeProvider>
     );
