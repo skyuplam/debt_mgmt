@@ -6,27 +6,16 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT = 'LOGOUT';
 
 export function login(fields) {
-  return ({ fetch, validate }) => {
+  return ({ fetch }) => {
     const getPromise = async () => {
       try {
-        await validate(fields)
-          .prop('email').required().email()
-          .prop('password').required().simplePassword()
-          .promise;
-        // Simulate response for server-less (Firebase hosting) example.
-        if (process.env.IS_SERVERLESS) {
-          return {
-            email: fields.email,
-            id: Date.now()
-          };
-        }
         // Sure we can use smarter api than raw fetch.
         const response = await fetch('/api/v1/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(fields)
         });
-        if (response.status !== 200) throw response;
+        if (response.status !== 201) throw response;
         // Return JSON response.
         return response.json();
       } catch (error) {

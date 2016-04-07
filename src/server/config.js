@@ -11,7 +11,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 nconf.env('__');
 
 // For local development with secrets. Check src/common/_secrets.json file.
-// nconf.file('src/common/secrets.json');
+nconf.file('src/common/secrets.json');
 
 // Remember, never put secrets in default config.
 // Use environment variables for production, and secrets.json for development.

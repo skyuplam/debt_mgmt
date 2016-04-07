@@ -14,9 +14,9 @@ const messages = defineMessages({
     defaultMessage: 'Classic XMLHttpRequest Login',
     id: 'auth.login.formLegend'
   },
-  emailPlaceholder: {
-    defaultMessage: 'your@email.com',
-    id: 'auth.login.emailPlaceholder'
+  usernamePlaceholder: {
+    defaultMessage: 'username',
+    id: 'auth.login.usernamePlaceholder'
   },
   passwordPlaceholder: {
     defaultMessage: 'password',
@@ -68,7 +68,7 @@ class Login extends Component {
   render() {
     const { auth, fields } = this.props;
     const { intl } = this.props;
-    const emailPlaceholder = intl.formatMessage(messages.emailPlaceholder);
+    const usernamePlaceholder = intl.formatMessage(messages.usernamePlaceholder);
     const passwordPlaceholder = intl.formatMessage(messages.passwordPlaceholder);
 
     return (
@@ -80,8 +80,8 @@ class Login extends Component {
             </legend>
             <input
               maxLength="100"
-              placeholder={emailPlaceholder}
-              {...fields.email}
+              placeholder={usernamePlaceholder}
+              {...fields.username}
             />
             <br />
             <input
@@ -108,7 +108,7 @@ class Login extends Component {
 
 Login = fields(Login, {
   path: 'auth',
-  fields: ['email', 'password']
+  fields: ['username', 'password']
 });
 
 Login = injectIntl(Login);

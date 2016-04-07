@@ -35,5 +35,5 @@ export default combineReducers({
   notes,
   categories,
   ui,
-  users
+  users,
 });

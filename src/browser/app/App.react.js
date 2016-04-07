@@ -11,6 +11,7 @@ import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
 import { cyan500 } from 'material-ui/lib/styles/colors';
 
+
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: cyan500,
@@ -24,7 +25,7 @@ class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     currentLocale: PropTypes.string.isRequired,
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
   };
 
   render() {

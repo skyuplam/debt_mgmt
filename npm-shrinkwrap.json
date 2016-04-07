@@ -1396,6 +1396,43 @@
       "from": "base64-url@1.2.1",
       "resolved": "https://registry.npmjs.org/base64-url/-/base64-url-1.2.1.tgz"
     },
+    "base64url": {
+      "version": "1.0.6",
+      "from": "base64url@>=1.0.4 <1.1.0",
+      "resolved": "https://registry.npmjs.org/base64url/-/base64url-1.0.6.tgz",
+      "dependencies": {
+        "camelcase": {
+          "version": "1.2.1",
+          "from": "camelcase@>=1.0.1 <2.0.0",
+          "resolved": "https://registry.npmjs.org/camelcase/-/camelcase-1.2.1.tgz"
+        },
+        "camelcase-keys": {
+          "version": "1.0.0",
+          "from": "camelcase-keys@>=1.0.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/camelcase-keys/-/camelcase-keys-1.0.0.tgz"
+        },
+        "concat-stream": {
+          "version": "1.4.10",
+          "from": "concat-stream@>=1.4.7 <1.5.0",
+          "resolved": "https://registry.npmjs.org/concat-stream/-/concat-stream-1.4.10.tgz"
+        },
+        "indent-string": {
+          "version": "1.2.2",
+          "from": "indent-string@>=1.1.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/indent-string/-/indent-string-1.2.2.tgz"
+        },
+        "meow": {
+          "version": "2.0.0",
+          "from": "meow@>=2.0.0 <2.1.0",
+          "resolved": "https://registry.npmjs.org/meow/-/meow-2.0.0.tgz"
+        },
+        "object-assign": {
+          "version": "1.0.0",
+          "from": "object-assign@>=1.0.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-1.0.0.tgz"
+        }
+      }
+    },
     "basic-auth": {
       "version": "1.0.3",
       "from": "basic-auth@>=1.0.3 <1.1.0",
@@ -1410,6 +1447,18 @@
       "version": "0.5.3",
       "from": "batch@0.5.3",
       "resolved": "https://registry.npmjs.org/batch/-/batch-0.5.3.tgz"
+    },
+    "bcrypt": {
+      "version": "0.8.5",
+      "from": "bcrypt@latest",
+      "resolved": "https://registry.npmjs.org/bcrypt/-/bcrypt-0.8.5.tgz",
+      "dependencies": {
+        "nan": {
+          "version": "2.0.5",
+          "from": "nan@2.0.5",
+          "resolved": "https://registry.npmjs.org/nan/-/nan-2.0.5.tgz"
+        }
+      }
     },
     "beeper": {
       "version": "1.1.0",
@@ -1529,6 +1578,11 @@
           "resolved": "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
         }
       }
+    },
+    "buffer-equal-constant-time": {
+      "version": "1.0.1",
+      "from": "buffer-equal-constant-time@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz"
     },
     "buffer-to-vinyl": {
       "version": "1.1.0",
@@ -2768,6 +2822,11 @@
       "from": "ecc-jsbn@>=0.0.1 <1.0.0",
       "resolved": "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz"
     },
+    "ecdsa-sig-formatter": {
+      "version": "1.0.5",
+      "from": "ecdsa-sig-formatter@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.5.tgz"
+    },
     "ee-first": {
       "version": "1.1.1",
       "from": "ee-first@1.1.1",
@@ -3063,6 +3122,11 @@
       "version": "1.1.1",
       "from": "event-target-shim@>=1.0.5 <2.0.0",
       "resolved": "https://registry.npmjs.org/event-target-shim/-/event-target-shim-1.1.1.tgz"
+    },
+    "eventemitter3": {
+      "version": "1.2.0",
+      "from": "eventemitter3@>=1.1.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-1.2.0.tgz"
     },
     "events": {
       "version": "1.1.0",
@@ -5142,6 +5206,11 @@
       "from": "JSONStream@>=1.0.3 <2.0.0",
       "resolved": "https://registry.npmjs.org/JSONStream/-/JSONStream-1.1.1.tgz"
     },
+    "jsonwebtoken": {
+      "version": "5.7.0",
+      "from": "jsonwebtoken@latest",
+      "resolved": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-5.7.0.tgz"
+    },
     "jsprim": {
       "version": "1.2.2",
       "from": "jsprim@>=1.2.2 <2.0.0",
@@ -5163,6 +5232,16 @@
           "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.31.tgz"
         }
       }
+    },
+    "jwa": {
+      "version": "1.1.3",
+      "from": "jwa@>=1.1.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/jwa/-/jwa-1.1.3.tgz"
+    },
+    "jws": {
+      "version": "3.1.3",
+      "from": "jws@>=3.0.0 <4.0.0",
+      "resolved": "https://registry.npmjs.org/jws/-/jws-3.1.3.tgz"
     },
     "keycode": {
       "version": "2.1.1",
@@ -6271,9 +6350,14 @@
         }
       }
     },
+    "passport-http-bearer": {
+      "version": "1.0.1",
+      "from": "passport-http-bearer@latest",
+      "resolved": "https://registry.npmjs.org/passport-http-bearer/-/passport-http-bearer-1.0.1.tgz"
+    },
     "passport-local": {
       "version": "1.0.0",
-      "from": "passport-local@*",
+      "from": "passport-local@latest",
       "resolved": "https://registry.npmjs.org/passport-local/-/passport-local-1.0.0.tgz"
     },
     "passport-strategy": {
@@ -6925,6 +7009,18 @@
           "version": "4.6.1",
           "from": "lodash@>=4.2.0 <5.0.0",
           "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.6.1.tgz"
+        }
+      }
+    },
+    "react-redux-toastr": {
+      "version": "3.0.4",
+      "from": "react-redux-toastr@latest",
+      "resolved": "https://registry.npmjs.org/react-redux-toastr/-/react-redux-toastr-3.0.4.tgz",
+      "dependencies": {
+        "fbjs": {
+          "version": "0.8.0",
+          "from": "fbjs@>=0.8.0-alpha.3 <0.9.0",
+          "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.0.tgz"
         }
       }
     },

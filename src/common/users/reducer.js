@@ -27,9 +27,9 @@ export default function usersReducer(state = initialState, action) {
   switch (action.type) {
 
     case authActions.LOGIN_SUCCESS: {
-      const { email, id } = action.payload;
-      const user = new User({ email, id });
-      return state.set('viewer', user);
+      const { user } = action.payload;
+      const theUser = new User(user);
+      return state.set('viewer', theUser);
     }
 
     case firebaseActions.REDUX_FIREBASE_ON_AUTH: {

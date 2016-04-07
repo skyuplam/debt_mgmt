@@ -1,7 +1,7 @@
 import express from 'express';
 import models from '../models';
 import moment from 'moment';
-
+import passport from 'passport';
 
 const router = express.Router();
 
@@ -59,21 +59,17 @@ function getDebtor(debtorId) {
 }
 
 router.route('/')
-  .get((req, res) => {
-    // Simulate async access.
-    // In real app we would check user credentials and load user data from DB.
-    // setTimeout(() => {
-    //   res.status(200).send({ debtors }).end();
-    // }, 50);
-    getDebtors().then(people => {
+  .get(passport.authenticate('bearer', { session: false }),
+    (req, res) => {
+      getDebtors().then(people => {
       // console.log(`Debtors Count:${people.length}`);
-      const debtors = people;
-      return res.status(200).send({ debtors }).end();
+        const debtors = people;
+        return res.status(200).send({ debtors }).end();
+      });
     });
-  });
 
 router.route('/')
-  .post((req, res) => {
+  .post(passport.authenticate('bearer', { session: false }), (req, res) => {
     const { idCard, originatedAgreementNo, name } = req.body;
 
     getDebtors({ idCard, originatedAgreementNo, name }).then(people => {

@@ -3,15 +3,20 @@ export default function (sequelize, DataTypes) {
     username: {
       type: DataTypes.STRING,
       unique: true,
-      validate: {
-        notNull: true,
-      }
+      allowNull: false
     },
     email: {
       type: DataTypes.STRING,
       validate: {
         isEmail: true
       }
+    },
+    password: {
+      type: DataTypes.STRING,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, {
     freezeTableName: true // Model tableName will be the same as the model name
