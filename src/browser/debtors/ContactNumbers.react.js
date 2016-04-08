@@ -42,20 +42,43 @@ class ContactNumbers extends Component {
 
   formatContact(contact) {
     let theContact = '';
+    let countryCode = '';
+    let areaCode = '';
+    let ext = '';
     if (contact.contactPerson) {
-      theContact = `${contact.contactPerson}-`;
+      theContact = `${contact.contactPerson} - `;
     }
-    return `${theContact}${contact.contactNumber}`;
+    if (contact.countryCode) {
+      countryCode = `+${contact.countryCode}-`;
+    }
+    if (contact.areaCode) {
+      areaCode = `${contact.areaCode}-`;
+    }
+    if (contact.ext) {
+      ext = `-${contact.ext}`;
+    }
+    return `${theContact}${countryCode}${areaCode}${contact.contactNumber}${ext}`;
   }
 
   formatSource(contactNumber) {
     const { relationships, intl } = this.props;
-    let theContactNumber = '';
+    let contactPerson = '';
+    let source = '';
+    let createdAt = '';
     if (contactNumber.contactPerson) {
-      const relationship = relationships.get(contactNumber.relationshipId).relationship;
-      theContactNumber = `${intl.formatMessage(contactsMessages[relationship])}-`;
+      const relationship = intl.formatMessage(
+        contactsMessages[relationships.get(contactNumber.relationshipId).relationship]
+      );
+      contactPerson = `${contactNumber.contactPerson}(${relationship}) - `;
     }
-    return `${theContactNumber}${intl.formatMessage(contactsMessages[contactNumber.source])}`;
+    if (contactNumber.contactLinkedAt) {
+      const createDate = intl.formatDate(contactNumber.contactLinkedAt);
+      createdAt = ` - ${createDate}`;
+    }
+    if (contactNumber.source) {
+      source = intl.formatMessage(contactsMessages[contactNumber.source]);
+    }
+    return `${contactPerson}${source}${createdAt}`;
   }
 
   render() {

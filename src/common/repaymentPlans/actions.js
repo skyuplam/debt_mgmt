@@ -45,7 +45,7 @@ export function newRepaymentPlan(repaymentPlan, debtorId, user = {}) {
 }
 
 
-export function fetchRepamentPlans(locParams, debtorId, user = {}) {
+export function fetchRepamentPlans(locParams, user = {}) {
   const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
@@ -63,7 +63,7 @@ export function fetchRepamentPlans(locParams, debtorId, user = {}) {
         if (response.status !== 200) throw response;
         return response.json();
       } catch (error) {
-        throw translateHttpError(error, { action: 'newRepaymentPlan' });
+        throw translateHttpError(error, { action: 'fetchRepamentPlans' });
       }
     }
     return {

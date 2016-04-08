@@ -350,7 +350,8 @@ router.route('/:debtorId/contactNumbers')
         pcn.relationshipId,
         pcn.verifiedAt,
         pcn.verifiedBy,
-        pcn.personId debtorId
+        pcn.personId debtorId,
+        pcn.createdAt contactLinkedAt
       FROM contactNumber cn
       LEFT JOIN contactNumberType cnt ON cnt.id = cn.contactNumberTypeId
       LEFT JOIN personContactNumber pcn ON pcn.contactNumberId = cn.id
@@ -462,7 +463,8 @@ router.route('/:debtorId/addresses')
         pad.relationshipId,
         pad.verifiedAt,
         pad.verifiedBy,
-        pad.personId debtorId
+        pad.personId debtorId,
+        pad.createdAt contactLinkedAt
       FROM address ad
       LEFT JOIN personAddress pad ON pad.addressId = ad.id
       LEFT JOIN addressType adt ON adt.id = pad.addressTypeId

@@ -52,11 +52,22 @@ class Addresses extends Component {
   formatSource(address) {
     const { relationships, intl } = this.props;
     let theAddress = '';
+    let source = '';
+    let createdAt = '';
     if (address.contactPerson) {
-      const relationship = relationships.get(address.relationshipId).relationship;
-      theAddress = `${intl.formatMessage(contactsMessages[relationship])}-`;
+      const relationship = intl.formatMessage(
+        contactsMessages[relationships.get(address.relationshipId).relationship]
+      );
+      theAddress = `${address.contactPerson}(${relationship}) - `;
     }
-    return `${theAddress}${intl.formatMessage(contactsMessages[address.source])}`;
+    if (address.contactLinkedAt) {
+      const createDate = intl.formatDate(address.contactLinkedAt);
+      createdAt = ` - ${createDate}`;
+    }
+    if (address.source) {
+      source = intl.formatMessage(contactsMessages[address.source]);
+    }
+    return `${theAddress}${source}${createdAt}`;
   }
 
   render() {

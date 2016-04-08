@@ -17,6 +17,7 @@ const Address = Record({
   sourceId: null,
   verifiedAt: null,
   verifiedBy: '',
+  contactLinkedAt: null,
 });
 
 export default Address;

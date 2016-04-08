@@ -16,6 +16,7 @@ const ContactNumber = Record({
   source: '',
   sourceId: null,
   debtorId: null,
+  contactLinkedAt: null,
 });
 
 export default ContactNumber;
