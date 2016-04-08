@@ -26,6 +26,7 @@ const Loan = Record({
   originatedAgreementNo: null,
   originatedLoanProcessingBranch: null,
   loanStatusId: null,
+  loanPlacementId: null,
   placementStatusId: null,
   placementCode: '',
   placementServicingFeeRate: 0.0,

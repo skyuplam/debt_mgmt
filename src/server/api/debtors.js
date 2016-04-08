@@ -105,6 +105,7 @@ router.route('/:debtorId/loans')
         p.placementCode,
         p.servicingFeeRate placementServicingFeeRate,
         p.placedAt,
+        lp.id loanPlacementId,
         lp.expectedRecalledAt,
         p.recalledAt,
         c.name agency,
@@ -118,6 +119,20 @@ router.route('/:debtorId/loans')
       WHERE dl.debtorId = ${debtorId}
       `, { type: models.sequelize.QueryTypes.SELECT }
     ).then(loans => res.status(200).send({ loans }).end());
+  });
+
+router.route('/:debtorId/loanPlacemnets/:loanPlacementId')
+  .post(authRequired(), (req, res) => {
+    const loanPlacementId = parseInt(req.params.loanPlacementId, 10);
+    const { postponedRecallDate } = req.body;
+    models.sequelize.transaction(t =>
+      models.loanPlacement.findById(loanPlacementId, {
+        transaction: t
+      }).then(loanPlacement => {
+        loanPlacement.expectedRecalledAt = postponedRecallDate;
+        return loanPlacement.save();
+      }).then(loanPlacement => res.status(201).json({ loanPlacement }))
+    );
   });
 
 router.route('/:debtorId/repaymentPlans')

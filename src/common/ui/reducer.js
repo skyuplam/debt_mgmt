@@ -18,6 +18,8 @@ const InitialState = Record({
   isAddNoteDialogOpen: false,
   isNoteDialogOpen: false,
   selectedNote: Note(),
+  isPostponeRecallPopupOpen: false,
+  postponeRecalltAnchorEl: null,
 });
 const initialState = new InitialState;
 
@@ -98,6 +100,17 @@ export default function uiReducer(state = initialState, action) {
       const theState = state.update('isNoteDialogOpen', isNoteDialogOpen => !isNoteDialogOpen);
       if (action.payload) {
         return theState.update('selectedNote', () => new Note(action.payload));
+      }
+      return theState;
+    }
+
+    case actions.TOGGLE_POSTPONE_RECALL_POPUP: {
+      const theState = state.update('isPostponeRecallPopupOpen',
+        isPostponeRecallPopupOpen => !isPostponeRecallPopupOpen);
+      if (action.payload) {
+        return theState.update('postponeRecalltAnchorEl', () =>
+          action.payload.postponeRecalltAnchorEl
+        );
       }
       return theState;
     }

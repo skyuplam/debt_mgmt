@@ -25,6 +25,14 @@ export default function loansReducer(state = initialState, action) {
       return state.set('map', loans);
     }
 
+    case actions.POSTPONE_PLACEMENT_RECALL_SUCCESS: {
+      const loanPlacement = action.payload.loanPlacement;
+      const loan = state.map.find(loan => loan.loanPlacementId === loanPlacement.id).toJS();
+      loan.expectedRecalledAt = loanPlacement.expectedRecalledAt;
+      const loanMap = Map().set(loan.id, new Loan(loan));
+      return state.update('map', map => map.mergeDeep(loanMap));
+    }
+
   }
 
   return state;

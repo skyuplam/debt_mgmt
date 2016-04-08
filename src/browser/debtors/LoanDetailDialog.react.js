@@ -3,10 +3,16 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Dialog from 'material-ui/lib/dialog';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import { closeLoanDetailDialog } from '../../common/ui/actions';
+import {
+  closeLoanDetailDialog,
+  togglePostponeRecallPopup,
+} from '../../common/ui/actions';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import GridList from 'material-ui/lib/grid-list/grid-list';
+import Popover from 'material-ui/lib/popover/popover';
+import PopoverAnimationFromTop from 'material-ui/lib/popover/popover-animation-from-top';
+
 import { FormattedNumber, FormattedDate } from 'react-intl';
 import { injectIntl, intlShape } from 'react-intl';
 import loansMessages from '../../common/loans/loansMessages';
@@ -22,8 +28,11 @@ class LoanDetailDialog extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     closeLoanDetailDialog: PropTypes.func.isRequired,
+    togglePostponeRecallPopup: PropTypes.func.isRequired,
     isLoanDetailDialogOpen: PropTypes.bool.isRequired,
     loan: PropTypes.object.isRequired,
+    postponeRecalltAnchorEl: PropTypes.bool.isRequired,
+    isPostponeRecallPopupOpen: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -32,6 +41,7 @@ class LoanDetailDialog extends Component {
     this._formatNumber = this._formatNumber.bind(this);
     this._formatPercentage = this._formatPercentage.bind(this);
     this._formatDate = this._formatDate.bind(this);
+    this.handlePostponeLoanRecall = this.handlePostponeLoanRecall.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -69,12 +79,22 @@ class LoanDetailDialog extends Component {
     );
   }
 
+  handlePostponeLoanRecall(e) {
+    const { togglePostponeRecallPopup } = this.props;
+    togglePostponeRecallPopup({
+      postponeRecalltAnchorEl: e.currentTarget
+    });
+  }
+
   render() {
     const {
       intl,
       loan,
       isLoanDetailDialogOpen,
       closeLoanDetailDialog,
+      isPostponeRecallPopupOpen,
+      postponeRecalltAnchorEl,
+      togglePostponeRecallPopup
     } = this.props;
 
     const styles = {
@@ -197,9 +217,20 @@ class LoanDetailDialog extends Component {
             <ListItem
               primaryText={intl.formatMessage(loansMessages.expectedRecalledAt)}
               secondaryText={this._formatDate(loan.expectedRecalledAt)}
+              onTouchTap={this.handlePostponeLoanRecall}
             />
           </List>
         </GridList>
+        <Popover
+          open={isPostponeRecallPopupOpen}
+          anchorEl={postponeRecalltAnchorEl}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          onRequestClose={togglePostponeRecallPopup}
+          animation={PopoverAnimationFromTop}
+        >
+        <p>Hello</p>
+        </Popover>
       </Dialog>
     );
   }
@@ -210,6 +241,9 @@ LoanDetailDialog = injectIntl(LoanDetailDialog);
 export default connect(state => ({
   isLoanDetailDialogOpen: state.ui.isLoanDetailDialogOpen,
   loan: state.ui.currentLoan,
+  postponeRecalltAnchorEl: state.ui.postponeRecalltAnchorEl,
+  isPostponeRecallPopupOpen: state.ui.isPostponeRecallPopupOpen,
 }), {
   closeLoanDetailDialog,
+  togglePostponeRecallPopup,
 })(LoanDetailDialog);
