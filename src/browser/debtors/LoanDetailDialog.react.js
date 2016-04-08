@@ -10,6 +10,12 @@ import GridList from 'material-ui/lib/grid-list/grid-list';
 import { FormattedNumber, FormattedDate } from 'react-intl';
 import { injectIntl, intlShape } from 'react-intl';
 import loansMessages from '../../common/loans/loansMessages';
+import {
+  getInterestAfterCutoff,
+  getLateFeeAfterCutoff,
+  getServicingFee,
+  getTotalAmount
+} from '../../common/loans/loan';
 import moment from 'moment';
 
 class LoanDetailDialog extends Component {
@@ -88,9 +94,16 @@ class LoanDetailDialog extends Component {
     const daysOfDelinq = Math.round((Date.now() - new Date(loan.delinquentAt)) /
     (1000 * 60 * 60 * 24 * 1));
 
+    const interestAfterCutoff = getInterestAfterCutoff(loan);
+    const lateFeeAfterCutoff = getLateFeeAfterCutoff(loan);
+
+    const title = `${intl.formatMessage(loansMessages.loanDetail)}-${loan.originatedAgreementNo}`;
+    const totalAmount = getTotalAmount(loan) + getServicingFee(loan);
+    const totalAmountStr = ` | ${intl.formatMessage(loansMessages.totalAmount)}-${totalAmount}`;
+
     return (
       <Dialog
-        title={`${intl.formatMessage(loansMessages.loanDetail)}-${loan.originatedAgreementNo}`}
+        title={`${title}${totalAmountStr}`}
         open={isLoanDetailDialogOpen}
         onRequestClose={closeLoanDetailDialog}
       >
@@ -119,6 +132,10 @@ class LoanDetailDialog extends Component {
               }
             />
             <ListItem
+              primaryText={intl.formatMessage(loansMessages.originator)}
+              secondaryText={loan.originator}
+            />
+            <ListItem
               primaryText={
                 // eslint-disable-next-line no-alert, max-len
                 `${intl.formatMessage(loansMessages.delinquentAt)} - ${daysOfDelinq}${intl.formatMessage(loansMessages.days)}`
@@ -131,6 +148,18 @@ class LoanDetailDialog extends Component {
               primaryText={intl.formatMessage(loansMessages.agency)}
               secondaryText={loan.agency}
             />
+            <ListItem
+              primaryText={intl.formatMessage(loansMessages.placementServicingFeeRate)}
+              secondaryText={this._formatPercentage(loan.placementServicingFeeRate)}
+            />
+            <ListItem
+              primaryText={intl.formatMessage(loansMessages.servicingFee)}
+              secondaryText={this._formatNumber(getServicingFee(loan))}
+            />
+            <ListItem
+              primaryText={intl.formatMessage(loansMessages.placedAt)}
+              secondaryText={this._formatDate(loan.placedAt)}
+            />
           </List>
           <List>
             <ListItem
@@ -142,6 +171,18 @@ class LoanDetailDialog extends Component {
               secondaryText={this._formatNumber(loan.collectableInterest)}
             />
             <ListItem
+              primaryText={intl.formatMessage(loansMessages.interestAfterCutoff)}
+              secondaryText={this._formatNumber(interestAfterCutoff)}
+            />
+            <ListItem
+              primaryText={intl.formatMessage(loansMessages.collectableLateFee)}
+              secondaryText={this._formatNumber(loan.collectableLateFee)}
+            />
+            <ListItem
+              primaryText={intl.formatMessage(loansMessages.lateFeeAfterCutoff)}
+              secondaryText={this._formatNumber(lateFeeAfterCutoff)}
+            />
+            <ListItem
               primaryText={intl.formatMessage(loansMessages.collectableMgmtFee)}
               secondaryText={this._formatNumber(loan.collectableMgmtFee)}
             />
@@ -150,16 +191,12 @@ class LoanDetailDialog extends Component {
               secondaryText={this._formatNumber(loan.collectableHandlingFee)}
             />
             <ListItem
-              primaryText={intl.formatMessage(loansMessages.collectableLateFee)}
-              secondaryText={this._formatNumber(loan.collectableLateFee)}
-            />
-            <ListItem
               primaryText={intl.formatMessage(loansMessages.collectablePenaltyFee)}
               secondaryText={this._formatNumber(loan.collectablePenaltyFee)}
             />
             <ListItem
-              primaryText={intl.formatMessage(loansMessages.placementServicingFeeRate)}
-              secondaryText={this._formatPercentage(loan.placementServicingFeeRate)}
+              primaryText={intl.formatMessage(loansMessages.expectedRecalledAt)}
+              secondaryText={this._formatDate(loan.expectedRecalledAt)}
             />
           </List>
         </GridList>

@@ -249,6 +249,10 @@
     {
       "name": "DCA 2",
       "code": "DCA-2"
+    },
+    {
+      "name": "Bank 1",
+      "code": "BK-1"
     }
   ]
 }

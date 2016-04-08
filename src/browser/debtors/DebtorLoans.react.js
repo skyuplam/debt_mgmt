@@ -15,6 +15,11 @@ import { FormattedNumber, FormattedDate } from 'react-intl';
 import LoanDetailDialog from './LoanDetailDialog.react';
 import { injectIntl, intlShape } from 'react-intl';
 import loansMessages from '../../common/loans/loansMessages';
+import {
+  getInterestAfterCutoff,
+  getLateFeeAfterCutoff,
+  getServicingFee
+} from '../../common/loans/loan';
 
 class DebtorLoans extends Component {
   static propTypes = {
@@ -35,6 +40,7 @@ class DebtorLoans extends Component {
     this._formatNumberCell = this._formatNumberCell.bind(this);
     this._formatDateCell = this._formatDateCell.bind(this);
     this._formatPercentageCell = this._formatPercentageCell.bind(this);
+    this._formatInterestCell = this._formatInterestCell.bind(this);
     this._handleTotalFeeRender = this._handleTotalFeeRender.bind(this);
     this._handleRowClicked = this._handleRowClicked.bind(this);
   }
@@ -66,7 +72,9 @@ class DebtorLoans extends Component {
     const totalFee = rowData.collectableMgmtFee +
       rowData.collectableHandlingFee +
       rowData.collectableLateFee +
-      rowData.collectablePenaltyFee;
+      rowData.collectablePenaltyFee +
+      getLateFeeAfterCutoff(rowData) +
+      getServicingFee(rowData);
     return this._formatNumberCell(totalFee);
   }
 
@@ -74,6 +82,18 @@ class DebtorLoans extends Component {
     return (
       <FormattedNumber
         value={cellData}
+      />
+    );
+  }
+
+  _formatInterestCell(cellData, cellDataKey, rowData) {
+    const interestAfterCutoff = getInterestAfterCutoff(rowData);
+    const interestB4Cutoff = rowData.collectableInterest;
+
+    const interest = interestB4Cutoff + interestAfterCutoff;
+    return (
+      <FormattedNumber
+        value={interest}
       />
     );
   }
@@ -130,16 +150,16 @@ class DebtorLoans extends Component {
                   width={100}
                 />
                 <FlexColumn
-                  label={intl.formatMessage(loansMessages.collectablePrincipal)}
+                  label={intl.formatMessage(loansMessages.principal)}
                   dataKey="collectablePrincipal"
                   cellRenderer={(cellData) => this._formatNumberCell(cellData)}
-                  width={80}
+                  width={100}
                 />
                 <FlexColumn
-                  label={intl.formatMessage(loansMessages.collectableInterest)}
+                  label={intl.formatMessage(loansMessages.interest)}
                   dataKey="collectableInterest"
-                  cellRenderer={(cellData) => this._formatNumberCell(cellData)}
-                  width={80}
+                  cellRenderer={this._formatInterestCell}
+                  width={100}
                 />
                 <FlexColumn
                   label={intl.formatMessage(loansMessages.totalCollectableFee)}
@@ -153,7 +173,7 @@ class DebtorLoans extends Component {
                   cellRenderer={
                     cellData => intl.formatMessage(loansMessages[`loanStatus${cellData}`])
                   }
-                  width={100}
+                  width={80}
                 />
                 <FlexColumn
                   label={intl.formatMessage(loansMessages.agency)}

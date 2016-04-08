@@ -22,6 +22,7 @@ const Loan = Record({
   collectablePenaltyFee: 0,
   repaidTerms: 0,
   completedAt: null,
+  originator: null,
   originatedAgreementNo: null,
   originatedLoanProcessingBranch: null,
   loanStatusId: null,
@@ -34,19 +35,18 @@ const Loan = Record({
   agency: '',
 });
 
-
 export function getInterestAfterCutoff(loan) {
   if (!loan) {
     return 0;
   }
   const cutOffDate = moment(loan.transferredAt);
   const monthlyInterestRate = loan.apr / 12;
-  const principal = loan.principal;
+  const principal = loan.collectablePrincipal;
   const now = moment();
   // Round up for the number of month elapsed
   const nMths = Math.ceil(now.diff(cutOffDate, 'months', true));
   // We use simple interest calculation here
-  return monthlyInterestRate * principal * nMths;
+  return Math.round(monthlyInterestRate * principal * nMths * 100.0) / 100.0;
 }
 
 export function getLateFeeAfterCutoff(loan) {
@@ -55,12 +55,29 @@ export function getLateFeeAfterCutoff(loan) {
   }
   const cutOffDate = moment(loan.transferredAt);
   const dailyRate = loan.lateFeeRate;
-  const principal = loan.principal;
+  const principal = loan.collectablePrincipal;
   const now = moment();
   // Round up for the number of month elapsed
   const nMths = Math.ceil(now.diff(cutOffDate, 'days', true));
   // We use simple interest calculation here
-  return dailyRate * principal * nMths;
+  return Math.round(dailyRate * principal * nMths * 100.0) / 100.0;
 }
+
+export function getTotalAmount(loan) {
+  return loan.collectablePrincipal +
+  loan.collectableInterest +
+  loan.collectableMgmtFee +
+  loan.collectableHandlingFee +
+  loan.collectableLateFee +
+  loan.collectablePenaltyFee +
+  getInterestAfterCutoff(loan) +
+  getLateFeeAfterCutoff(loan);
+}
+
+export function getServicingFee(loan) {
+  const placementServicingFeeRate = loan.placementServicingFeeRate;
+  return Math.round(getTotalAmount(loan) * placementServicingFeeRate * 100.0) / 100.0;
+}
+
 
 export default Loan;

@@ -9,10 +9,6 @@ export default [
     "defaultMessage": "贷后管理系统"
   },
   {
-    "id": "auth.login.emailPlaceholder",
-    "defaultMessage": "your@email.com"
-  },
-  {
     "id": "auth.login.error.email",
     "defaultMessage": "Email address is not valid."
   },
@@ -43,6 +39,10 @@ export default [
   {
     "id": "auth.login.passwordPlaceholder",
     "defaultMessage": "password"
+  },
+  {
+    "id": "auth.login.usernamePlaceholder",
+    "defaultMessage": "username"
   },
   {
     "id": "auth.logout",
@@ -502,27 +502,27 @@ export default [
   },
   {
     "id": "loans.collectableHandlingFee",
-    "defaultMessage": "手续费应收"
+    "defaultMessage": "转前手续费"
   },
   {
     "id": "loans.collectableInterest",
-    "defaultMessage": "利息应收"
+    "defaultMessage": "转前利息"
   },
   {
     "id": "loans.collectableLateFee",
-    "defaultMessage": "滞纳金应收"
+    "defaultMessage": "转前滞纳金"
   },
   {
     "id": "loans.collectableMgmtFee",
-    "defaultMessage": "管理费应收"
+    "defaultMessage": "转前管理费"
   },
   {
     "id": "loans.collectablePenaltyFee",
-    "defaultMessage": "违约金应收"
+    "defaultMessage": "转前违约金"
   },
   {
     "id": "loans.collectablePrincipal",
-    "defaultMessage": "本金应收"
+    "defaultMessage": "转前本金"
   },
   {
     "id": "loans.confirmNewRepaymentPlanContent",
@@ -553,8 +553,24 @@ export default [
     "defaultMessage": "贷款列表"
   },
   {
+    "id": "loans.interest",
+    "defaultMessage": "利息"
+  },
+  {
+    "id": "loans.interestAfterCutoff",
+    "defaultMessage": "转后利息"
+  },
+  {
     "id": "loans.issuedAt",
     "defaultMessage": "贷款日期"
+  },
+  {
+    "id": "loans.lateFee",
+    "defaultMessage": "罚息"
+  },
+  {
+    "id": "loans.lateFeeAfterCutoff",
+    "defaultMessage": "转后滞纳金"
   },
   {
     "id": "loans.lateFeeRate",
@@ -601,6 +617,10 @@ export default [
     "defaultMessage": "原贷款分行"
   },
   {
+    "id": "loans.originator",
+    "defaultMessage": "原贷款机构"
+  },
+  {
     "id": "loans.penaltyFeeRate",
     "defaultMessage": "违约金费率"
   },
@@ -615,6 +635,10 @@ export default [
   {
     "id": "loans.placementServicingFeeRate",
     "defaultMessage": "委外费率"
+  },
+  {
+    "id": "loans.principal",
+    "defaultMessage": "本金"
   },
   {
     "id": "loans.recalledAt",
@@ -633,12 +657,20 @@ export default [
     "defaultMessage": "还款计划"
   },
   {
+    "id": "loans.servicingFee",
+    "defaultMessage": "委外服务费"
+  },
+  {
     "id": "loans.terms",
     "defaultMessage": "期限"
   },
   {
+    "id": "loans.totalAmount",
+    "defaultMessage": "总结欠"
+  },
+  {
     "id": "loans.totalCollectableFee",
-    "defaultMessage": "总费用应收"
+    "defaultMessage": "总费用"
   },
   {
     "id": "loans.transferredAt",
