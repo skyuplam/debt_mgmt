@@ -75,7 +75,7 @@ class RepaymentList extends Component {
               height={200}
               headerHeight={36}
               rowHeight={48}
-              rowsCount={repayments.size}
+              rowsCount={repayments.size || 0}
               rowGetter={index => repayments.get(index + 1)}
             >
               <FlexColumn

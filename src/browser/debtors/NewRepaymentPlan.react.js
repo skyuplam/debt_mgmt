@@ -136,7 +136,9 @@ class NewRepaymentPlan extends Component {
     if (!repayments || !repayments.size) return true;
     const totalAmt = toFloat(fields.amount.value);
     let repaymentAmt = 0;
-    repayments.map(repayment => repaymentAmt += repayment.principal);
+    repayments.forEach(repayment => {
+      repaymentAmt += repayment.principal;
+    });
     if (repaymentAmt < 0 || repaymentAmt !== totalAmt) {
       return true;
     }
