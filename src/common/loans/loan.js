@@ -1,4 +1,5 @@
 import { Record } from 'immutable';
+import moment from 'moment';
 
 const Loan = Record({
   id: null,
@@ -32,5 +33,34 @@ const Loan = Record({
   recalledAt: null,
   agency: '',
 });
+
+
+export function getInterestAfterCutoff(loan) {
+  if (!loan) {
+    return 0;
+  }
+  const cutOffDate = moment(loan.transferredAt);
+  const monthlyInterestRate = loan.apr / 12;
+  const principal = loan.principal;
+  const now = moment();
+  // Round up for the number of month elapsed
+  const nMths = Math.ceil(now.diff(cutOffDate, 'months', true));
+  // We use simple interest calculation here
+  return monthlyInterestRate * principal * nMths;
+}
+
+export function getLateFeeAfterCutoff(loan) {
+  if (!loan) {
+    return 0;
+  }
+  const cutOffDate = moment(loan.transferredAt);
+  const dailyRate = loan.lateFeeRate;
+  const principal = loan.principal;
+  const now = moment();
+  // Round up for the number of month elapsed
+  const nMths = Math.ceil(now.diff(cutOffDate, 'days', true));
+  // We use simple interest calculation here
+  return dailyRate * principal * nMths;
+}
 
 export default Loan;

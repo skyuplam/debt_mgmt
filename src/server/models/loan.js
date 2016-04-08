@@ -88,18 +88,18 @@ export default function (sequelize, DataTypes) {
       },
       hook: models => {
         // Init Loan Status to "LO"
-        Loan.afterCreate((loan, opts) => {
-          return models.loanStatus.findOne({
+        Loan.afterCreate((loan, opts) =>
+          models.loanStatus.findOne({
             where: {
               status: 'Loan Originated'
             }
-          }, { transaction: opts.transaction }).then(loanStatus => {
-            return loan.setLoanStatus(loanStatus,
+          }, { transaction: opts.transaction }).then(loanStatus =>
+            loan.setLoanStatus(loanStatus,
               {
                 transaction: opts.transaction
-              });
-          });
-        });
+              })
+          )
+        );
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name

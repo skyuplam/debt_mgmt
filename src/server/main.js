@@ -155,6 +155,8 @@ models.sequelize.sync({ force: !isProduction }).then(() => {
                 collectablePenaltyFee: parseFloat(debtor['违约金应收']),
                 collectablePrincipal: parseFloat(debtor['本金应收']),
                 collectableInterest: parseFloat(debtor['利息应收']),
+                lateFeeRate: 0.001,
+                apr: 0.276,
                 repaidTerms: parseInt(debtor['已还期数'], 10),
                 originatedAgreementNo: debtor['贷款合同号'],
                 originatedLoanProcessingBranch: debtor['分行']
