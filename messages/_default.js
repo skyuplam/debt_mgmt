@@ -501,6 +501,10 @@ export default [
     "defaultMessage": "年化利率"
   },
   {
+    "id": "loans.cancel",
+    "defaultMessage": "取消"
+  },
+  {
     "id": "loans.collectableHandlingFee",
     "defaultMessage": "转前手续费"
   },
@@ -609,6 +613,10 @@ export default [
     "defaultMessage": "管理费率"
   },
   {
+    "id": "loans.ok",
+    "defaultMessage": "确定"
+  },
+  {
     "id": "loans.originatedAgreementNo",
     "defaultMessage": "原贷款合同号"
   },
@@ -635,6 +643,14 @@ export default [
   {
     "id": "loans.placementServicingFeeRate",
     "defaultMessage": "委外费率"
+  },
+  {
+    "id": "loans.postpone",
+    "defaultMessage": "延期"
+  },
+  {
+    "id": "loans.postponeTo",
+    "defaultMessage": "延期到"
   },
   {
     "id": "loans.principal",

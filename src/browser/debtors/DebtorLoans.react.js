@@ -210,7 +210,7 @@ class DebtorLoans extends Component {
           <NewRepaymentPlan
             debtorId={debtorId}
           />
-          <LoanDetailDialog />
+          <LoanDetailDialog debtorId={debtorId} />
         </CardActions>
       </Card>
     );

@@ -197,4 +197,24 @@ export default defineMessages({
     defaultMessage: '结清',
     id: 'loans.loanStatus5',
   },
+  postpone: {
+    defaultMessage: '延期',
+    id: 'loans.postpone',
+  },
+  postponeRecall: {
+    defaultMessage: '延期委外',
+    id: 'loans.postponeRecall',
+  },
+  postponeTo: {
+    defaultMessage: '延期到',
+    id: 'loans.postponeTo',
+  },
+  ok: {
+    defaultMessage: '确定',
+    id: 'loans.ok',
+  },
+  cancel: {
+    defaultMessage: '取消',
+    id: 'loans.cancel',
+  },
 });
