@@ -29,7 +29,7 @@ class Header extends Component {
   }
 
   goToDebtors() {
-    this.browserHistory.push('/debtorList');
+    this.browserHistory.push('/debtors');
   }
 
   render() {

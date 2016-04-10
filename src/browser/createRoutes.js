@@ -21,7 +21,7 @@ export default function createRoutes(getState) {
     <Route component={App} path="/">
       <IndexRoute component={Home} onEnter={requireAuth} />
       <Route component={Login} path="/login" />
-      <Route component={Debtors} onEnter={requireAuth} path="debtorList">
+      <Route component={Debtors} onEnter={requireAuth} path="debtors">
         <Route component={Debtor} path="/debtors/:id" />
         <Redirect from="debtors/:id" to="/debtors/:id" />
       </Route>

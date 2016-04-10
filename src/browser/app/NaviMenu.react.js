@@ -23,7 +23,7 @@ class NaviMenu extends Component {
 
   goToDebtors() {
     const { toggleSideMenu } = this.props;
-    browserHistory.push('/debtorList');
+    browserHistory.push('/debtors');
 
     // Close SideMenu
     toggleSideMenu();
