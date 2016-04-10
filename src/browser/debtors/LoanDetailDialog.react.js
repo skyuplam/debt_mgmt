@@ -31,10 +31,12 @@ class LoanDetailDialog extends Component {
     intl: intlShape.isRequired,
     closeLoanDetailDialog: PropTypes.func.isRequired,
     togglePostponeRecallPopup: PropTypes.func.isRequired,
+    postponePlacementRecall: PropTypes.func.isRequired,
     setField: PropTypes.func.isRequired,
     isLoanDetailDialogOpen: PropTypes.bool.isRequired,
     loan: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
     isPostponeRecallPopupOpen: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
   }
@@ -45,11 +47,11 @@ class LoanDetailDialog extends Component {
     this._formatNumber = this._formatNumber.bind(this);
     this._formatPercentage = this._formatPercentage.bind(this);
     this._formatDate = this._formatDate.bind(this);
-    this.handlePostponeLoanRecall = this.handlePostponeLoanRecall.bind(this);
     this.isValidRecallDate = this.isValidRecallDate.bind(this);
     this.sendPostponeRecallRequest = this.sendPostponeRecallRequest.bind(this);
     this._handleOnChange = this._handleOnChange.bind(this);
     this.shouldDisableDateForRecall = this.shouldDisableDateForRecall.bind(this);
+    this.handlePostponeRecall = this.handlePostponeRecall.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -87,27 +89,34 @@ class LoanDetailDialog extends Component {
     );
   }
 
-  handlePostponeLoanRecall(e) {
+  handlePostponeRecall() {
     const { togglePostponeRecallPopup } = this.props;
-    togglePostponeRecallPopup({
-      postponeRecalltAnchorEl: e.currentTarget
-    });
+    togglePostponeRecallPopup();
   }
 
   isValidRecallDate() {
     const { fields, loan } = this.props;
     const postponedTo = moment(fields.postponedRecallDate.value);
-    return postponedTo.isAfter(loan.expectedRecalledAt);
+    return postponedTo.isValid() && postponedTo.isAfter(loan.expectedRecalledAt);
   }
 
   sendPostponeRecallRequest() {
-    const { togglePostponeRecallPopup, fields, debtorId } = this.props;
+    const {
+      togglePostponeRecallPopup,
+      fields,
+      debtorId,
+      viewer,
+      loan,
+      postponePlacementRecall
+    } = this.props;
     const postponedRecallDate = fields.postponedRecallDate.value;
     postponePlacementRecall({
+      loanPlacementId: loan.loanPlacementId,
       postponedRecallDate,
       debtorId
-    });
+    }, viewer);
     togglePostponeRecallPopup();
+    fields.$reset();
   }
 
   _handleOnChange(e, date) {
@@ -128,7 +137,8 @@ class LoanDetailDialog extends Component {
       isLoanDetailDialogOpen,
       closeLoanDetailDialog,
       isPostponeRecallPopupOpen,
-      togglePostponeRecallPopup
+      togglePostponeRecallPopup,
+      fields
     } = this.props;
 
     const styles = {
@@ -169,6 +179,14 @@ class LoanDetailDialog extends Component {
         onTouchTap={this.sendPostponeRecallRequest}
       />
     ];
+
+    let defaultRecallDate;
+
+    if (moment(fields.postponedRecallDate.value).isValid()) {
+      defaultRecallDate = new Date(fields.postponedRecallDate.value);
+    } else if (moment(loan.expectedRecalledAt).isValid()) {
+      defaultRecallDate = new Date(loan.expectedRecalledAt);
+    }
 
     return (
       <Dialog
@@ -266,22 +284,21 @@ class LoanDetailDialog extends Component {
             <ListItem
               primaryText={intl.formatMessage(loansMessages.expectedRecalledAt)}
               secondaryText={this._formatDate(loan.expectedRecalledAt)}
-              onTouchTap={this.handlePostponeLoanRecall}
+              onTouchTap={this.handlePostponeRecall}
             />
           </List>
         </GridList>
         <Dialog
           title={intl.formatMessage(loansMessages.postponeRecall)}
           actions={actions}
-          modal={false}
+          modal
           open={isPostponeRecallPopupOpen}
-          onRequestClose={togglePostponeRecallPopup}
         >
           <DatePicker
             hintText={intl.formatMessage(loansMessages.postponeTo)}
             floatingLabelText={intl.formatMessage(loansMessages.postponeTo)}
-            container="inline"
             locale="zh"
+            defaultDate={defaultRecallDate}
             shouldDisableDate={this.shouldDisableDateForRecall}
             DateTimeFormat={global.Intl.DateTimeFormat}
             onChange={this._handleOnChange}
@@ -306,6 +323,7 @@ LoanDetailDialog = injectIntl(LoanDetailDialog);
 export default connect(state => ({
   isLoanDetailDialogOpen: state.ui.isLoanDetailDialogOpen,
   loan: state.ui.currentLoan,
+  viewer: state.users.viewer,
   isPostponeRecallPopupOpen: state.ui.isPostponeRecallPopupOpen,
 }), {
   closeLoanDetailDialog,

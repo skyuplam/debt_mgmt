@@ -130,7 +130,9 @@ router.route('/:debtorId/loanPlacemnets/:loanPlacementId')
         transaction: t
       }).then(loanPlacement => {
         loanPlacement.expectedRecalledAt = postponedRecallDate;
-        return loanPlacement.save();
+        return loanPlacement.save({
+          transaction: t
+        });
       }).then(loanPlacement => res.status(201).json({ loanPlacement }))
     );
   });

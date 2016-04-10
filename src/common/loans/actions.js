@@ -39,24 +39,30 @@ export function fetchLoans(locParams, user = {}) {
 }
 
 export function postponePlacementRecall({
+  loanPlacementId,
   postponedRecallDate, debtorId
 }, user = {}) {
   const Authorization = `Bearer ${user.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
-        const response = await fetch(`${API_VERSION}/debtors/`, {
-          method: 'post',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization
-          }
-        });
+        // eslint-disable-next-line no-alert, max-len
+        const response = await fetch(`${API_VERSION}/debtors/${debtorId}/loanPlacemnets/${loanPlacementId}`,
+          {
+            method: 'post',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization
+            },
+            body: JSON.stringify({
+              postponedRecallDate,
+            })
+          });
         if (response.status !== 201) throw response;
         return response.json();
       } catch (error) {
-        throw translateHttpError(error, { action: 'fetpostponeLoanRecallchLoans' });
+        throw translateHttpError(error, { action: 'postponePlacementRecall' });
       }
     }
     return {

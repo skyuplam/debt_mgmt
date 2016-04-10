@@ -649,6 +649,10 @@ export default [
     "defaultMessage": "延期"
   },
   {
+    "id": "loans.postponeRecall",
+    "defaultMessage": "延期委外"
+  },
+  {
     "id": "loans.postponeTo",
     "defaultMessage": "延期到"
   },

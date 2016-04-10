@@ -128,9 +128,8 @@ export function toggleNoteDialog(note) {
   };
 }
 
-export function togglePostponeRecallPopup(popup) {
+export function togglePostponeRecallPopup() {
   return {
     type: TOGGLE_POSTPONE_RECALL_POPUP,
-    payload: popup,
   };
 }
