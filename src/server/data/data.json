@@ -1,4 +1,18 @@
 {
+  "roles": [
+    {
+      "role": "user",
+      "description": ""
+    },
+    {
+      "role": "manager",
+      "description": ""
+    },
+    {
+      "role": "admin",
+      "description": ""
+    }
+  ],
   "identityTypes": [
     {
       "type": "ID Card",

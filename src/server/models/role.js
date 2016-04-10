@@ -1,31 +1,21 @@
 export default function (sequelize, DataTypes) {
-  const User = sequelize.define('user', {
-    username: {
+  const Role = sequelize.define('role', {
+    role: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false
     },
-    email: {
+    description: {
       type: DataTypes.STRING,
-      validate: {
-        isEmail: true
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
     }
   }, {
     classMethods: {
       associate: models => {
-        User.hasMany(models.userRole);
+        Role.hasMany(models.userRole);
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
   });
 
-  return User;
+  return Role;
 }

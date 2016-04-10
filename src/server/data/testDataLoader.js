@@ -157,7 +157,29 @@ export function loanTestData() {
         password: bcrypt.hashSync('passw0rd', 10)
       }, {
         transaction: t
-      })
+      }).then(user =>
+        models.role.find({
+          where: {
+            role: 'admin'
+          }
+        }, {
+          transaction: t
+        }).then(role =>
+          models.userRole.create({
+            active: true
+          }, {
+            transaction: t
+          }).then(userRole =>
+            userRole.setRole(role, {
+              transaction: t
+            })
+          ).then(userRole =>
+            userRole.setUser(user, {
+              transaction: t
+            })
+          )
+        )
+      )
     )
   );
 }
