@@ -164,9 +164,10 @@ class LoanDetailDialog extends Component {
     const interestAfterCutoff = getInterestAfterCutoff(loan);
     const lateFeeAfterCutoff = getLateFeeAfterCutoff(loan);
 
-    const title = `${intl.formatMessage(loansMessages.loanDetail)}-${loan.originatedAgreementNo}`;
-    const totalAmount = getTotalAmount(loan) + getServicingFee(loan);
-    const totalAmountStr = ` | ${intl.formatMessage(loansMessages.totalAmount)}-${totalAmount}`;
+    const title = `${intl.formatMessage(loansMessages.loanDetail)} - ${loan.originatedAgreementNo}`;
+    const totalAmount = intl.formatNumber(
+      Math.round((getTotalAmount(loan) + getServicingFee(loan)) * 100) / 100);
+    const totalAmountStr = ` | ${intl.formatMessage(loansMessages.totalAmount)} ${totalAmount}`;
     const actions = [
       <FlatButton
         label={intl.formatMessage(loansMessages.cancel)}
