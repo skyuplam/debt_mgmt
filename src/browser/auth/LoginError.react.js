@@ -4,22 +4,22 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 
 const messages = defineMessages({
   required: {
-    defaultMessage: `Please fill out {prop, select,
-      email {email}
-      password {password}
+    defaultMessage: `请输入 {prop, select,
+      电邮地址 {username}
+      密码 {password}
     }.`,
     id: 'auth.login.error.required'
   },
   email: {
-    defaultMessage: 'Email address is not valid.',
+    defaultMessage: '电邮地址不正确',
     id: 'auth.login.error.email'
   },
   simplePassword: {
-    defaultMessage: 'Password must contain at least {minLength} characters.',
+    defaultMessage: '密码长度不能少于 {minLength} 字符.',
     id: 'auth.login.error.simplePassword'
   },
   wrongPassword: {
-    defaultMessage: 'Wrong password.',
+    defaultMessage: '密码不正确',
     id: 'auth.login.error.wrongPassword'
   }
 });

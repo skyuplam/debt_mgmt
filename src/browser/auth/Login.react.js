@@ -11,25 +11,21 @@ import { replace } from 'react-router-redux';
 
 const messages = defineMessages({
   formLegend: {
-    defaultMessage: 'Classic XMLHttpRequest Login',
+    defaultMessage: '用户登录',
     id: 'auth.login.formLegend'
   },
   usernamePlaceholder: {
-    defaultMessage: 'username',
+    defaultMessage: '用户名',
     id: 'auth.login.usernamePlaceholder'
   },
   passwordPlaceholder: {
-    defaultMessage: 'password',
+    defaultMessage: '密码',
     id: 'auth.login.passwordPlaceholder'
   },
   loginButton: {
-    defaultMessage: 'Login',
+    defaultMessage: '登录',
     id: 'auth.login.loginButton'
   },
-  hint: {
-    defaultMessage: 'Hint: pass1',
-    id: 'auth.login.hint'
-  }
 });
 
 class Login extends Component {
@@ -94,9 +90,6 @@ class Login extends Component {
             <button type="submit">
               <FormattedMessage {...messages.loginButton} />
             </button>
-            <span className="hint">
-              <FormattedMessage {...messages.hint} />
-            </span>
             <LoginError error={auth.formError} />
           </fieldset>
         </form>

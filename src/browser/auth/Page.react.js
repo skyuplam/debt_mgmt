@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 
 const messages = defineMessages({
   title: {
-    defaultMessage: 'Login',
+    defaultMessage: '登录',
     id: 'auth.page.title'
   }
 });

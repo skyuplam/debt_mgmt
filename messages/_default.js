@@ -10,47 +10,43 @@ export default [
   },
   {
     "id": "auth.login.error.email",
-    "defaultMessage": "Email address is not valid."
+    "defaultMessage": "电邮地址不正确"
   },
   {
     "id": "auth.login.error.required",
-    "defaultMessage": "Please fill out {prop, select, email {email} password {password}}."
+    "defaultMessage": "请输入 {prop, select, 电邮地址 {username} 密码 {password}}."
   },
   {
     "id": "auth.login.error.simplePassword",
-    "defaultMessage": "Password must contain at least {minLength} characters."
+    "defaultMessage": "密码长度不能少于 {minLength} 字符."
   },
   {
     "id": "auth.login.error.wrongPassword",
-    "defaultMessage": "Wrong password."
+    "defaultMessage": "密码不正确"
   },
   {
     "id": "auth.login.formLegend",
-    "defaultMessage": "Classic XMLHttpRequest Login"
-  },
-  {
-    "id": "auth.login.hint",
-    "defaultMessage": "Hint: pass1"
+    "defaultMessage": "用户登录"
   },
   {
     "id": "auth.login.loginButton",
-    "defaultMessage": "Login"
+    "defaultMessage": "登录"
   },
   {
     "id": "auth.login.passwordPlaceholder",
-    "defaultMessage": "password"
+    "defaultMessage": "密码"
   },
   {
     "id": "auth.login.usernamePlaceholder",
-    "defaultMessage": "username"
+    "defaultMessage": "用户名"
   },
   {
     "id": "auth.logout",
-    "defaultMessage": "Logout"
+    "defaultMessage": "注销"
   },
   {
     "id": "auth.page.title",
-    "defaultMessage": "Login"
+    "defaultMessage": "登录"
   },
   {
     "id": "contacts.add",

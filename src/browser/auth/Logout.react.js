@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 const messages = defineMessages({
   logout: {
-    defaultMessage: 'Logout',
+    defaultMessage: '注销',
     id: 'auth.logout'
   }
 });
