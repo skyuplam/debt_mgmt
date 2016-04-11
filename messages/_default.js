@@ -9,6 +9,10 @@ export default [
     "defaultMessage": "贷后管理系统"
   },
   {
+    "id": "app.links.users",
+    "defaultMessage": "用户管理"
+  },
+  {
     "id": "auth.login.error.email",
     "defaultMessage": "电邮地址不正确"
   },
@@ -979,5 +983,65 @@ export default [
   {
     "id": "todos.todos.empty",
     "defaultMessage": "It's rather empty here..."
+  },
+  {
+    "id": "users.action",
+    "defaultMessage": "操作"
+  },
+  {
+    "id": "users.activate",
+    "defaultMessage": "激活用户"
+  },
+  {
+    "id": "users.addUserAction",
+    "defaultMessage": "新增用户"
+  },
+  {
+    "id": "users.admin",
+    "defaultMessage": "系统管理员"
+  },
+  {
+    "id": "users.changePassword",
+    "defaultMessage": "修改密码"
+  },
+  {
+    "id": "users.confirmPassword",
+    "defaultMessage": "确认密码"
+  },
+  {
+    "id": "users.deactivate",
+    "defaultMessage": "撤销用户"
+  },
+  {
+    "id": "users.email",
+    "defaultMessage": "邮箱"
+  },
+  {
+    "id": "users.manager",
+    "defaultMessage": "经理"
+  },
+  {
+    "id": "users.password",
+    "defaultMessage": "密码"
+  },
+  {
+    "id": "users.role",
+    "defaultMessage": "角色"
+  },
+  {
+    "id": "users.user",
+    "defaultMessage": "一般用户"
+  },
+  {
+    "id": "users.userAction",
+    "defaultMessage": "用户操作"
+  },
+  {
+    "id": "users.username",
+    "defaultMessage": "用户名"
+  },
+  {
+    "id": "users.usersTitle",
+    "defaultMessage": "用户列表"
   }
 ];

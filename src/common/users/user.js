@@ -1,14 +1,15 @@
-import { Record } from 'immutable';
+import { Record, List } from 'immutable';
 
 // Record is like class, but immutable and with default values.
 // https://facebook.github.io/immutable-js/docs/#/Record
 const User = Record({
-  createdAt: null,
-  email: '',
-  id: null,
-  token: '',
-  updatedAt: null,
-  username: '',
+  createdAt: undefined,
+  email: undefined,
+  id: undefined,
+  token: undefined,
+  updatedAt: undefined,
+  username: undefined,
+  roles: List(),
 });
 
 export default User;

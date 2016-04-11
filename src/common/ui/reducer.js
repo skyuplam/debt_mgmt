@@ -8,7 +8,7 @@ const InitialState = Record({
   isSideMenuOpen: false,
   isConfirmDialogOpen: false,
   isNewRepaymentPlan: false,
-  currentLoanId: null,
+  currentLoanId: undefined,
   isRepaymentDialogOpen: false,
   currentRepayment: Repayment(),
   currentLoan: Loan(),
@@ -18,7 +18,10 @@ const InitialState = Record({
   isAddNoteDialogOpen: false,
   isNoteDialogOpen: false,
   selectedNote: Note(),
-  isPostponeRecallPopupOpen: false,
+  isUserActionPopupOpen: false,
+  selectedUserId: undefined,
+  isUserActionDialogOpen: false,
+  userActionType: undefined,
 });
 const initialState = new InitialState;
 
@@ -103,12 +106,20 @@ export default function uiReducer(state = initialState, action) {
       return theState;
     }
 
-    case actions.TOGGLE_POSTPONE_RECALL_POPUP: {
-      const theState = state.update('isPostponeRecallPopupOpen',
-        isPostponeRecallPopupOpen => !isPostponeRecallPopupOpen);
+    case actions.TOGGLE_USER_ACTION_POPUP: {
+      const theState = state.update('isUserActionPopupOpen',
+        isUserActionPopupOpen => !isUserActionPopupOpen);
+      if (action.payload) {
+        return theState.set('selectedUserId', action.payload);
+      }
       return theState;
     }
 
+    case actions.TOGGLE_USER_ACTION_DIALOG: {
+      const newState = state.update('isUserActionDialogOpen',
+        isUserActionDialogOpen => !isUserActionDialogOpen);
+      return newState.set('userActionType', action.payload);
+    }
   }
 
   return state;

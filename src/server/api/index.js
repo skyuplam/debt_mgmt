@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import debtors from './debtors';
+import users from './users';
 import categories from './categories';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 
 app.use('/auth', auth);
 app.use('/debtors', debtors);
+app.use('/users', users);
 app.use('/categories', categories);
 
 app.on('mount', () => {

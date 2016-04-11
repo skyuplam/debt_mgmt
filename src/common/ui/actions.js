@@ -15,7 +15,8 @@ export const CLOSE_ADD_ADDRESS_DIALOG = 'CLOSE_ADD_ADDRESS_DIALOG';
 export const OPEN_ADD_NOTE_DIALOG = 'OPEN_ADD_NOTE_DIALOG';
 export const CLOSE_ADD_NOTE_DIALOG = 'CLOSE_ADD_NOTE_DIALOG';
 export const TOGGLE_NOTE_DIALOG = 'TOGGLE_NOTE_DIALOG';
-export const TOGGLE_POSTPONE_RECALL_POPUP = 'TOGGLE_POSTPONE_RECALL_POPUP';
+export const TOGGLE_USER_ACTION_POPUP = 'TOGGLE_USER_ACTION_POPUP';
+export const TOGGLE_USER_ACTION_DIALOG = 'TOGGLE_USER_ACTION_DIALOG';
 
 
 export function onSideMenuChange(isOpen) {
@@ -128,8 +129,16 @@ export function toggleNoteDialog(note) {
   };
 }
 
-export function togglePostponeRecallPopup() {
+export function toggleUserActionPopup(target) {
   return {
-    type: TOGGLE_POSTPONE_RECALL_POPUP,
+    type: TOGGLE_USER_ACTION_POPUP,
+    payload: target
+  };
+}
+
+export function toggleUserActionDialog(actionType) {
+  return {
+    type: TOGGLE_USER_ACTION_DIALOG,
+    payload: actionType,
   };
 }

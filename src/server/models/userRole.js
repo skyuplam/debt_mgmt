@@ -5,12 +5,6 @@ export default function (sequelize, DataTypes) {
       defaultValue: true
     }
   }, {
-    classMethods: {
-      associate: models => {
-        UserRole.belongsTo(models.user);
-        UserRole.belongsTo(models.role);
-      }
-    },
     freezeTableName: true // Model tableName will be the same as the model name
   });
 

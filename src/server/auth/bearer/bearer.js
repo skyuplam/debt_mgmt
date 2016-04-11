@@ -13,7 +13,11 @@ const strategy = new Strategy((token, done) => {
       return models.user.findOne({
         where: {
           username: decoded.username
-        }
+        },
+        attributes: {
+          exclude: ['password']
+        },
+        include: [models.role]
       }).then(user => {
         if (user) {
           return done(null, user);

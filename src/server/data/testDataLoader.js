@@ -165,19 +165,9 @@ export function loanTestData() {
         }, {
           transaction: t
         }).then(role =>
-          models.userRole.create({
-            active: true
-          }, {
+          user.addRole(role, {
             transaction: t
-          }).then(userRole =>
-            userRole.setRole(role, {
-              transaction: t
-            })
-          ).then(userRole =>
-            userRole.setUser(user, {
-              transaction: t
-            })
-          )
+          })
         )
       )
     )

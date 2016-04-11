@@ -1,12 +1,13 @@
 import * as actions from './actions';
 import * as authActions from '../auth/actions';
 import User from './user';
-import { Record, Seq } from 'immutable';
+import { Record, Map, Seq } from 'immutable';
 import { firebaseActions, mapAuthToUser } from '../lib/redux-firebase';
 
 const InitialState = Record({
   // Undefined is absence of evidence. Null is evidence of absence.
   list: undefined,
+  map: Map(),
   viewer: undefined
 });
 const initialState = new InitialState;
@@ -16,8 +17,9 @@ const usersJsonToList = users => users && Seq(users)
   .sortBy(user => -user.authenticatedAt)
   .toList();
 
-const revive = ({ list, viewer }) => initialState.merge({
+const revive = ({ list, map, viewer }) => initialState.merge({
   list: usersJsonToList(list),
+  map: Map(map).map(user => new User(user)),
   viewer: viewer ? new User(viewer) : null
 });
 
@@ -46,6 +48,23 @@ export default function usersReducer(state = initialState, action) {
       const { users } = action.payload;
       const list = usersJsonToList(users);
       return state.set('list', list);
+    }
+
+    case actions.NEW_USER_SUCCESS: {
+      const user = Map().set(action.payload.user.id, new User(action.payload.user));
+      return state.update('map', map => map.mergeDeep(user));
+    }
+
+    case actions.FETCH_USERS_SUCCESS: {
+      const users = action.payload.users.reduce((users, json) =>
+        users.set(json.id, new User(json))
+      , Map());
+      return state.set('map', users);
+    }
+
+    case actions.UPDATE_USER_SUCCESS: {
+      const user = Map().set(action.payload.user.id, new User(action.payload.user));
+      return state.update('map', map => map.mergeDeep(user));
     }
 
   }

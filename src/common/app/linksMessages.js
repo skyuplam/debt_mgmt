@@ -8,5 +8,9 @@ export default defineMessages({
   debtors: {
     defaultMessage: '借款人管理',
     id: 'app.links.debtors'
+  },
+  users: {
+    defaultMessage: '用户管理',
+    id: 'app.links.users'
   }
 });

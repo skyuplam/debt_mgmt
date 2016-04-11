@@ -18,12 +18,21 @@ class NaviMenu extends Component {
   constructor(props) {
     super(props);
     this.goToDebtors = this.goToDebtors.bind(this);
+    this.goToUsers = this.goToUsers.bind(this);
     this.goHome = this.goHome.bind(this);
   }
 
   goToDebtors() {
     const { toggleSideMenu } = this.props;
     browserHistory.push('/debtors');
+
+    // Close SideMenu
+    toggleSideMenu();
+  }
+
+  goToUsers() {
+    const { toggleSideMenu } = this.props;
+    browserHistory.push('/users');
 
     // Close SideMenu
     toggleSideMenu();
@@ -51,6 +60,11 @@ class NaviMenu extends Component {
           <MenuItem onTouchTap={this.goToDebtors}>
             <FormattedMessage
               {...linksMessages.debtors}
+            />
+          </MenuItem>
+          <MenuItem onTouchTap={this.goToUsers}>
+            <FormattedMessage
+              {...linksMessages.users}
             />
           </MenuItem>
         </LeftNav>

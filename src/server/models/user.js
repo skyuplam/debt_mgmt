@@ -21,7 +21,9 @@ export default function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: models => {
-        User.hasMany(models.userRole);
+        User.belongsToMany(models.role, {
+          through: models.userRole
+        });
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name
