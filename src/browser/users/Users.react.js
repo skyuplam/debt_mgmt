@@ -4,7 +4,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import fetch from '../../common/components/fetch';
-import { fetchUsers, updateUser } from '../../common/users/actions';
+import { fetchUsers, updateUser, createUser } from '../../common/users/actions';
 import userMessage from '../../common/users/userMessages';
 import IconButton from 'material-ui/lib/icon-button';
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
@@ -30,6 +30,7 @@ import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import SelectField from 'material-ui/lib/select-field';
 import MenuItem from 'material-ui/lib/menus/menu-item';
+import { isEmail } from 'validator';
 
 
 const userAction = {
@@ -54,6 +55,7 @@ class Users extends Component {
     setField: PropTypes.func.isRequired,
     toggleUserActionDialog: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
+    createUser: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -63,10 +65,12 @@ class Users extends Component {
     this.actionCellRenderer = this.actionCellRenderer.bind(this);
     this.userActionBtnTapped = this.userActionBtnTapped.bind(this);
     this.handleUserAction = this.handleUserAction.bind(this);
-    this.handleSumitUserAction = this.handleSumitUserAction.bind(this);
+    this.handleSubmitUserAction = this.handleSubmitUserAction.bind(this);
     this.renderDialogContent = this.renderDialogContent.bind(this);
     this.handleSelectRole = this.handleSelectRole.bind(this);
+    this.validateFormInput = this.validateFormInput.bind(this);
     this.dismissDialog = this.dismissDialog.bind(this);
+    this.isUserActive = this.isUserActive.bind(this);
     this.popupTarget = null;
   }
 
@@ -79,7 +83,7 @@ class Users extends Component {
   dismissDialog() {
     const { toggleUserActionDialog, fields } = this.props;
 
-    fields.$reset();
+    // fields.$reset();
     toggleUserActionDialog();
   }
 
@@ -126,8 +130,104 @@ class Users extends Component {
       prev.concat(intl.formatMessage(userMessage[curr.role])), []).join();
   }
 
-  handleSumitUserAction() {
+  handleSubmitUserAction() {
+    const {
+      userActionType,
+      users,
+      selectedUserId,
+      updateUser,
+      createUser,
+      viewer,
+      fields,
+    } = this.props;
+    const user = users.get(selectedUserId);
+    const username = fields.username.value.trim();
+    const email = fields.email.value.trim();
+    const password = fields.password.value.trim();
+    const role = fields.role.value;
 
+    switch (userActionType) {
+      case userAction.newUser: {
+        createUser({
+          user: {
+            username,
+            email,
+            password,
+            role
+          }
+        }, viewer);
+        break;
+      }
+      case userAction.changePassword: {
+        updateUser({
+          user: {
+            id: user.id,
+            newPassword: password,
+          }
+        }, viewer);
+        break;
+      }
+      case userAction.deactivate: {
+        updateUser({
+          user: {
+            id: user.id,
+            active: false
+          }
+        }, viewer);
+        break;
+      }
+      case userAction.activate: {
+        updateUser({
+          user: {
+            id: user.id,
+            active: true
+          }
+        }, viewer);
+        break;
+      }
+    }
+
+    this.dismissDialog();
+  }
+
+  isUserActive() {
+    const { users, selectedUserId } = this.props;
+    if (users && selectedUserId && users.get(selectedUserId)) {
+      return users.get(selectedUserId).active;
+    }
+    return false;
+  }
+
+  validateFormInput() {
+    const { fields, userActionType } = this.props;
+
+    const username = fields.username.value.trim();
+    const email = fields.email.value.trim();
+    const password = fields.password.value.trim();
+    const confirmPassword = fields.confirmPassword.value.trim();
+    const role = fields.role.value;
+
+    switch (userActionType) {
+      case userAction.newUser: {
+        return (username &&
+          email &&
+          password &&
+          role &&
+          confirmPassword &&
+          password === confirmPassword &&
+          isEmail(email)
+        );
+      }
+      case userAction.changePassword: {
+        return username && password && confirmPassword && password === confirmPassword;
+      }
+      case userAction.deactivate:
+      case userAction.activate: {
+        return true;
+      }
+      default:
+        return false;
+    }
   }
 
   renderDialogContent() {
@@ -163,6 +263,10 @@ class Users extends Component {
               hintText={intl.formatMessage(userMessage.username)}
               {...fields.username}
             /><br />
+            <TextField
+              hintText={intl.formatMessage(userMessage.email)}
+              {...fields.email}
+            /><br />
             {passwordField}
             {confirmPasswordField}
             <SelectField
@@ -171,15 +275,15 @@ class Users extends Component {
               onChange={this.handleSelectRole}
             >
               <MenuItem
-                value={userMessage.user}
+                value={'user'}
                 primaryText={intl.formatMessage(userMessage.user)}
               />
               <MenuItem
-                value={userMessage.manager}
+                value={'manager'}
                 primaryText={intl.formatMessage(userMessage.manager)}
               />
               <MenuItem
-                value={userMessage.admin}
+                value={'admin'}
                 primaryText={intl.formatMessage(userMessage.admin)}
               />
             </SelectField>
@@ -256,6 +360,8 @@ class Users extends Component {
         label={intl.formatMessage(userMessage.submit)}
         primary
         keyboardFocused
+        disabled={!this.validateFormInput()}
+        onTouchTap={() => this.handleSubmitUserAction()}
       />,
     ];
 
@@ -291,7 +397,10 @@ class Users extends Component {
               <TableBody>
                 {userList ? userList.map(user =>
                   (
-                    <TableRow key={user.id}>
+                    <TableRow key={user.id} style={{
+                      textDecoration: user.active ? 'initial' : 'line-through'
+                    }}
+                    >
                       <TableRowColumn>{user.id}</TableRowColumn>
                       <TableRowColumn>{user.username}</TableRowColumn>
                       <TableRowColumn>{this.roleCellDataGetter(user)}</TableRowColumn>
@@ -326,16 +435,21 @@ class Users extends Component {
               onTouchTap={e => this.handleUserAction(e, userAction.changePassword)}
               primary
             /><br />
-            <FlatButton
-              label={intl.formatMessage(userMessage.activate)}
-              onTouchTap={e => this.handleUserAction(e, userAction.activate)}
-              primary
-            /><br />
-            <FlatButton
-              label={intl.formatMessage(userMessage.deactivate)}
-              onTouchTap={e => this.handleUserAction(e, userAction.deactivate)}
-              secondary
-            /><br />
+            {
+              this.isUserActive() ? (
+                <FlatButton
+                  label={intl.formatMessage(userMessage.deactivate)}
+                  onTouchTap={e => this.handleUserAction(e, userAction.deactivate)}
+                  secondary
+                />
+              ) : (
+                <FlatButton
+                  label={intl.formatMessage(userMessage.activate)}
+                  onTouchTap={e => this.handleUserAction(e, userAction.activate)}
+                  primary
+                />
+              )
+            }
           </div>
         </Popover>
         <Dialog
@@ -374,6 +488,7 @@ export default connect(state => ({
 }), {
   toggleUserActionPopup,
   updateUser,
+  createUser,
   toggleUserActionDialog,
   setField,
 })(Users);

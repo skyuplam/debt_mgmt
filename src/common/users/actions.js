@@ -60,7 +60,7 @@ export function createUser(newUser, user = {}) {
       try {
         // eslint-disable-next-line no-alert, max-len
         const response = await fetch(`${API_VERSION}/users`, {
-          method: 'get',
+          method: 'post',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
@@ -83,20 +83,20 @@ export function createUser(newUser, user = {}) {
   };
 }
 
-export function updateUser(data, user = {}) {
-  const Authorization = `Bearer ${user.token}`;
+export function updateUser({ user }, viewer = {}) {
+  const Authorization = `Bearer ${viewer.token}`;
   return ({ fetch }) => {
     async function getPromise() {
       try {
         // eslint-disable-next-line no-alert, max-len
-        const response = await fetch(`${API_VERSION}/users/${data.id}`, {
+        const response = await fetch(`${API_VERSION}/users/${user.id}`, {
           method: 'put',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             Authorization
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify({ user })
         });
         if (response.status !== 202) throw response;
         return response.json();

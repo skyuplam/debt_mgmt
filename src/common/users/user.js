@@ -9,6 +9,7 @@ const User = Record({
   token: undefined,
   updatedAt: undefined,
   username: undefined,
+  active: undefined,
   roles: List(),
 });
 

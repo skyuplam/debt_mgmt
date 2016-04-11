@@ -1001,12 +1001,20 @@ export default [
     "defaultMessage": "系统管理员"
   },
   {
+    "id": "users.cancel",
+    "defaultMessage": "取消"
+  },
+  {
     "id": "users.changePassword",
     "defaultMessage": "修改密码"
   },
   {
     "id": "users.confirmPassword",
     "defaultMessage": "确认密码"
+  },
+  {
+    "id": "users.confirmUser",
+    "defaultMessage": "确定要{act} [{username}]?"
   },
   {
     "id": "users.deactivate",
@@ -1027,6 +1035,10 @@ export default [
   {
     "id": "users.role",
     "defaultMessage": "角色"
+  },
+  {
+    "id": "users.submit",
+    "defaultMessage": "提交"
   },
   {
     "id": "users.user",
