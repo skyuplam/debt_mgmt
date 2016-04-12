@@ -14,6 +14,7 @@ class NaviMenu extends Component {
   static propTypes = {
     open: PropTypes.bool.isRequired,
     toggleSideMenu: PropTypes.func.isRequired,
+    viewer: PropTypes.object,
     push: PropTypes.func.isRequired,
   };
 
@@ -49,7 +50,7 @@ class NaviMenu extends Component {
   }
 
   render() {
-    const { open } = this.props;
+    const { open, viewer } = this.props;
 
     return (
       <div>
@@ -59,16 +60,22 @@ class NaviMenu extends Component {
               {...linksMessages.home}
             />
           </MenuItem>
-          <MenuItem onTouchTap={this.goToDebtors}>
-            <FormattedMessage
-              {...linksMessages.debtors}
-            />
-          </MenuItem>
-          <MenuItem onTouchTap={this.goToUsers}>
-            <FormattedMessage
-              {...linksMessages.users}
-            />
-          </MenuItem>
+          {
+            viewer ?
+            <div>
+              <MenuItem onTouchTap={this.goToDebtors}>
+                <FormattedMessage
+                  {...linksMessages.debtors}
+                />
+              </MenuItem>
+              <MenuItem onTouchTap={this.goToUsers}>
+                <FormattedMessage
+                  {...linksMessages.users}
+                />
+              </MenuItem>
+            </div>
+            : null
+          }
         </LeftNav>
       </div>
     );
@@ -76,7 +83,9 @@ class NaviMenu extends Component {
 
 }
 
-export default connect(null, {
+export default connect(state => ({
+  viewer: state.users.viewer,
+}), {
   toggleSideMenu,
-  push
+  push,
 })(NaviMenu);
