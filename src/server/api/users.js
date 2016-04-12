@@ -122,7 +122,7 @@ router.route('/:userId')
             }).then(theTargetUser => {
               // Modify Self data
               const isSelf = theTargetUser.username === sender.username;
-              if (isSelf) {
+              if (isSelf && user.oldPassword) {
                 return bcrypt.compareAsync(user.oldPassword, theTargetUser.password)
                 .then(verified => {
                   if (verified) {
