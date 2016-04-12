@@ -64,7 +64,8 @@ class Addresses extends Component {
       createdAt = ` - ${createDate}`;
     }
     if (address.source) {
-      source = intl.formatMessage(contactsMessages[address.source]);
+      const key = address.source.replace(/\s+/g, '');
+      source = intl.formatMessage(contactsMessages[key]);
     }
     return `${theAddress}${source}${createdAt}`;
   }

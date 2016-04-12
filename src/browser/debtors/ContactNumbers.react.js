@@ -76,7 +76,8 @@ class ContactNumbers extends Component {
       createdAt = ` - ${createDate}`;
     }
     if (contactNumber.source) {
-      source = intl.formatMessage(contactsMessages[contactNumber.source]);
+      const key = contactNumber.source.replace(/\s+/g, '');
+      source = intl.formatMessage(contactsMessages[key]);
     }
     return `${contactPerson}${source}${createdAt}`;
   }
