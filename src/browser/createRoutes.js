@@ -19,6 +19,21 @@ export default function createRoutes(getState) {
       });
     }
   };
+
+  const requireManager = (nextState, replace) => {
+    const logginUser = getState().users.viewer;
+    const loggedInUserRoles = logginUser ? logginUser.roles.reduce((prev, curr) =>
+      prev.concat(curr.role), []) : undefined;
+    if (!(logginUser &&
+      (loggedInUserRoles.indexOf('admin') !== -1 ||
+      loggedInUserRoles.indexOf('manager') !== -1))) {
+      replace({
+        pathname: '/login',
+        state: { nextPathname: nextState.location.pathname }
+      });
+    }
+  };
+
   return (
     <Route component={App} path="/">
       <IndexRoute component={Home} onEnter={requireAuth} />
@@ -27,7 +42,7 @@ export default function createRoutes(getState) {
         <Route component={Debtor} path="/debtors/:id" />
         <Redirect from="debtors/:id" to="/debtors/:id" />
       </Route>
-      <Route component={Users} onEnter={requireAuth} path="users">
+      <Route component={Users} onEnter={requireManager} path="users">
         <Route component={User} path="/users/:id" />
       </Route>
       <Route component={NotFound} path="*" />
