@@ -83,7 +83,7 @@ class Users extends Component {
   dismissDialog() {
     const { toggleUserActionDialog, fields } = this.props;
 
-    // fields.$reset();
+    fields.$reset();
     toggleUserActionDialog();
   }
 

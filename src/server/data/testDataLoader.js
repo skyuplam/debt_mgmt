@@ -171,5 +171,47 @@ export function loanTestData() {
         )
       )
     )
+  ).then(() =>
+    models.sequelize.transaction(t =>
+      models.user.create({
+        username: 'manager',
+        password: bcrypt.hashSync('123', 10)
+      }, {
+        transaction: t
+      }).then(user =>
+        models.role.find({
+          where: {
+            role: 'manager'
+          }
+        }, {
+          transaction: t
+        }).then(role =>
+          user.addRole(role, {
+            transaction: t
+          })
+        )
+      )
+    )
+  ).then(() =>
+    models.sequelize.transaction(t =>
+      models.user.create({
+        username: 'user',
+        password: bcrypt.hashSync('123', 10)
+      }, {
+        transaction: t
+      }).then(user =>
+        models.role.find({
+          where: {
+            role: 'user'
+          }
+        }, {
+          transaction: t
+        }).then(role =>
+          user.addRole(role, {
+            transaction: t
+          })
+        )
+      )
+    )
   );
 }
