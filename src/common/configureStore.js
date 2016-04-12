@@ -3,7 +3,6 @@ import Firebase from 'firebase';
 import appReducer from './app/reducer';
 import createFetch from './createFetch';
 import createLogger from 'redux-logger';
-import isomorphicFetch from 'isomorphic-fetch';
 import promiseMiddleware from 'redux-promise-middleware';
 import recycle from 'redux-recycle';
 import shortid from 'shortid';
