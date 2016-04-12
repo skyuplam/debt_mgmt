@@ -6,7 +6,6 @@ import Debtors from './debtors/Page.react';
 import Debtor from './debtors/Debtor.react';
 import Login from './auth/Login.react';
 import Users from './users/Users.react';
-import User from './users/User.react';
 import { Redirect, IndexRoute, Route } from 'react-router';
 
 export default function createRoutes(getState) {
@@ -42,10 +41,8 @@ export default function createRoutes(getState) {
         <Route component={Debtor} path="/debtors/:id" />
         <Redirect from="debtors/:id" to="/debtors/:id" />
       </Route>
-      <Route component={Users} onEnter={requireManager} path="users">
-        <Route component={User} path="/users/:id" />
-      </Route>
-      <Route component={NotFound} path="*" />
+      <Route component={Users} onEnter={requireManager} path="users" />
+        <Route component={NotFound} path="*" />
     </Route>
   );
 }

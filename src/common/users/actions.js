@@ -16,6 +16,13 @@ export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 
 export const ON_USERS_LIST = 'ON_USERS_LIST';
 
+export const userAction = {
+  newUser: 'newUser',
+  changePassword: 'changePassword',
+  deactivate: 'deactivate',
+  activate: 'activate',
+};
+
 export function onUsersList(users) {
   return {
     type: ON_USERS_LIST,
