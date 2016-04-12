@@ -6,19 +6,19 @@ import { Link } from 'react-router';
 
 const messages = defineMessages({
   title: {
-    defaultMessage: 'Page Not Found',
+    defaultMessage: '访问地址不存在',
     id: 'notFound.title'
   },
   h1: {
-    defaultMessage: 'This page isn\'t available',
+    defaultMessage: '访问页面不存在',
     id: 'notFound.h1'
   },
   p: {
-    defaultMessage: 'The link may be broken, or the page may have been removed.',
+    defaultMessage: '链结可能已经不存在或页面已经搬家了',
     id: 'notFound.p'
   },
   continue: {
-    defaultMessage: 'Continue here please.',
+    defaultMessage: '请按这继续',
     id: 'notFound.continue'
   }
 });
