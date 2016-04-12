@@ -49,15 +49,14 @@ class NoteDialog extends Component {
         title={intl.formatMessage(notesMessages.note)}
         open={isNoteDialogOpen}
         onRequestClose={this.handleClose}
+        autoScrollBodyContent
         contentStyle={styles.contentStyle}
       >
         <ReactMarkdown
           source={note.note}
           skipHtml
         />
-        <p
-          style={styles.h4}
-        >
+        <p style={styles.h4} >
           {intl.formatDate(note.createdAt)}
         </p>
       </Dialog>

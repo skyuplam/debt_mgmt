@@ -122,8 +122,9 @@ class DebtorInfo extends Component {
             {
               theNotes.map(note => (
                 <ListItem
-                  primaryText={note.note}
-                  secondaryText={this.formatDate(note.createdAt)}
+                  primaryText={this.formatDate(note.createdAt)}
+                  secondaryText={note.note}
+                  secondaryTextLines={2}
                   onTouchTap={() => this.handleOpenNote(note)}
                 />
               ))
