@@ -11,6 +11,7 @@ class AuthorizationError extends BaseError {
     notify({
       message: '沒有權限進行此操作',
       level: 'error',
+      uid: 401
     });
   }
 

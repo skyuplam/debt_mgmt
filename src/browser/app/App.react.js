@@ -12,6 +12,11 @@ import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
 import { cyan500 } from 'material-ui/lib/styles/colors';
 import NotificationSystem from 'react-notification-system';
 import { EE } from '../../common/eventEmitter/eventEmitter';
+import { replace } from 'react-router-redux';
+
+const errorCode = {
+  401: 'unauthorized'
+};
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -27,12 +32,14 @@ class App extends Component {
     children: PropTypes.object.isRequired,
     currentLocale: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,
+    replace: PropTypes.func.isRequired,
   };
 
   constructor() {
     super();
 
     this.addNotification = this.addNotification.bind(this);
+    this.unauthorized = this.unauthorized.bind(this);
   }
 
   componentDidMount() {
@@ -45,7 +52,15 @@ class App extends Component {
   }
 
   addNotification(notification) {
+    if (this[errorCode[notification.uid]]) {
+      notification.onRemove = this[errorCode[notification.uid]];
+    }
     this._notificationSystem.addNotification(notification);
+  }
+
+  unauthorized() {
+    const { replace } = this.props;
+    replace('/login');
   }
 
   render() {
@@ -73,4 +88,6 @@ App = start(App);
 
 export default connect(state => ({
   currentLocale: state.intl.currentLocale
-}))(App);
+}), {
+  replace
+})(App);
