@@ -6,7 +6,8 @@ const strategy = new Strategy('local', (username, password, done) =>
   models.user.findOne({
     where: {
       username
-    }
+    },
+    include: [models.role]
   }).then(user => {
     if (!user) {
       return done(null, false);
