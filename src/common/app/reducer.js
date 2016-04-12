@@ -17,6 +17,8 @@ import contactNumbers from '../contactNumbers/reducer';
 import addresses from '../addresses/reducer';
 import notes from '../notes/reducer';
 import categories from '../categories/reducer';
+// redux-recycle higher-order reducer
+import recycleState from 'redux-recycle';
 
 export default combineReducers({
   auth,
@@ -35,5 +37,5 @@ export default combineReducers({
   notes,
   categories,
   ui,
-  users,
+  users: recycleState(users, ['LOGOUT']),
 });
