@@ -6,7 +6,7 @@ import NaviMenu from './NaviMenu.react';
 import * as uiActions from '../../common/ui/actions';
 import linksMessages from '../../common/app/linksMessages';
 import { injectIntl, intlShape } from 'react-intl';
-
+import { push } from 'react-router-redux';
 
 class Header extends Component {
 
@@ -15,6 +15,7 @@ class Header extends Component {
     intl: intlShape.isRequired,
     onSideMenuChange: PropTypes.func.isRequired,
     toggleSideMenu: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired,
     isSideMenuOpen: PropTypes.bool.isRequired,
   };
 
@@ -29,7 +30,8 @@ class Header extends Component {
   }
 
   goToDebtors() {
-    this.browserHistory.push('/debtors');
+    const { push } = this.props;
+    push('/debtors');
   }
 
   render() {
@@ -54,4 +56,7 @@ Header = injectIntl(Header);
 
 export default connect(state => ({
   isSideMenuOpen: state.ui.isSideMenuOpen
-}), uiActions)(Header);
+}), {
+  ...uiActions,
+  push
+})(Header);

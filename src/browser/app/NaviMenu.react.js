@@ -4,15 +4,17 @@ import { connect } from 'react-redux';
 import LeftNav from 'material-ui/lib/left-nav';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import { toggleSideMenu } from '../../common/ui/actions';
-import { browserHistory } from 'react-router';
 import linksMessages from '../../common/app/linksMessages';
 import { FormattedMessage } from 'react-intl';
+import { push } from 'react-router-redux';
+
 
 class NaviMenu extends Component {
 
   static propTypes = {
     open: PropTypes.bool.isRequired,
-    toggleSideMenu: PropTypes.func.isRequired
+    toggleSideMenu: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -23,24 +25,24 @@ class NaviMenu extends Component {
   }
 
   goToDebtors() {
-    const { toggleSideMenu } = this.props;
-    browserHistory.push('/debtors');
+    const { toggleSideMenu, push } = this.props;
+    push('/debtors');
 
     // Close SideMenu
     toggleSideMenu();
   }
 
   goToUsers() {
-    const { toggleSideMenu } = this.props;
-    browserHistory.push('/users');
+    const { toggleSideMenu, push } = this.props;
+    push('/users');
 
     // Close SideMenu
     toggleSideMenu();
   }
 
   goHome() {
-    const { toggleSideMenu } = this.props;
-    browserHistory.push('/');
+    const { toggleSideMenu, push } = this.props;
+    push('/');
 
     // Close SideMenu
     toggleSideMenu();
@@ -75,5 +77,6 @@ class NaviMenu extends Component {
 }
 
 export default connect(null, {
-  toggleSideMenu
+  toggleSideMenu,
+  push
 })(NaviMenu);

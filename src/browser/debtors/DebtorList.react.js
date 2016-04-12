@@ -13,7 +13,7 @@ import CardHeader from 'material-ui/lib/card/card-header';
 import CardText from 'material-ui/lib/card/card-text';
 import CardActions from 'material-ui/lib/card/card-actions';
 import DebtorSearch from './DebtorSearch.react';
-import { browserHistory } from 'react-router';
+import { push } from 'react-router-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import debtorsMessages from '../../common/debtors/debtorsMessages';
 
@@ -24,6 +24,7 @@ class Debtors extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     debtors: PropTypes.object.isRequired,
+    push: PropTypes.func.isRequired,
   };
 
   // Example how to measure component update.
@@ -43,9 +44,9 @@ class Debtors extends Component {
 
   onRowSelected(selectedRow) {
     if (!!!selectedRow.length) return;
-    const { debtors } = this.props;
+    const { debtors, push } = this.props;
     const debtorId = debtors.toArray()[selectedRow[0]].id;
-    browserHistory.push(`/debtors/${debtorId}`);
+    push(`/debtors/${debtorId}`);
   }
 
   render() {
@@ -95,4 +96,7 @@ Debtors = injectIntl(Debtors);
 
 export default connect(state => ({
   debtors: state.debtors.map
-}), debtorsActions)(Debtors);
+}), {
+  ...debtorsActions,
+  push
+})(Debtors);
