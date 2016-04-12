@@ -25,6 +25,7 @@ import PopoverAnimationFromTop from 'material-ui/lib/popover/popover-animation-f
 import FlatButton from 'material-ui/lib/flat-button';
 import { toggleUserActionPopup, toggleUserActionDialog } from '../../common/ui/actions';
 import UserActionDialog from './UserActionDialog.react';
+import { cyan500, grey900 } from 'material-ui/lib/styles/colors';
 
 
 class Users extends Component {
@@ -130,6 +131,7 @@ class Users extends Component {
       intl,
       isUserActionPopupOpen,
       users,
+      viewer,
     } = this.props;
 
     const title = intl.formatMessage(userMessage.usersTitle);
@@ -178,7 +180,8 @@ class Users extends Component {
                 {userList ? userList.map(user =>
                   (
                     <TableRow key={user.id} style={{
-                      textDecoration: user.active ? 'initial' : 'line-through'
+                      textDecoration: user.active ? 'initial' : 'line-through',
+                      color: user.username === viewer.username ? cyan500 : grey900,
                     }}
                     >
                       <TableRowColumn>{user.id}</TableRowColumn>
