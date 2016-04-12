@@ -2203,7 +2203,7 @@
     },
     "csurf": {
       "version": "1.8.3",
-      "from": "csurf@>=1.8.3 <1.9.0",
+      "from": "csurf@latest",
       "resolved": "https://registry.npmjs.org/csurf/-/csurf-1.8.3.tgz",
       "dependencies": {
         "cookie": {
@@ -3335,32 +3335,6 @@
           "version": "5.0.15",
           "from": "glob@>=5.0.0 <5.1.0",
           "resolved": "https://registry.npmjs.org/glob/-/glob-5.0.15.tgz"
-        }
-      }
-    },
-    "firebase": {
-      "version": "2.4.2",
-      "from": "firebase@>=2.4.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/firebase/-/firebase-2.4.2.tgz",
-      "dependencies": {
-        "faye-websocket": {
-          "version": "0.9.3",
-          "from": "faye-websocket@>=0.6.0",
-          "resolved": "https://registry.npmjs.org/faye-websocket/-/faye-websocket-0.9.3.tgz",
-          "dependencies": {
-            "websocket-driver": {
-              "version": "0.5.2",
-              "from": "websocket-driver@>=0.5.1",
-              "resolved": "https://registry.npmjs.org/websocket-driver/-/websocket-driver-0.5.2.tgz",
-              "dependencies": {
-                "websocket-extensions": {
-                  "version": "0.1.1",
-                  "from": "websocket-extensions@>=0.1.1",
-                  "resolved": "https://registry.npmjs.org/websocket-extensions/-/websocket-extensions-0.1.1.tgz"
-                }
-              }
-            }
-          }
         }
       }
     },

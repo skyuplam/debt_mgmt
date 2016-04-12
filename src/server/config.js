@@ -18,7 +18,6 @@ nconf.file('src/common/secrets.json');
 nconf.defaults({
   appName,
   defaultLocale: 'zh',
-  firebaseUrl: 'https://este.firebaseio.com',
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction,
   port: process.env.PORT || 8000,

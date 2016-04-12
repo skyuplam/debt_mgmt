@@ -2,8 +2,6 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
-import { firebaseActions } from '../lib/redux-firebase';
-import { logout } from '../auth/actions';
 import { updateAppStateFromStorage } from './actions';
 
 export default function start(Wrapped) {
@@ -19,7 +17,6 @@ export default function start(Wrapped) {
     componentDidMount() {
       const { dispatch } = this.props;
       // Client side changes must be dispatched after componentDidMount.
-      dispatch(firebaseActions.watchAuth(logout));
       dispatch(updateAppStateFromStorage());
     }
 

@@ -14,7 +14,6 @@ export default function index() {
   const initialState = {
     config: {
       appName: config.appName,
-      firebaseUrl: config.firebaseUrl
     },
     intl: {
       // TODO: Detect native current locale.

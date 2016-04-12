@@ -1,5 +1,4 @@
 import * as storage from 'redux-storage';
-import Firebase from 'firebase';
 import appReducer from './app/reducer';
 import createFetch from './createFetch';
 import createLogger from 'redux-logger';
@@ -55,11 +54,6 @@ export default function configureStore(options) {
 
   const engineKey = `redux-storage:${initialState.config.appName}`;
   const engine = createEngine && createEngine(engineKey); // No server engine.
-  const firebase = new Firebase(initialState.config.firebaseUrl);
-  // // Check whether connection works.
-  // firebase.child('hello-world').set({
-  //   createdAt: Firebase.ServerValue.TIMESTAMP
-  // });
 
   let reducer = appReducer;
   reducer = recycle(reducer, [LOGOUT], {
@@ -74,7 +68,6 @@ export default function configureStore(options) {
       ...platformDeps,
       engine,
       fetch: createUniversalFetch(initialState),
-      firebase,
       getUid: () => shortid.generate(),
       now: () => Date.now(),
       validate

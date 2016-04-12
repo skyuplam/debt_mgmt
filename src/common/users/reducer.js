@@ -3,7 +3,6 @@ import * as authActions from '../auth/actions';
 import { TOGGLE_USER_ACTION_POPUP, TOGGLE_USER_ACTION_DIALOG } from '../ui/actions';
 import User from './user';
 import { Record, Map, Seq } from 'immutable';
-import { firebaseActions, mapAuthToUser } from '../lib/redux-firebase';
 
 const InitialState = Record({
   // Undefined is absence of evidence. Null is evidence of absence.
@@ -35,16 +34,6 @@ export default function usersReducer(state = initialState, action) {
       const { user } = action.payload;
       const theUser = new User(user);
       return state.set('viewer', theUser);
-    }
-
-    case firebaseActions.REDUX_FIREBASE_ON_AUTH: {
-      const { authData } = action.payload;
-      // Handle logout.
-      if (!authData) {
-        return state.delete('viewer');
-      }
-      const user = new User(mapAuthToUser(authData));
-      return state.set('viewer', user);
     }
 
     case actions.ON_USERS_LIST: {

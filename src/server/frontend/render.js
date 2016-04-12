@@ -10,7 +10,6 @@ import loadMessages from '../intl/loadMessages';
 import serialize from 'serialize-javascript';
 import { Provider } from 'react-redux';
 import { createMemoryHistory, match, RouterContext } from 'react-router';
-import { queryFirebaseServer } from '../../common/lib/redux-firebase/queryFirebase';
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 
 const messages = loadMessages();
@@ -48,7 +47,6 @@ const getInitialState = req => {
   return {
     config: {
       appName: config.appName,
-      firebaseUrl: config.firebaseUrl
     },
     intl: {
       currentLocale,
@@ -134,9 +132,6 @@ export default function render(req, res, next) {
       return;
     }
     try {
-      if (!process.env.IS_SERVERLESS) {
-        await queryFirebaseServer(() => renderApp(store, renderProps));
-      }
       await fetchComponentDataAsync(store.dispatch, renderProps);
       const html = renderPage(store, renderProps, req);
       const status = renderProps.routes
