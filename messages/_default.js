@@ -1,12 +1,20 @@
 /* eslint-disable max-len, quote-props, quotes */
 export default [
   {
+    "id": "app.links.changePassword",
+    "defaultMessage": "修改密码"
+  },
+  {
     "id": "app.links.debtors",
     "defaultMessage": "借款人管理"
   },
   {
     "id": "app.links.home",
     "defaultMessage": "贷后管理系统"
+  },
+  {
+    "id": "app.links.logout",
+    "defaultMessage": "注销"
   },
   {
     "id": "app.links.users",
@@ -1027,6 +1035,10 @@ export default [
   {
     "id": "users.manager",
     "defaultMessage": "经理"
+  },
+  {
+    "id": "users.oldPassword",
+    "defaultMessage": "旧密码"
   },
   {
     "id": "users.password",

@@ -118,7 +118,7 @@ class UserActionDialog extends Component {
         updateUser({
           user: {
             id: user.id,
-            newPassword: password,
+            password,
           }
         }, viewer);
         break;

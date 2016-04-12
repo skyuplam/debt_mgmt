@@ -13,6 +13,10 @@ export default defineMessages({
     id: 'users.password',
     defaultMessage: '密码',
   },
+  oldPassword: {
+    id: 'users.oldPassword',
+    defaultMessage: '旧密码',
+  },
   confirmPassword: {
     id: 'users.confirmPassword',
     defaultMessage: '确认密码',
