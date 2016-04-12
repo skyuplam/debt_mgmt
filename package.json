@@ -108,7 +108,7 @@
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",
     "react-select": "^1.0.0-beta12",
-    "react-tap-event-plugin": "^0.2.2",
+    "react-tap-event-plugin": "^1.0.0",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "react-virtualized": "^5.5.6",
