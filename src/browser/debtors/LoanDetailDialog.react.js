@@ -5,7 +5,7 @@ import Dialog from 'material-ui/lib/dialog';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import {
   closeLoanDetailDialog,
-  togglePostponeRecallPopup,
+  togglePostponeRecallDialoag,
 } from '../../common/ui/actions';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
@@ -30,14 +30,14 @@ class LoanDetailDialog extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     closeLoanDetailDialog: PropTypes.func.isRequired,
-    togglePostponeRecallPopup: PropTypes.func.isRequired,
+    togglePostponeRecallDialoag: PropTypes.func.isRequired,
     postponePlacementRecall: PropTypes.func.isRequired,
     setField: PropTypes.func.isRequired,
     isLoanDetailDialogOpen: PropTypes.bool.isRequired,
     loan: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
-    isPostponeRecallPopupOpen: PropTypes.object.isRequired,
+    isPostponeRecallDialogOpen: PropTypes.bool.isRequired,
     debtorId: PropTypes.number.isRequired,
   }
 
@@ -90,8 +90,8 @@ class LoanDetailDialog extends Component {
   }
 
   handlePostponeRecall() {
-    const { togglePostponeRecallPopup } = this.props;
-    togglePostponeRecallPopup();
+    const { togglePostponeRecallDialoag } = this.props;
+    togglePostponeRecallDialoag();
   }
 
   isValidRecallDate() {
@@ -102,7 +102,7 @@ class LoanDetailDialog extends Component {
 
   sendPostponeRecallRequest() {
     const {
-      togglePostponeRecallPopup,
+      togglePostponeRecallDialoag,
       fields,
       debtorId,
       viewer,
@@ -115,7 +115,7 @@ class LoanDetailDialog extends Component {
       postponedRecallDate,
       debtorId
     }, viewer);
-    togglePostponeRecallPopup();
+    togglePostponeRecallDialoag();
     fields.$reset();
   }
 
@@ -136,8 +136,8 @@ class LoanDetailDialog extends Component {
       loan,
       isLoanDetailDialogOpen,
       closeLoanDetailDialog,
-      isPostponeRecallPopupOpen,
-      togglePostponeRecallPopup,
+      isPostponeRecallDialogOpen,
+      togglePostponeRecallDialoag,
       fields
     } = this.props;
 
@@ -171,7 +171,7 @@ class LoanDetailDialog extends Component {
     const actions = [
       <FlatButton
         label={intl.formatMessage(loansMessages.cancel)}
-        onTouchTap={togglePostponeRecallPopup}
+        onTouchTap={togglePostponeRecallDialoag}
       />,
       <FlatButton
         label={intl.formatMessage(loansMessages.postpone)}
@@ -293,7 +293,7 @@ class LoanDetailDialog extends Component {
           title={intl.formatMessage(loansMessages.postponeRecall)}
           actions={actions}
           modal
-          open={isPostponeRecallPopupOpen}
+          open={isPostponeRecallDialogOpen}
         >
           <DatePicker
             hintText={intl.formatMessage(loansMessages.postponeTo)}
@@ -325,10 +325,10 @@ export default connect(state => ({
   isLoanDetailDialogOpen: state.ui.isLoanDetailDialogOpen,
   loan: state.ui.currentLoan,
   viewer: state.users.viewer,
-  isPostponeRecallPopupOpen: state.ui.isPostponeRecallPopupOpen,
+  isPostponeRecallDialogOpen: state.ui.isPostponeRecallDialogOpen,
 }), {
   closeLoanDetailDialog,
-  togglePostponeRecallPopup,
+  togglePostponeRecallDialoag,
   setField,
   postponePlacementRecall,
 })(LoanDetailDialog);

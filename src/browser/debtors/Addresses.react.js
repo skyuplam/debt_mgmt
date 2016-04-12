@@ -22,7 +22,6 @@ class Addresses extends Component {
     relationships: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
     openAddAddressDialog: PropTypes.func.isRequired,
-    isAddAddressDialogOpen: PropTypes.bool.isRequired,
   }
 
   constructor(props, context) {

@@ -27,7 +27,7 @@ const directives = isProduction ?
   defaultSrc: ["'self'"],
   scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "'unsafe-eval'", 'https://cdn.polyfill.io'],
   styleSrc: ["'self'", "'unsafe-inline'"],
-  imgSrc: ["'self'"],
+  imgSrc: ["'self'", 'data:'],
   sandbox: ['allow-forms', 'allow-scripts', 'allow-same-origin'],
   reportUri: '/report-violation',
   connectSrc: ["'self'"],
@@ -37,9 +37,9 @@ const directives = isProduction ?
 :
 {
   defaultSrc: ["'self'"],
-  scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cdn.polyfill.io', '192.168.1.210:8080'],
-  styleSrc: ["'self'", "'unsafe-inline'"],
-  imgSrc: ["'self'"],
+  scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cdn.polyfill.io', '192.168.1.210:8080', 'localhost'],
+  styleSrc: ["'self'", "'unsafe-inline'", 'localhost'],
+  imgSrc: ["'self'", 'data:'],
   sandbox: ['allow-forms', 'allow-scripts', 'allow-same-origin'],
   reportUri: '/report-violation',
   connectSrc: ["'self'", '192.168.1.210:8080'],

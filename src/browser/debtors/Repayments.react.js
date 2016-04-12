@@ -23,7 +23,6 @@ class Repayments extends Component {
     viewer: PropTypes.object.isRequired,
     debtorId: PropTypes.number,
     fetchRepaments: PropTypes.func.isRequired,
-    payRepayment: PropTypes.func.isRequired,
     openRepaymentDialog: PropTypes.func.isRequired,
     repayments: PropTypes.object.isRequired,
   };
@@ -174,7 +173,9 @@ class Repayments extends Component {
                       label={intl.formatMessage(repaymentsMessages.status)}
                       cellRenderer={this._cellRenderer}
                       dataKey="repaymentPlanStatusId"
-                      cellRenderer={(cellData) => `${intl.formatMessage(repaymentsMessages['repaymentPlanStatus'+cellData])}`}
+                      cellRenderer={(cellData) =>
+                        `${intl.formatMessage(repaymentsMessages['repaymentPlanStatus'+cellData])}`
+                      }
                       width={100}
                     />
                   </FlexTable>

@@ -38,7 +38,7 @@ class NewRepaymentPlan extends Component {
     viewer: PropTypes.object.isRequired,
     repayments: PropTypes.object.isRequired,
     debtorId: PropTypes.number.isRequired,
-    currentLoanId: PropTypes.number.isRequired,
+    currentLoanId: PropTypes.number,
     setField: PropTypes.func.isRequired,
     newRepaymentPlan: PropTypes.func.isRequired,
     addRepayments: PropTypes.func.isRequired,

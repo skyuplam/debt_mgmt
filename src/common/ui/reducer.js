@@ -18,6 +18,7 @@ const InitialState = Record({
   isAddNoteDialogOpen: false,
   isNoteDialogOpen: false,
   selectedNote: Note(),
+  isPostponeRecallDialogOpen: false,
   isUserActionPopupOpen: false,
   isUserActionDialogOpen: false,
   userActionType: undefined,
@@ -105,6 +106,11 @@ export default function uiReducer(state = initialState, action) {
         return theState.update('selectedNote', () => new Note(action.payload));
       }
       return theState;
+    }
+
+    case actions.TOGGLE_POSTPONE_RECALL_DIALOG: {
+      return state.update('isPostponeRecallDialogOpen',
+        isPostponeRecallDialogOpen => !isPostponeRecallDialogOpen);
     }
 
     case actions.TOGGLE_USER_ACTION_POPUP: {

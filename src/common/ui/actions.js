@@ -14,6 +14,7 @@ export const OPEN_ADD_ADDRESS_DIALOG = 'OPEN_ADD_ADDRESS_DIALOG';
 export const CLOSE_ADD_ADDRESS_DIALOG = 'CLOSE_ADD_ADDRESS_DIALOG';
 export const OPEN_ADD_NOTE_DIALOG = 'OPEN_ADD_NOTE_DIALOG';
 export const CLOSE_ADD_NOTE_DIALOG = 'CLOSE_ADD_NOTE_DIALOG';
+export const TOGGLE_POSTPONE_RECALL_DIALOG = 'TOGGLE_POSTPONE_RECALL_DIALOG';
 export const TOGGLE_NOTE_DIALOG = 'TOGGLE_NOTE_DIALOG';
 export const TOGGLE_USER_ACTION_POPUP = 'TOGGLE_USER_ACTION_POPUP';
 export const TOGGLE_USER_ACTION_DIALOG = 'TOGGLE_USER_ACTION_DIALOG';
@@ -127,6 +128,12 @@ export function toggleNoteDialog(note) {
   return {
     type: TOGGLE_NOTE_DIALOG,
     payload: note,
+  };
+}
+
+export function togglePostponeRecallDialoag() {
+  return {
+    type: TOGGLE_POSTPONE_RECALL_DIALOG,
   };
 }
 
