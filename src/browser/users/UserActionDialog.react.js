@@ -18,14 +18,12 @@ import FlatButton from 'material-ui/lib/flat-button';
 
 class UserActionDialog extends Component {
   static propTypes = {
-    users: PropTypes.object.isRequired,
-    viewer: PropTypes.object.isRequired,
+    viewer: PropTypes.object,
+    user: PropTypes.object,
     fields: PropTypes.object.isRequired,
-    selectedUserId: PropTypes.number,
     userActionType: PropTypes.string,
     isUserActionPopupOpen: PropTypes.bool.isRequired,
     isUserActionDialogOpen: PropTypes.bool.isRequired,
-    toggleUserActionPopup: PropTypes.func.isRequired,
     setField: PropTypes.func.isRequired,
     toggleUserActionDialog: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
@@ -89,14 +87,12 @@ class UserActionDialog extends Component {
   handleSubmitUserAction() {
     const {
       userActionType,
-      users,
-      selectedUserId,
       updateUser,
       createUser,
       viewer,
+      user,
       fields,
     } = this.props;
-    const user = users.get(selectedUserId);
     const username = fields.username.value.trim();
     const email = fields.email.value.trim();
     const password = fields.password.value.trim();
@@ -147,8 +143,8 @@ class UserActionDialog extends Component {
   }
 
   renderDialogContent() {
-    const { intl, fields, userActionType, selectedUserId, users } = this.props;
-    const user = users.get(selectedUserId);
+    const { intl, fields, userActionType, user } = this.props;
+
     let content = (<div></div>);
 
     const passwordField = (
@@ -248,6 +244,7 @@ class UserActionDialog extends Component {
     const {
       intl,
       isUserActionDialogOpen,
+      user,
     } = this.props;
 
     const actions = [
@@ -264,12 +261,17 @@ class UserActionDialog extends Component {
         onTouchTap={() => this.handleSubmitUserAction()}
       />,
     ];
+    let username = '';
+    if (user) {
+      username = ` - ${user.username}`;
+    }
+    const title = `${intl.formatMessage(userMessage.userAction)}${username}`;
 
     return (
       <div>
-        <Helmet title={intl.formatMessage(userMessage.userAction)} />
+        <Helmet title={title} />
         <Dialog
-          title={intl.formatMessage(userMessage.userAction)}
+          title={title}
           actions={actions}
           modal
           open={isUserActionDialogOpen}
@@ -290,12 +292,11 @@ UserActionDialog = fields(UserActionDialog, {
 UserActionDialog = injectIntl(UserActionDialog);
 
 export default connect(state => ({
-  users: state.users.map,
   isUserActionPopupOpen: state.ui.isUserActionPopupOpen,
   isUserActionDialogOpen: state.ui.isUserActionDialogOpen,
   userActionType: state.ui.userActionType,
-  selectedUserId: state.ui.selectedUserId,
   viewer: state.users.viewer,
+  user: state.users.targetUser,
 }), {
   updateUser,
   createUser,

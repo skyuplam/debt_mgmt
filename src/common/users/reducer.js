@@ -1,5 +1,6 @@
 import * as actions from './actions';
 import * as authActions from '../auth/actions';
+import { TOGGLE_USER_ACTION_POPUP, TOGGLE_USER_ACTION_DIALOG } from '../ui/actions';
 import User from './user';
 import { Record, Map, Seq } from 'immutable';
 import { firebaseActions, mapAuthToUser } from '../lib/redux-firebase';
@@ -8,7 +9,8 @@ const InitialState = Record({
   // Undefined is absence of evidence. Null is evidence of absence.
   list: undefined,
   map: Map(),
-  viewer: undefined
+  viewer: undefined,
+  targetUser: undefined,
 });
 const initialState = new InitialState;
 
@@ -17,10 +19,11 @@ const usersJsonToList = users => users && Seq(users)
   .sortBy(user => -user.authenticatedAt)
   .toList();
 
-const revive = ({ list, map, viewer }) => initialState.merge({
+const revive = ({ list, map, viewer, targetUser }) => initialState.merge({
   list: usersJsonToList(list),
   map: Map(map).map(user => new User(user)),
-  viewer: viewer ? new User(viewer) : null
+  viewer: viewer ? new User(viewer) : null,
+  targetUser: targetUser ? new User(targetUser) : null,
 });
 
 export default function usersReducer(state = initialState, action) {
@@ -65,6 +68,22 @@ export default function usersReducer(state = initialState, action) {
     case actions.UPDATE_USER_SUCCESS: {
       const user = Map().set(action.payload.user.id, new User(action.payload.user));
       return state.update('map', map => map.mergeDeep(user));
+    }
+
+    case TOGGLE_USER_ACTION_POPUP: {
+      if (!(action.payload && action.payload.user)) {
+        return state.delete('targetUser');
+      }
+      const user = action.payload.user;
+      return state.set('targetUser', new User(user));
+    }
+
+    case TOGGLE_USER_ACTION_DIALOG: {
+      if (!(action.payload && action.payload.user)) {
+        return state.delete('targetUser');
+      }
+      const user = action.payload.user;
+      return state.set('targetUser', new User(user));
     }
 
   }

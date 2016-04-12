@@ -19,7 +19,6 @@ const InitialState = Record({
   isNoteDialogOpen: false,
   selectedNote: Note(),
   isUserActionPopupOpen: false,
-  selectedUserId: undefined,
   isUserActionDialogOpen: false,
   userActionType: undefined,
   isAppBarPopupUp: false,
@@ -109,24 +108,28 @@ export default function uiReducer(state = initialState, action) {
     }
 
     case actions.TOGGLE_USER_ACTION_POPUP: {
-      const theState = state.update('isUserActionPopupOpen',
+      return state.update('isUserActionPopupOpen',
         isUserActionPopupOpen => !isUserActionPopupOpen);
-      if (action.payload) {
-        return theState.set('selectedUserId', action.payload);
-      }
-      return theState;
     }
 
     case actions.TOGGLE_USER_ACTION_DIALOG: {
       const newState = state.update('isUserActionDialogOpen',
         isUserActionDialogOpen => !isUserActionDialogOpen);
-      return newState.set('userActionType', action.payload);
+      if (!(action.payload && action.payload.actionType)) {
+        return newState.delete('userActionType');
+      }
+      const actionType = action.payload.actionType;
+      return newState.set('userActionType', actionType);
     }
 
     case actions.TOGGLE_APP_BAR_ACTIONS: {
       const newState = state.update('isAppBarPopupUp',
         isAppBarPopupUp => !isAppBarPopupUp);
-      return newState.set('appBarActionType', action.payload);
+      if (!(action.payload && action.payload.actionType)) {
+        return newState.delete('appBarActionType');
+      }
+      const actionType = action.payload.actionType;
+      return newState.set('appBarActionType', actionType);
     }
   }
 

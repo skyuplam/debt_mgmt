@@ -130,23 +130,23 @@ export function toggleNoteDialog(note) {
   };
 }
 
-export function toggleUserActionPopup(target) {
+export function toggleUserActionPopup(data) {
   return {
     type: TOGGLE_USER_ACTION_POPUP,
-    payload: target
+    payload: data
   };
 }
 
-export function toggleUserActionDialog(actionType) {
+export function toggleUserActionDialog(data) {
   return {
     type: TOGGLE_USER_ACTION_DIALOG,
-    payload: actionType,
+    payload: data,
   };
 }
 
-export function toggleAppBarActions(actionType) {
+export function toggleAppBarActions(data) {
   return {
     type: TOGGLE_APP_BAR_ACTIONS,
-    payload: actionType,
+    payload: data,
   };
 }

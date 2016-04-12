@@ -14,6 +14,8 @@ import { logout } from '../../common/auth/actions';
 import Popover from 'material-ui/lib/popover/popover';
 import PopoverAnimationFromTop from 'material-ui/lib/popover/popover-animation-from-top';
 import { toggleAppBarActions } from '../../common/ui/actions';
+import UserActionDialog from '../users/UserActionDialog.react';
+import { toggleUserActionDialog } from '../../common/ui/actions';
 
 const appBarAction = {
   logout: 'logout',
@@ -31,6 +33,7 @@ class Header extends Component {
     push: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
     toggleAppBarActions: PropTypes.func.isRequired,
+    toggleUserActionDialog: PropTypes.func.isRequired,
     isSideMenuOpen: PropTypes.bool.isRequired,
     isAppBarPopupUp: PropTypes.bool.isRequired,
   };
@@ -59,6 +62,14 @@ class Header extends Component {
   logout() {
     const { logout } = this.props;
     logout();
+  }
+
+  changePassword() {
+    const { toggleUserActionDialog, viewer } = this.props;
+    toggleUserActionDialog({
+      actionType: appBarAction.changePassword,
+      user: viewer,
+    });
   }
 
   closePopover() {
@@ -133,6 +144,7 @@ class Header extends Component {
             }
           </div>
         </Popover>
+        <UserActionDialog />
       </header>
     );
   }
@@ -150,4 +162,5 @@ export default connect(state => ({
   push,
   logout,
   toggleAppBarActions,
+  toggleUserActionDialog,
 })(Header);

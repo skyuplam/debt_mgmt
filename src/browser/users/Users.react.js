@@ -31,8 +31,8 @@ class Users extends Component {
 
   static propTypes = {
     users: PropTypes.object.isRequired,
+    targetUser: PropTypes.object,
     viewer: PropTypes.object.isRequired,
-    selectedUserId: PropTypes.number,
     userActionType: PropTypes.string,
     isUserActionPopupOpen: PropTypes.bool.isRequired,
     toggleUserActionPopup: PropTypes.func.isRequired,
@@ -53,7 +53,9 @@ class Users extends Component {
   userActionBtnTapped(e, rowData) {
     const { toggleUserActionPopup } = this.props;
     this.popupTarget = e.target;
-    toggleUserActionPopup(rowData.id);
+    toggleUserActionPopup({
+      user: rowData
+    });
   }
 
   handleClosePopover() {
@@ -63,26 +65,40 @@ class Users extends Component {
   }
 
   handleUserAction(e, actionType) {
-    const { toggleUserActionDialog } = this.props;
-
+    const { toggleUserActionDialog, targetUser } = this.props;
+    if (actionType !== userAction.newUser) {
+      this.handleClosePopover();
+    }
     switch (actionType) {
       case userAction.newUser: {
-        return toggleUserActionDialog(userAction.newUser);
+        return toggleUserActionDialog({
+          actionType: userAction.newUser,
+          user: targetUser,
+        });
       }
       case userAction.changePassword: {
-        toggleUserActionDialog(userAction.changePassword);
+        toggleUserActionDialog({
+          actionType: userAction.changePassword,
+          user: targetUser,
+        });
         break;
       }
       case userAction.deactivate: {
-        toggleUserActionDialog(userAction.deactivate);
+        toggleUserActionDialog({
+          actionType: userAction.deactivate,
+          user: targetUser,
+        });
         break;
       }
       case userAction.activate: {
-        toggleUserActionDialog(userAction.activate);
+        toggleUserActionDialog({
+          actionType: userAction.activate,
+          user: targetUser,
+        });
         break;
       }
     }
-    return this.handleClosePopover();
+    return null;
   }
 
   actionCellRenderer(rowData) {
@@ -102,9 +118,9 @@ class Users extends Component {
   }
 
   isUserActive() {
-    const { users, selectedUserId } = this.props;
-    if (users && selectedUserId && users.get(selectedUserId)) {
-      return users.get(selectedUserId).active;
+    const { targetUser } = this.props;
+    if (targetUser) {
+      return targetUser.active;
     }
     return false;
   }
@@ -232,10 +248,10 @@ Users = injectIntl(Users);
 
 export default connect(state => ({
   users: state.users.map,
+  targetUser: state.users.targetUser,
   isUserActionPopupOpen: state.ui.isUserActionPopupOpen,
   isUserActionDialogOpen: state.ui.isUserActionDialogOpen,
   userActionType: state.ui.userActionType,
-  selectedUserId: state.ui.selectedUserId,
   viewer: state.users.viewer,
 }), {
   toggleUserActionPopup,
