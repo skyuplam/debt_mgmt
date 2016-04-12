@@ -22,6 +22,8 @@ const InitialState = Record({
   selectedUserId: undefined,
   isUserActionDialogOpen: false,
   userActionType: undefined,
+  isAppBarPopupUp: false,
+  appBarActionType: undefined,
 });
 const initialState = new InitialState;
 
@@ -119,6 +121,12 @@ export default function uiReducer(state = initialState, action) {
       const newState = state.update('isUserActionDialogOpen',
         isUserActionDialogOpen => !isUserActionDialogOpen);
       return newState.set('userActionType', action.payload);
+    }
+
+    case actions.TOGGLE_APP_BAR_ACTIONS: {
+      const newState = state.update('isAppBarPopupUp',
+        isAppBarPopupUp => !isAppBarPopupUp);
+      return newState.set('appBarActionType', action.payload);
     }
   }
 

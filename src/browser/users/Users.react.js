@@ -67,6 +67,7 @@ class Users extends Component {
     this.handleUserAction = this.handleUserAction.bind(this);
     this.handleSubmitUserAction = this.handleSubmitUserAction.bind(this);
     this.renderDialogContent = this.renderDialogContent.bind(this);
+    this.handleClosePopover = this.handleClosePopover.bind(this);
     this.handleSelectRole = this.handleSelectRole.bind(this);
     this.validateFormInput = this.validateFormInput.bind(this);
     this.dismissDialog = this.dismissDialog.bind(this);
@@ -92,8 +93,15 @@ class Users extends Component {
     setField(['userMgmt', 'role'], value);
   }
 
+  handleClosePopover() {
+    const { toggleUserActionPopup } = this.props;
+    this.popupTarget = null;
+    toggleUserActionPopup();
+  }
+
   handleUserAction(e, actionType) {
-    const { toggleUserActionDialog, toggleUserActionPopup } = this.props;
+    const { toggleUserActionDialog } = this.props;
+
     switch (actionType) {
       case userAction.newUser: {
         return toggleUserActionDialog(userAction.newUser);
@@ -111,7 +119,7 @@ class Users extends Component {
         break;
       }
     }
-    return toggleUserActionPopup();
+    return this.handleClosePopover();
   }
 
   actionCellRenderer(rowData) {
@@ -333,7 +341,6 @@ class Users extends Component {
       intl,
       isUserActionPopupOpen,
       users,
-      toggleUserActionPopup,
       isUserActionDialogOpen,
     } = this.props;
 
@@ -426,7 +433,7 @@ class Users extends Component {
           anchorEl={this.popupTarget}
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          onRequestClose={toggleUserActionPopup}
+          onRequestClose={this.handleClosePopover}
           animation={PopoverAnimationFromTop}
         >
           <div style={styles.popover}>

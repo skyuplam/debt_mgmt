@@ -12,5 +12,13 @@ export default defineMessages({
   users: {
     defaultMessage: '用户管理',
     id: 'app.links.users'
-  }
+  },
+  logout: {
+    defaultMessage: '注销',
+    id: 'app.links.logout'
+  },
+  changePassword: {
+    defaultMessage: '修改密码',
+    id: 'app.links.changePassword'
+  },
 });

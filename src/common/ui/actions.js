@@ -17,6 +17,7 @@ export const CLOSE_ADD_NOTE_DIALOG = 'CLOSE_ADD_NOTE_DIALOG';
 export const TOGGLE_NOTE_DIALOG = 'TOGGLE_NOTE_DIALOG';
 export const TOGGLE_USER_ACTION_POPUP = 'TOGGLE_USER_ACTION_POPUP';
 export const TOGGLE_USER_ACTION_DIALOG = 'TOGGLE_USER_ACTION_DIALOG';
+export const TOGGLE_APP_BAR_ACTIONS = 'TOGGLE_APP_BAR_ACTIONS';
 
 
 export function onSideMenuChange(isOpen) {
@@ -139,6 +140,13 @@ export function toggleUserActionPopup(target) {
 export function toggleUserActionDialog(actionType) {
   return {
     type: TOGGLE_USER_ACTION_DIALOG,
+    payload: actionType,
+  };
+}
+
+export function toggleAppBarActions(actionType) {
+  return {
+    type: TOGGLE_APP_BAR_ACTIONS,
     payload: actionType,
   };
 }

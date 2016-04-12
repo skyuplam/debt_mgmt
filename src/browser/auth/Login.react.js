@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
 import { focusInvalidField } from '../../common/lib/validation';
 import { replace } from 'react-router-redux';
+import TextField from 'material-ui/lib/text-field';
+import RaisedButton from 'material-ui/lib/raised-button';
 
 const messages = defineMessages({
   formLegend: {
@@ -75,22 +77,24 @@ class Login extends Component {
             <legend>
               <FormattedMessage {...messages.formLegend} />
             </legend>
-            <input
+            <TextField
               maxLength="100"
-              placeholder={usernamePlaceholder}
+              floatingLabelText={usernamePlaceholder}
               {...fields.username}
             />
             <br />
-            <input
+            <TextField
               maxLength="300"
-              placeholder={passwordPlaceholder}
+              floatingLabelText={passwordPlaceholder}
               type="password"
               {...fields.password}
             />
             <br />
-            <button type="submit">
-              <FormattedMessage {...messages.loginButton} />
-            </button>
+            <RaisedButton
+              label={intl.formatMessage(messages.loginButton)}
+              type="submit"
+              primary
+            />
             <LoginError error={auth.formError} />
           </fieldset>
         </form>
