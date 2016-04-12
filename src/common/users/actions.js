@@ -21,6 +21,7 @@ export const userAction = {
   changePassword: 'changePassword',
   deactivate: 'deactivate',
   activate: 'activate',
+  changeSelfPassword: 'changeSelfPassword',
 };
 
 export function onUsersList(users) {

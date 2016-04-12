@@ -53,6 +53,7 @@ class UserActionDialog extends Component {
     const username = fields.username.value.trim();
     const email = fields.email.value.trim();
     const password = fields.password.value.trim();
+    const oldPassword = fields.oldPassword.value.trim();
     const confirmPassword = fields.confirmPassword.value.trim();
     const role = fields.role.value;
 
@@ -66,6 +67,13 @@ class UserActionDialog extends Component {
           password === confirmPassword &&
           isEmail(email)
         );
+      }
+      case userAction.changeSelfPassword: {
+        return oldPassword &&
+          password &&
+          confirmPassword &&
+          oldPassword !== password &&
+          password === confirmPassword;
       }
       case userAction.changePassword: {
         return password && confirmPassword && password === confirmPassword;
@@ -96,6 +104,7 @@ class UserActionDialog extends Component {
     const username = fields.username.value.trim();
     const email = fields.email.value.trim();
     const password = fields.password.value.trim();
+    const oldPassword = fields.oldPassword.value.trim();
     const role = fields.role.value;
 
     switch (userActionType) {
@@ -106,6 +115,16 @@ class UserActionDialog extends Component {
             email,
             password,
             role
+          }
+        }, viewer);
+        break;
+      }
+      case userAction.changeSelfPassword: {
+        updateUser({
+          user: {
+            id: user.id,
+            oldPassword,
+            password,
           }
         }, viewer);
         break;
@@ -157,6 +176,16 @@ class UserActionDialog extends Component {
         </div>
       );
 
+    const oldPasswordField = (
+        <div>
+          <TextField
+            hintText={intl.formatMessage(userMessage.oldPassword)}
+            type="password"
+            {...fields.oldPassword}
+          /><br />
+        </div>
+      );
+
     const confirmPasswordField = (
         <div>
           <TextField
@@ -199,6 +228,16 @@ class UserActionDialog extends Component {
                 primaryText={intl.formatMessage(userMessage.admin)}
               />
             </SelectField>
+          </div>
+        );
+        break;
+      }
+      case userAction.changeSelfPassword: {
+        content = (
+          <div>
+            {oldPasswordField}
+            {passwordField}
+            {confirmPasswordField}
           </div>
         );
         break;
@@ -286,7 +325,7 @@ class UserActionDialog extends Component {
 
 UserActionDialog = fields(UserActionDialog, {
   path: 'userMgmt',
-  fields: ['username', 'email', 'password', 'confirmPassword', 'role']
+  fields: ['username', 'email', 'oldPassword', 'password', 'confirmPassword', 'role']
 });
 
 UserActionDialog = injectIntl(UserActionDialog);

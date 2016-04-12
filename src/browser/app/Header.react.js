@@ -19,7 +19,7 @@ import { toggleUserActionDialog } from '../../common/ui/actions';
 
 const appBarAction = {
   logout: 'logout',
-  changePassword: 'changePassword',
+  changeSelfPassword: 'changeSelfPassword',
 };
 
 
@@ -44,6 +44,7 @@ class Header extends Component {
     this.logout = this.logout.bind(this);
     this.handleAppBarActions = this.handleAppBarActions.bind(this);
     this.showPopover = this.showPopover.bind(this);
+    this.changeSelfPassword = this.changeSelfPassword.bind(this);
     this.closePopover = this.closePopover.bind(this);
 
     this.popupTarget = null;
@@ -64,10 +65,10 @@ class Header extends Component {
     logout();
   }
 
-  changePassword() {
+  changeSelfPassword() {
     const { toggleUserActionDialog, viewer } = this.props;
     toggleUserActionDialog({
-      actionType: appBarAction.changePassword,
+      actionType: appBarAction.changeSelfPassword,
       user: viewer,
     });
   }
@@ -131,7 +132,7 @@ class Header extends Component {
                 <div>
                   <FlatButton
                     label={intl.formatMessage(linksMessages.changePassword)}
-                    onTouchTap={e => this.handleAppBarActions(e, appBarAction.changePassword)}
+                    onTouchTap={e => this.handleAppBarActions(e, appBarAction.changeSelfPassword)}
                     primary
                   /><br />
                   <FlatButton

@@ -24,6 +24,7 @@ router.route('/login')
         expiresIn: '1h'
       }).then(token => {
         user.token = token;
+        delete user.password;
         res.status(201).json({ user });
       });
     }, {

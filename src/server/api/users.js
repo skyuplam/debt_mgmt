@@ -115,40 +115,66 @@ router.route('/:userId')
         }).then(isAdmin =>
           isManager(sender, {
             transaction: t
-          }).then(isManager => {
-            if (isAdmin || isManager) {
-              const roles = ['user', 'manager'];
-              if (isAdmin) {
-                roles.push('admin');
-              }
-              return models.user.findById(userId, {
-                include: [{
-                  model: models.role,
-                  where: {
-                    role: {
-                      $in: roles
-                    }
+          }).then(isManager =>
+            models.user.findById(userId, {
+              include: [models.role],
+              transaction: t
+            }).then(theTargetUser => {
+              // Modify Self data
+              const isSelf = theTargetUser.username === sender.username;
+              if (isSelf) {
+                return bcrypt.compareAsync(user.oldPassword, theTargetUser.password)
+                .then(verified => {
+                  if (verified) {
+                    theTargetUser.password = bcrypt.hashSync(user.password, 10);
+                    return theTargetUser.save({
+                      transaction: t
+                    }).then(() => {
+                      const userJSON = theTargetUser.toJSON();
+                      delete userJSON.password;
+                      return res.status(202).json({ user: userJSON });
+                    });
                   }
-                }],
-                transaction: t
-              }).then(theUser => {
-                if (user.password) {
-                  theUser.password = bcrypt.hashSync(user.password, 10);
+                  return res.status(401).json({ error: 'Unauthorized' });
+                });
+              }
+              // user Modified by admin or manager
+              if (isAdmin || isManager || isSelf) {
+                const roles = ['user', 'manager'];
+                if (isAdmin) {
+                  roles.push('admin');
                 }
-                if (typeof user.active !== 'undefined') {
-                  theUser.active = user.active;
-                }
-                return theUser.save({
+                return models.user.findById(userId, {
+                  include: [{
+                    model: models.role,
+                    where: {
+                      role: {
+                        $in: roles
+                      }
+                    }
+                  }],
                   transaction: t
-                }).then(() =>
-                  res.status(202).json({ user: theUser })
+                }).then(theUser => {
+                  if (user.password) {
+                    theUser.password = bcrypt.hashSync(user.password, 10);
+                  }
+                  if (typeof user.active !== 'undefined') {
+                    theUser.active = user.active;
+                  }
+                  return theUser.save({
+                    transaction: t
+                  }).then(() => {
+                    const userJSON = theUser.toJSON();
+                    delete userJSON.password;
+                    return res.status(202).json({ user: userJSON });
+                  });
+                }, rejected =>
+                  res.status(400).json({ error: rejected })
                 );
-              }, rejected =>
-                res.status(400).json({ error: rejected })
-              );
-            }
-            return res.status(401).json({ error: 'Unauthorized' });
-          })
+              }
+              return res.status(401).json({ error: 'Unauthorized' });
+            })
+          )
         )
       ).catch(error => res.status(400).json({ error }));
     })(req, res);
