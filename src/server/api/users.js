@@ -3,9 +3,10 @@ import passport from 'passport';
 import models from '../models';
 import { isAdmin, isManager } from '../auth/utils';
 import bcrypt from '../auth/bcrypt';
+import config from '../config';
 
 const router = express.Router();
-
+const { saltRounds } = config;
 
 router.route('/')
   .get((req, res) => {
@@ -64,32 +65,34 @@ router.route('/')
                 return res.status(401).json({ error: 'Unauthorized' });
               }
 
-              return models.user.create({
-                username: user.username,
-                email: user.email,
-                password: bcrypt.hashSync(user.password, 10)
-              }, {
-                transaction: t
-              }).then(theUser =>
-                models.role.find({
-                  where: {
-                    role: user.role
-                  }
+              return bcrypt.hashAsync(user.password, saltRounds).then(hashedPassword =>
+                models.user.create({
+                  username: user.username,
+                  email: user.email,
+                  password: hashedPassword
                 }, {
                   transaction: t
-                }).then(role =>
-                  theUser.addRole(role, {
+                }).then(theUser =>
+                  models.role.find({
+                    where: {
+                      role: user.role
+                    }
+                  }, {
                     transaction: t
-                  })
-                ).then(() =>
-                  models.user.findById(theUser.id, {
-                    attributes: {
-                      exclude: ['password']
-                    },
-                    include: [models.role],
-                    transaction: t
-                  }).then(newUser =>
-                    res.status(201).json({ user: newUser })
+                  }).then(role =>
+                    theUser.addRole(role, {
+                      transaction: t
+                    })
+                  ).then(() =>
+                    models.user.findById(theUser.id, {
+                      attributes: {
+                        exclude: ['password']
+                      },
+                      include: [models.role],
+                      transaction: t
+                    }).then(newUser =>
+                      res.status(201).json({ user: newUser })
+                    )
                   )
                 )
               );
@@ -126,13 +129,15 @@ router.route('/:userId')
                 return bcrypt.compareAsync(user.oldPassword, theTargetUser.password)
                 .then(verified => {
                   if (verified) {
-                    theTargetUser.password = bcrypt.hashSync(user.password, 10);
-                    return theTargetUser.save({
-                      transaction: t
-                    }).then(() => {
-                      const userJSON = theTargetUser.toJSON();
-                      delete userJSON.password;
-                      return res.status(202).json({ user: userJSON });
+                    return bcrypt.hashAsync(user.password, saltRounds).then(hashedPassword => {
+                      theTargetUser.password = hashedPassword;
+                      return theTargetUser.save({
+                        transaction: t
+                      }).then(() => {
+                        const userJSON = theTargetUser.toJSON();
+                        delete userJSON.password;
+                        return res.status(202).json({ user: userJSON });
+                      });
                     });
                   }
                   return res.status(401).json({ error: 'Unauthorized' });
@@ -155,19 +160,31 @@ router.route('/:userId')
                   }],
                   transaction: t
                 }).then(theUser => {
-                  if (user.password) {
-                    theUser.password = bcrypt.hashSync(user.password, 10);
+                  if (user.password) {  // Change Password
+                    return bcrypt.hashAsync(user.password, saltRounds)
+                      .then(hashedPassword => {
+                        theUser.password = hashedPassword;
+                        return theUser.save({
+                          transaction: t
+                        }).then(() => {
+                          const userJSON = theUser.toJSON();
+                          delete userJSON.password;
+                          return res.status(202).json({ user: userJSON });
+                        });
+                      });
                   }
+                  // Activate or Deactivate user
                   if (typeof user.active !== 'undefined') {
                     theUser.active = user.active;
+                    return theUser.save({
+                      transaction: t
+                    }).then(() => {
+                      const userJSON = theUser.toJSON();
+                      delete userJSON.password;
+                      return res.status(202).json({ user: userJSON });
+                    });
                   }
-                  return theUser.save({
-                    transaction: t
-                  }).then(() => {
-                    const userJSON = theUser.toJSON();
-                    delete userJSON.password;
-                    return res.status(202).json({ user: userJSON });
-                  });
+                  return res.status(400).json();
                 }, rejected =>
                   res.status(400).json({ error: rejected })
                 );

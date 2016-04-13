@@ -152,64 +152,70 @@ export function loanTestData() {
     )
   ).then(() =>
     models.sequelize.transaction(t =>
-      models.user.create({
-        username: 'terrencelam',
-        password: bcrypt.hashSync('passw0rd', 10)
-      }, {
-        transaction: t
-      }).then(user =>
-        models.role.find({
-          where: {
-            role: 'admin'
-          }
+      bcrypt.hashAsync('passw0rd', 10).then(passwordHashed =>
+        models.user.create({
+          username: 'terrencelam',
+          password: passwordHashed
         }, {
           transaction: t
-        }).then(role =>
-          user.addRole(role, {
+        }).then(user =>
+          models.role.find({
+            where: {
+              role: 'admin'
+            }
+          }, {
             transaction: t
-          })
+          }).then(role =>
+            user.addRole(role, {
+              transaction: t
+            })
+          )
         )
       )
     )
   ).then(() =>
     models.sequelize.transaction(t =>
-      models.user.create({
-        username: 'manager',
-        password: bcrypt.hashSync('123', 10)
-      }, {
-        transaction: t
-      }).then(user =>
-        models.role.find({
-          where: {
-            role: 'manager'
-          }
+      bcrypt.hashAsync('123', 10).then(passwordHashed =>
+        models.user.create({
+          username: 'manager',
+          password: passwordHashed
         }, {
           transaction: t
-        }).then(role =>
-          user.addRole(role, {
+        }).then(user =>
+          models.role.find({
+            where: {
+              role: 'manager'
+            }
+          }, {
             transaction: t
-          })
+          }).then(role =>
+            user.addRole(role, {
+              transaction: t
+            })
+          )
         )
       )
     )
   ).then(() =>
     models.sequelize.transaction(t =>
-      models.user.create({
-        username: 'user',
-        password: bcrypt.hashSync('123', 10)
-      }, {
-        transaction: t
-      }).then(user =>
-        models.role.find({
-          where: {
-            role: 'user'
-          }
+      bcrypt.hashAsync('123', 10).then(passwordHashed =>
+        models.user.create({
+          username: 'user',
+          password: passwordHashed
         }, {
           transaction: t
-        }).then(role =>
-          user.addRole(role, {
+        }).then(user =>
+          models.role.find({
+            where: {
+              role: 'user'
+            }
+          }, {
             transaction: t
-          })
+          }).then(role =>
+            user.addRole(role, {
+              transaction: t
+            })
+          )
         )
       )
     )

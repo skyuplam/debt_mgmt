@@ -18,6 +18,7 @@ nconf.file('src/common/secrets.json');
 nconf.defaults({
   appName,
   defaultLocale: 'zh',
+  saltRounds: 10,
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction,
   port: process.env.PORT || 8000,
