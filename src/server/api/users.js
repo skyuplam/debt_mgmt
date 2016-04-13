@@ -23,7 +23,7 @@ router.route('/')
             }
             return models.user.findAll({
               attributes: {
-                exclude: ['password']
+                exclude: ['password', 'lastLoginIP', 'currentLoginIP']
               },
               include: [{
                 model: models.role,
@@ -85,7 +85,7 @@ router.route('/')
                   ).then(() =>
                     models.user.findById(theUser.id, {
                       attributes: {
-                        exclude: ['password']
+                        exclude: ['password', 'lastLoginIP', 'currentLoginIP']
                       },
                       include: [models.role],
                       transaction: t
@@ -134,6 +134,8 @@ router.route('/:userId')
                         transaction: t
                       }).then(() => {
                         const userJSON = theTargetUser.toJSON();
+                        delete userJSON.lastLoginIP;
+                        delete userJSON.currentLoginIP;
                         delete userJSON.password;
                         return res.status(202).json({ user: userJSON });
                       });
@@ -167,6 +169,8 @@ router.route('/:userId')
                           transaction: t
                         }).then(() => {
                           const userJSON = theUser.toJSON();
+                          delete userJSON.lastLoginIP;
+                          delete userJSON.currentLoginIP;
                           delete userJSON.password;
                           return res.status(202).json({ user: userJSON });
                         });
@@ -179,6 +183,8 @@ router.route('/:userId')
                       transaction: t
                     }).then(() => {
                       const userJSON = theUser.toJSON();
+                      delete userJSON.lastLoginIP;
+                      delete userJSON.currentLoginIP;
                       delete userJSON.password;
                       return res.status(202).json({ user: userJSON });
                     });
