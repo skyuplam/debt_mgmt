@@ -1,9 +1,10 @@
 import config from '../config';
+import logger from '../lib/logger';
 
 export default function errorHandler(err, req, res, next) { // eslint-disable-line no-unused-vars
   const errorDetails = err.stack || err;
 
-  console.error('Yay', errorDetails);
+  logger.error('Yay', errorDetails);
 
   res.status(500).format({
     json() {

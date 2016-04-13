@@ -12,16 +12,16 @@ router.route('/')
   .get((req, res) => {
     passport.authenticate('bearer', { session: false }, (err, sender) => {
       if (err || !sender) {
-        res.status(400).json({ error: err });
+        return res.status(400).json({ error: err });
       }
-      isAdmin(sender).then(isAdmin =>
+      return isAdmin(sender).then(isAdmin =>
         isManager(sender).then(isManager => {
           if (isAdmin || isManager) {
             const roles = ['user', 'manager'];
             if (isAdmin) {
               roles.push('admin');
             }
-            models.user.findAll({
+            return models.user.findAll({
               attributes: {
                 exclude: ['password']
               },
@@ -33,12 +33,11 @@ router.route('/')
                   }
                 }
               }],
-            }).then(users => {
-              res.json({ users });
-            });
-          } else {
-            res.status(401).json({ error: 'Unauthorized' });
+            }).then(users =>
+              res.json({ users })
+            );
           }
+          return res.status(401).json({ error: 'Unauthorized' });
         })
       );
     })(req, res);
@@ -49,11 +48,11 @@ router.route('/')
   .post((req, res) => {
     passport.authenticate('bearer', { session: false }, (err, sender) => {
       if (err || !sender) {
-        res.status(400).json({ error: err });
+        return res.status(400).json({ error: err });
       }
 
       const { user } = req.body;
-      models.sequelize.transaction(t =>
+      return models.sequelize.transaction(t =>
         isAdmin(sender, {
           transaction: t
         }).then(isAdmin =>
@@ -100,7 +99,7 @@ router.route('/')
             return res.status(401).json({ error: 'Unauthorized' });
           })
         )
-      ).catch(error => res.status(400).json({ error }));
+      );
     })(req, res);
   });
 
@@ -108,11 +107,11 @@ router.route('/:userId')
   .put((req, res) => {
     passport.authenticate('bearer', { session: false }, (err, sender) => {
       if (err || !sender) {
-        res.status(400).json({ error: err });
+        return res.status(400).json({ error: err });
       }
       const userId = parseInt(req.params.userId, 10);
       const { user } = req.body;
-      models.sequelize.transaction(t =>
+      return models.sequelize.transaction(t =>
         isAdmin(sender, {
           transaction: t
         }).then(isAdmin =>

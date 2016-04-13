@@ -77,7 +77,7 @@ app.use(errorHandler);
 models.sequelize.sync({ force: !isProduction }).then(() => {
   bootstrap();
   const server = app.listen(port, () => {
-    console.log('Server started at port %d', port);
+    logger.info('Server started at port %d', port);
   });
 
   return server;

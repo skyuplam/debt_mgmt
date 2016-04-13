@@ -2,6 +2,7 @@ import typesAndStatus from '../data/data.json';
 import models from '../models';
 import { loanTestData } from '../data/testDataLoader';
 import config from '../config';
+import logger from '../lib/logger';
 
 const { isProduction } = config;
 
@@ -80,6 +81,6 @@ export default function loadData() {
     return data;
   })
   .catch(error => {
-    console.error(error);
+    logger.error(error);
   });
 }

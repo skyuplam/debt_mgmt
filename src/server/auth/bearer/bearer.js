@@ -2,6 +2,7 @@ import { Strategy } from 'passport-http-bearer';
 import models from '../../models';
 import { verifyAsync } from '../jwt';
 import config from '../../config';
+import logger from '../../lib/logger';
 
 
 const { isProduction, secretKey } = config;
@@ -27,6 +28,7 @@ const strategy = new Strategy((token, done) => {
     }
     return done(null, false);
   }).catch(err => {
+    logger.error(err);
     done(err);
   });
 });

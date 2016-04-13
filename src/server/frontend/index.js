@@ -1,6 +1,7 @@
 import compression from 'compression';
 import express from 'express';
 import render from './render';
+import logger from '../lib/logger';
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use('/assets', express.static('build', { maxAge: '200d' }));
 app.get('*', render);
 
 app.on('mount', () => {
-  console.log('App is available at %s', app.mountpath);
+  logger.info('App is available at %s', app.mountpath);
 });
 
 export default app;

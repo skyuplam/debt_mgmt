@@ -1,6 +1,7 @@
 import { Strategy } from 'passport-local';
 import bcrypt from '../bcrypt';
 import models from '../../models';
+import logger from '../../lib/logger';
 
 const strategy = new Strategy('local', (username, password, done) =>
   models.user.findOne({
@@ -24,6 +25,7 @@ const strategy = new Strategy('local', (username, password, done) =>
       return done(null, false);
     });
   }).catch(err => {
+    logger.error(err);
     done(err);
   })
 );

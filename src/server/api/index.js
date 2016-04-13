@@ -5,6 +5,7 @@ import express from 'express';
 import debtors from './debtors';
 import users from './users';
 import categories from './categories';
+import logger from '../lib/logger';
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use('/users', users);
 app.use('/categories', categories);
 
 app.on('mount', () => {
-  console.log('Api is available at %s', app.mountpath);
+  logger.info('Api is available at %s', app.mountpath);
 });
 
 export default app;
