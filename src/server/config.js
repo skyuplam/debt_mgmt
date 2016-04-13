@@ -21,6 +21,7 @@ nconf.defaults({
   saltRounds: 10,
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction,
+  tokenExpiredIn: '1h',
   port: process.env.PORT || 8000,
   db: {
     development: {

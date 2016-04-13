@@ -19,7 +19,7 @@ const strategy = new Strategy('local', (username, password, done) =>
     return bcrypt.compareAsync(password, storedPwd)
     .then(verified => {
       if (verified) {
-        return done(null, user.toJSON());
+        return done(null, user);
       }
       return done(null, false);
     });
