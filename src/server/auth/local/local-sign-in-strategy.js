@@ -23,6 +23,8 @@ const strategy = new Strategy('local', (username, password, done) =>
       }
       return done(null, false);
     });
+  }).catch(err => {
+    done(err);
   })
 );
 

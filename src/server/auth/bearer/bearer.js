@@ -26,6 +26,8 @@ const strategy = new Strategy((token, done) => {
       });
     }
     return done(null, false);
+  }).catch(err => {
+    done(err);
   });
 });
 

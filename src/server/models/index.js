@@ -2,9 +2,12 @@ import Sequelize from 'sequelize';
 import fs from 'fs';
 import path from 'path';
 import config from '../config';
+import logger from '../lib/logger';
 
 const env = process.env.NODE_ENV || 'development';
 const dbConfig = config.db[env];
+// Setup logging
+dbConfig.logging = logger.debug.bind(logger);
 const db = {};
 
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);
