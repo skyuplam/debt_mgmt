@@ -11,7 +11,7 @@ import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
 import { cyan500 } from 'material-ui/lib/styles/colors';
 import NotificationSystem from 'react-notification-system';
 import { EE } from '../../common/eventEmitter/eventEmitter';
-import { replace } from 'react-router-redux';
+import { logout } from '../../common/auth/actions';
 
 const errorCode = {
   401: 'unauthorized'
@@ -31,7 +31,7 @@ class App extends Component {
     children: PropTypes.object.isRequired,
     currentLocale: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,
-    replace: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
   };
 
   constructor() {
@@ -58,8 +58,8 @@ class App extends Component {
   }
 
   unauthorized() {
-    const { replace } = this.props;
-    replace('/login');
+    const { logout } = this.props;
+    logout();
   }
 
   render() {
@@ -88,5 +88,5 @@ App = start(App);
 export default connect(state => ({
   currentLocale: state.intl.currentLocale
 }), {
-  replace
+  logout
 })(App);
