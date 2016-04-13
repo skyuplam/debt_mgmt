@@ -8,6 +8,7 @@ import models from './models';
 import passport from './auth/passport';
 import typesAndStatus from './data/data.json';
 import { loanTestData } from './data/testDataLoader';
+import expressBunyanLogger from 'express-bunyan-logger';
 
 
 const app = express();
@@ -17,7 +18,15 @@ app.use(passport.initialize());
 // passport piggy backs of express sessions, still need to set express session options
 app.use(passport.session());
 
-app.disable('x-powered-by');
+// Bunyan Logger
+app.use(expressBunyanLogger({
+  name: 'DMAppServer',
+  obfuscate: [
+    'req-headers.authorization',
+    'body.user.password',
+    'body.user.oldPassword',
+  ]
+}));
 
 // helmet
 app.use(helmet());
