@@ -13,6 +13,10 @@ export default defineMessages({
     defaultMessage: '用户管理',
     id: 'app.links.users'
   },
+  boarding: {
+    defaultMessage: '上传资料包',
+    id: 'app.links.boarding'
+  },
   logout: {
     defaultMessage: '注销',
     id: 'app.links.logout'

@@ -1,11 +1,11 @@
 import Component from 'react-pure-render/component';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField';
 import React, { PropTypes } from 'react';
 import { fields } from '../../common/lib/redux-fields';
 import { connect } from 'react-redux';
 import * as debtorsActions from '../../common/debtors/actions';
-import RaisedButton from 'material-ui/lib/raised-button';
-import FontIcon from 'material-ui/lib/font-icon';
+import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
 import { injectIntl, intlShape } from 'react-intl';
 import debtorsMessages from '../../common/debtors/debtorsMessages';
 

@@ -1,17 +1,17 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Dialog from 'material-ui/lib/dialog';
+import Dialog from 'material-ui/Dialog';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import {
   closeLoanDetailDialog,
   togglePostponeRecallDialoag,
 } from '../../common/ui/actions';
-import List from 'material-ui/lib/lists/list';
-import ListItem from 'material-ui/lib/lists/list-item';
-import GridList from 'material-ui/lib/grid-list/grid-list';
-import FlatButton from 'material-ui/lib/flat-button';
-import DatePicker from 'material-ui/lib/date-picker/date-picker';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import GridList from 'material-ui/GridList/GridList';
+import FlatButton from 'material-ui/FlatButton';
+import DatePicker from 'material-ui/DatePicker';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import { postponePlacementRecall } from '../../common/loans/actions';

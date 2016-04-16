@@ -2,14 +2,14 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import TextField from 'material-ui/lib/text-field';
-import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
+import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { closeNewRepyamnetPlanDialog } from '../../common/ui/actions';
 import { fields } from '../../common/lib/redux-fields';
 import { FormattedNumber } from 'react-intl';
-import DatePicker from 'material-ui/lib/date-picker/date-picker';
+import DatePicker from 'material-ui/DatePicker';
 import { setField } from '../../common/lib/redux-fields/actions';
 import {
   newRepaymentPlan,

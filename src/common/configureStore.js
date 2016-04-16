@@ -24,9 +24,8 @@ const createUniversalFetch = initialState => {
   const serverUrl =
     initialState.device.host || // Autodetected in Node.
     process.env.SERVER_URL || // Must be set for React Native production app.
-    (process.env.IS_BROWSER
-      ? '' // Browser can handle relative urls.
-      : 'http://localhost:8000' // Failback for dev.
+    (((process.env.IS_BROWSER ? // Browser can handle relative urls.
+    '' : 'http://localhost:8000')) // Failback for dev.
     );
   return createFetch(serverUrl);
 };

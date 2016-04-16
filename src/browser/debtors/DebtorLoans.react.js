@@ -2,12 +2,12 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Card from 'material-ui/lib/card/card';
-import CardTitle from 'material-ui/lib/card/card-title';
-import CardActions from 'material-ui/lib/card/card-actions';
+import Card from 'material-ui/Card/Card';
+import CardTitle from 'material-ui/Card/CardTitle';
+import CardActions from 'material-ui/Card/CardActions';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import 'react-virtualized/styles.css';
-import RaisedButton from 'material-ui/lib/raised-button';
+import RaisedButton from 'material-ui/RaisedButton';
 import NewRepaymentPlan from './NewRepaymentPlan.react';
 import { openNewRepyamnetPlanDialog, openLoanDetailDialog } from '../../common/ui/actions';
 import shouldPureComponentUpdate from 'react-pure-render/function';

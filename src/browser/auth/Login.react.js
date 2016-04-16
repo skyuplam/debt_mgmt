@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
 import { focusInvalidField } from '../../common/lib/validation';
 import { replace } from 'react-router-redux';
-import TextField from 'material-ui/lib/text-field';
-import RaisedButton from 'material-ui/lib/raised-button';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const messages = defineMessages({
   formLegend: {

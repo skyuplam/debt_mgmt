@@ -1,12 +1,14 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 import { connect } from 'react-redux';
-import LeftNav from 'material-ui/lib/left-nav';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import LeftNav from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
 import { toggleSideMenu } from '../../common/ui/actions';
 import linksMessages from '../../common/app/linksMessages';
 import { FormattedMessage } from 'react-intl';
 import { push } from 'react-router-redux';
+import { LINKS } from '../../common/app/actions';
 
 
 class NaviMenu extends Component {
@@ -20,31 +22,14 @@ class NaviMenu extends Component {
 
   constructor(props) {
     super(props);
-    this.goToDebtors = this.goToDebtors.bind(this);
-    this.goToUsers = this.goToUsers.bind(this);
-    this.goHome = this.goHome.bind(this);
+    this.redirectTo = this.redirectTo.bind(this);
   }
 
-  goToDebtors() {
+  shouldComponentUpdate = shouldPureComponentUpdate;
+
+  redirectTo(path) {
     const { toggleSideMenu, push } = this.props;
-    push('/debtors');
-
-    // Close SideMenu
-    toggleSideMenu();
-  }
-
-  goToUsers() {
-    const { toggleSideMenu, push } = this.props;
-    push('/users');
-
-    // Close SideMenu
-    toggleSideMenu();
-  }
-
-  goHome() {
-    const { toggleSideMenu, push } = this.props;
-    push('/');
-
+    push(path);
     // Close SideMenu
     toggleSideMenu();
   }
@@ -55,7 +40,7 @@ class NaviMenu extends Component {
     return (
       <div>
         <LeftNav open={open}>
-          <MenuItem onTouchTap={this.goHome}>
+          <MenuItem onTouchTap={() => this.redirectTo(LINKS.home)}>
             <FormattedMessage
               {...linksMessages.home}
             />
@@ -63,14 +48,19 @@ class NaviMenu extends Component {
           {
             viewer ?
             <div>
-              <MenuItem onTouchTap={this.goToDebtors}>
+              <MenuItem onTouchTap={() => this.redirectTo(LINKS.debtors)}>
                 <FormattedMessage
                   {...linksMessages.debtors}
                 />
               </MenuItem>
-              <MenuItem onTouchTap={this.goToUsers}>
+              <MenuItem onTouchTap={() => this.redirectTo(LINKS.users)}>
                 <FormattedMessage
                   {...linksMessages.users}
+                />
+              </MenuItem>
+              <MenuItem onTouchTap={() => this.redirectTo(LINKS.boarding)}>
+                <FormattedMessage
+                  {...linksMessages.boarding}
                 />
               </MenuItem>
             </div>

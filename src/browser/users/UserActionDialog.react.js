@@ -5,15 +5,15 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import userMessage from '../../common/users/userMessages';
 import { isEmail } from 'validator';
-import Dialog from 'material-ui/lib/dialog';
+import Dialog from 'material-ui/Dialog';
 import { toggleUserActionDialog } from '../../common/ui/actions';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
-import SelectField from 'material-ui/lib/select-field';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import { userAction, updateUser, createUser } from '../../common/users/actions';
-import FlatButton from 'material-ui/lib/flat-button';
+import FlatButton from 'material-ui/FlatButton';
 
 
 class UserActionDialog extends Component {

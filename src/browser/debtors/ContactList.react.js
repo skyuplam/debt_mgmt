@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import GridList from 'material-ui/lib/grid-list/grid-list';
+import GridList from 'material-ui/GridList/GridList';
 import ContactNumbers from './ContactNumbers.react';
 import Addresses from './Addresses.react';
 

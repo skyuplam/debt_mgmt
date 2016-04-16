@@ -2,7 +2,7 @@ import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import Dialog from 'material-ui/lib/dialog';
+import Dialog from 'material-ui/Dialog';
 import { toggleNoteDialog } from '../../common/ui/actions';
 import { injectIntl, intlShape } from 'react-intl';
 import notesMessages from '../../common/notes/notesMessages';

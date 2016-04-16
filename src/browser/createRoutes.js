@@ -6,7 +6,9 @@ import Debtors from './debtors/Page.react';
 import Debtor from './debtors/Debtor.react';
 import Login from './auth/Login.react';
 import Users from './users/Users.react';
-import { Redirect, IndexRoute, Route } from 'react-router';
+import Boarding from './upload/Boarding.react';
+import { IndexRoute, Route } from 'react-router';
+import { LINKS } from '../common/app/actions';
 
 export default function createRoutes(getState) {
   const requireAuth = (nextState, replace) => {
@@ -34,15 +36,15 @@ export default function createRoutes(getState) {
   };
 
   return (
-    <Route component={App} path="/">
+    <Route component={App} path={LINKS.home} >
       <IndexRoute component={Home} onEnter={requireAuth} />
-      <Route component={Login} path="/login" />
-      <Route component={Debtors} onEnter={requireAuth} path="debtors">
-        <Route component={Debtor} path="/debtors/:id" />
-        <Redirect from="debtors/:id" to="/debtors/:id" />
+      <Route component={Login} path={LINKS.login} />
+      <Route component={Debtors} onEnter={requireAuth} path={LINKS.debtors} >
+        <Route component={Debtor} path={`/${LINKS.debtors}/:id`} />
       </Route>
-      <Route component={Users} onEnter={requireManager} path="users" />
-        <Route component={NotFound} path="*" />
+      <Route component={Users} onEnter={requireManager} path={LINKS.users} />
+      <Route component={Boarding} path={LINKS.boarding} />
+      <Route component={NotFound} path="*" />
     </Route>
   );
 }

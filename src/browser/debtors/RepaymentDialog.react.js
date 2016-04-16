@@ -1,17 +1,16 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import TextField from 'material-ui/lib/text-field';
-import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
+import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import { closeRepaymentDialog } from '../../common/ui/actions';
-import DatePicker from 'material-ui/lib/date-picker/date-picker';
+import DatePicker from 'material-ui/DatePicker';
 import { payRepayment } from '../../common/repayments/actions';
-// import { dateFormat } from '../../common/intl/format';
-import Checkbox from 'material-ui/lib/checkbox';
+import Checkbox from 'material-ui/Checkbox';
 import { injectIntl, intlShape } from 'react-intl';
 import repaymentsMessages from '../../common/repayments/repaymentsMessages';
 

@@ -6,7 +6,7 @@ import shouldPureComponentUpdate from 'react-pure-render/function';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import { FormattedDate } from 'react-intl';
 import { updateRepayment } from '../../common/repaymentPlans/actions';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField';
 import { toFloat } from 'validator';
 import { injectIntl, intlShape } from 'react-intl';
 import repaymentsMessages from '../../common/repayments/repaymentsMessages';
