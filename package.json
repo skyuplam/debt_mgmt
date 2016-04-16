@@ -149,6 +149,7 @@
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.10.0",
     "webpack-isomorphic-tools": "^2.2.46",
+    "xlsx": "^0.8.0",
     "yargs": "^4.6.0"
   }
 }
