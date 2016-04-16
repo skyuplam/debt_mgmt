@@ -1,3 +1,7 @@
+# App
+uploads
+uploads/
+
 # Este
 *.sublime-workspace
 src/common/secrets.json

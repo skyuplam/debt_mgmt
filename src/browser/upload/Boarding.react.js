@@ -27,9 +27,9 @@ class Boarding extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   handleDrop(files) {
-    // const { upload } = this.props;
+    const { upload } = this.props;
 
-    // upload(files);
+    upload(files);
   }
 
 

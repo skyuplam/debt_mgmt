@@ -3,6 +3,7 @@ import models from '../models';
 import logger from '../lib/logger';
 import multer from 'multer';
 import moment from 'moment';
+import XLSX from 'xlsx';
 
 
 const storage = multer.diskStorage({
@@ -24,6 +25,9 @@ router.route('/boarding')
         logger.warn(err);
         return res.status(400).json({ err });
       }
+      const workbook = XLSX.readFile(`uploads/${req.file.filename}`);
+      const firstSheetName = workbook.SheetNames[0];
+      logger.info(workbook.Sheets[firstSheetName]['A1'].v);
       res.status(201).end();
     });
   });
