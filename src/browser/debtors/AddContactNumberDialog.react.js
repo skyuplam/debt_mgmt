@@ -199,7 +199,7 @@ class AddContactNumberDialog extends Component {
           maxHeight={300}
         >
           {
-            relationships.map(relationship => (
+            relationships.toArray().map(relationship => (
               <MenuItem
                 value={relationship.id}
                 label={intl.formatMessage(contactsMessages[relationship.relationship])}

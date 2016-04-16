@@ -24,6 +24,7 @@ class ContactList extends Component {
       <GridList
         style={styles.gridList}
         padding={1}
+        className="grid-list"
       >
         <ContactNumbers debtorId={debtorId} />
         <Addresses debtorId={debtorId} />

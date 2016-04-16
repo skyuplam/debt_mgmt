@@ -2,12 +2,9 @@ import * as debtorsActions from '../../common/debtors/actions';
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Table from 'material-ui/Table/Table';
-import TableHeaderColumn from 'material-ui/Table/TableHeader';
-import TableRow from 'material-ui/Table/TableRow';
-import TableHeader from 'material-ui/Table/TableHeader';
-import TableRowColumn from 'material-ui/Table/TableRowColumn';
-import TableBody from 'material-ui/Table/TableBody';
+import {
+  Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn
+} from 'material-ui/Table';
 import Card from 'material-ui/Card/Card';
 import CardHeader from 'material-ui/Card/CardHeader';
 import CardText from 'material-ui/Card/CardText';

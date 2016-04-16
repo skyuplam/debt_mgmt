@@ -21,7 +21,8 @@ const strategy = new Strategy((token, done) => {
         include: [models.role]
       }).then(user => {
         if (user) {
-          return done(null, user);
+          done(null, user);
+          return null;
         }
         return done(null, false);
       });

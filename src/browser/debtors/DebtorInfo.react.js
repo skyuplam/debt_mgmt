@@ -5,15 +5,14 @@ import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import Card from 'material-ui/Card/Card';
 import CardHeader from 'material-ui/Card/CardHeader';
-import GridList from 'material-ui/GridList/GridList';
+import { GridList, GridTile } from 'material-ui/GridList';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import AddNoteDialog from './AddNoteDialog';
 import { openAddNoteDialog, toggleNoteDialog } from '../../common/ui/actions';
-import { FormattedDate } from 'react-intl';
-import { injectIntl, intlShape } from 'react-intl';
+import { FormattedDate, injectIntl, intlShape } from 'react-intl';
 import debtorsMessages from '../../common/debtors/debtorsMessages';
 import moment from 'moment';
 import NoteDialog from './NoteDialog.react';
@@ -64,9 +63,14 @@ class DebtorInfo extends Component {
       note.personId === debtor.id
     ) : [];
     const styles = {
+      root: {
+        display: 'flex',
+        flexFlow: 'row wrap',
+        width: '100%',
+      },
       gridList: {
         width: '100%',
-        height: 236,
+        overflowY: 'auto',
       },
       card: {
         height: 234,
@@ -75,9 +79,6 @@ class DebtorInfo extends Component {
         height: 130,
         overflowY: 'auto',
       },
-      listItem: {
-        width: '100%',
-      },
       floatingActionBtn: {
         width: 40,
         height: 40,
@@ -85,63 +86,78 @@ class DebtorInfo extends Component {
       }
     };
     return (
-      <GridList
-        style={styles.gridList}
-        padding={1}
-      >
-        <Card
-          style={styles.card}
+      <div style={styles.root}>
+        <GridList
+          cols={2}
+          cellHeight={236}
+          padding={1}
+          className="grid-list"
+          style={styles.gridList}
         >
-          <CardHeader
-            title={
-              `${intl.formatMessage(debtorsMessages.debtorDetail)} - ${debtor ? debtor.name : ''}`
-            }
-          />
-          <div className="debtor-info">
-            <TextField
-              floatingLabelText={intl.formatMessage(debtorsMessages.idCard)}
-              disabled
-              value={debtor ? debtor.idNumber : ''}
-            />
-            <TextField
-              floatingLabelText={intl.formatMessage(debtorsMessages.maritalStatus)}
-              disabled
-              value={debtor ? debtor.maritalStatus : ''}
-            />
-          </div>
-        </Card>
-        <Card
-          style={styles.card}
-        >
-          <CardHeader
-            title={`${intl.formatMessage(debtorsMessages.note)}`}
-          />
-          <List
-            style={styles.list}
+          <GridTile
+            cols={1}
+            rows={1}
           >
-            {
-              theNotes.map(note => (
-                <ListItem
-                  primaryText={this.formatDate(note.createdAt)}
-                  secondaryText={note.note}
-                  secondaryTextLines={2}
-                  onTouchTap={() => this.handleOpenNote(note)}
+            <Card
+              style={styles.card}
+            >
+              <CardHeader
+                title={
+                  `${intl.formatMessage(debtorsMessages.debtorDetail)} - ${debtor ? debtor.name : ''}`
+                }
+              />
+              <div className="debtor-info">
+                <TextField
+                  floatingLabelText={intl.formatMessage(debtorsMessages.idCard)}
+                  disabled
+                  value={debtor ? debtor.idNumber : ''}
+                /><br />
+                <TextField
+                  floatingLabelText={intl.formatMessage(debtorsMessages.maritalStatus)}
+                  disabled
+                  value={debtor ? debtor.maritalStatus : ''}
                 />
-              ))
-            }
-          </List>
-          <FloatingActionButton
-            mini
-            style={styles.floatingActionBtn}
-            onTouchEnd={this.handleAddNote}
-            onMouseDown={this.handleAddNote}
+              </div>
+            </Card>
+          </GridTile>
+          <GridTile
+            cols={1}
+            rows={1}
           >
-            <ContentAdd />
-          </FloatingActionButton>
-          <AddNoteDialog debtorId={debtor ? debtor.id : 0} />
-          <NoteDialog />
-        </Card>
-      </GridList>
+            <Card
+              style={styles.card}
+            >
+              <CardHeader
+                title={`${intl.formatMessage(debtorsMessages.note)}`}
+              />
+              <List
+                style={styles.list}
+              >
+                {
+                  theNotes.map(note => (
+                    <ListItem
+                      primaryText={this.formatDate(note.createdAt)}
+                      secondaryText={note.note}
+                      secondaryTextLines={2}
+                      onTouchTap={() => this.handleOpenNote(note)}
+                    />
+                  ))
+                }
+              </List>
+              <FloatingActionButton
+                mini
+                style={styles.floatingActionBtn}
+                onTouchEnd={this.handleAddNote}
+                onMouseDown={this.handleAddNote}
+              >
+                <ContentAdd />
+              </FloatingActionButton>
+              <AddNoteDialog debtorId={debtor ? debtor.id : 0} />
+              <NoteDialog />
+            </Card>
+          </GridTile>
+        </GridList>
+      </div>
     );
   }
 

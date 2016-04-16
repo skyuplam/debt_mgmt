@@ -20,13 +20,14 @@ const strategy = new Strategy('local', (username, password, done) =>
     return bcrypt.compareAsync(password, storedPwd)
     .then(verified => {
       if (verified) {
-        return done(null, user);
+        done(null, user);
+        return null;
       }
       return done(null, false);
     });
   }).catch(err => {
     logger.error(err);
-    done(err);
+    return done(err);
   })
 );
 

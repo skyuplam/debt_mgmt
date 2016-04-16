@@ -14,12 +14,9 @@ import Card from 'material-ui/Card/Card';
 import CardText from 'material-ui/Card/CardText';
 import CardActions from 'material-ui/Card/CardActions';
 import CardHeader from 'material-ui/Card/CardHeader';
-import Table from 'material-ui/Table/Table';
-import TableRow from 'material-ui/Table/TableRow';
-import TableRowColumn from 'material-ui/Table/TableRowColumn';
-import TableBody from 'material-ui/Table/TableBody';
-import TableHeader from 'material-ui/Table/TableHeader';
-import TableHeaderColumn from 'material-ui/Table/TableHeader';
+import {
+  Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn
+} from 'material-ui/Table';
 import { Popover, PopoverAnimationFromTop } from 'material-ui/Popover';
 import FlatButton from 'material-ui/FlatButton';
 import { toggleUserActionPopup, toggleUserActionDialog } from '../../common/ui/actions';

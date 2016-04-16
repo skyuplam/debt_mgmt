@@ -45,7 +45,10 @@ router.route('/login')
             return res.status(201).json({ user: userJson });
           })
         )
-      ).catch(err => logger.error(err));
+      ).catch(err => {
+        logger.error(err);
+        return res.status(400).json({ err });
+      });
     }, {
       session: false,
     })(req, res);

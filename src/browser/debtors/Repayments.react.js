@@ -126,6 +126,7 @@ class Repayments extends Component {
         <GridList
           cellHeight={386}
           padding={1}
+          className="grid-list"
         >
           <Card>
             <CardTitle title={intl.formatMessage(repaymentsMessages.repaymentPlan)} />

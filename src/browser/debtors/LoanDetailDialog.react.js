@@ -15,8 +15,7 @@ import DatePicker from 'material-ui/DatePicker';
 import { fields } from '../../common/lib/redux-fields';
 import { setField } from '../../common/lib/redux-fields/actions';
 import { postponePlacementRecall } from '../../common/loans/actions';
-import { FormattedNumber, FormattedDate } from 'react-intl';
-import { injectIntl, intlShape } from 'react-intl';
+import { FormattedNumber, FormattedDate, injectIntl, intlShape } from 'react-intl';
 import loansMessages from '../../common/loans/loansMessages';
 import {
   getInterestAfterCutoff,
@@ -195,7 +194,7 @@ class LoanDetailDialog extends Component {
         open={isLoanDetailDialogOpen}
         onRequestClose={closeLoanDetailDialog}
       >
-        <GridList cellHeight={400} style={styles.gridList}>
+        <GridList cellHeight={400} style={styles.gridList} className="grid-list">
           <List>
             <ListItem
               primaryText={intl.formatMessage(loansMessages.amount)}

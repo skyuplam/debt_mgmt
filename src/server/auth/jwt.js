@@ -2,11 +2,14 @@ import jwt from 'jsonwebtoken';
 import Promise from 'bluebird';
 
 export function signAync(payload, secretOrPrivateKey, options) {
-  return new Promise((resolve) => {
-    jwt.sign(payload, secretOrPrivateKey, options, (token) =>
-      resolve(token)
-    );
-  });
+  return new Promise((resolve, reject) =>
+    jwt.sign(payload, secretOrPrivateKey, options, (token) => {
+      if (token) {
+        return resolve(token);
+      }
+      return reject();
+    })
+  );
 }
 
 export function verifyAsync(token, secretOrPublicKey, options = {}) {
