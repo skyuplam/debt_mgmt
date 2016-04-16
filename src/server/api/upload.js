@@ -25,9 +25,10 @@ router.route('/boarding')
         logger.warn(err);
         return res.status(400).json({ err });
       }
-      const workbook = XLSX.readFile(`uploads/${req.file.filename}`);
+      const workbook = XLSX.readFile(req.file.path);
       const firstSheetName = workbook.SheetNames[0];
-      logger.info(workbook.Sheets[firstSheetName]['A1'].v);
+      // logger.info(workbook.Sheets[firstSheetName]['A1'].v);
+
       res.status(201).end();
     });
   });
