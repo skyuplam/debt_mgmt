@@ -16,11 +16,13 @@ import contactNumbers from '../contactNumbers/reducer';
 import addresses from '../addresses/reducer';
 import notes from '../notes/reducer';
 import categories from '../categories/reducer';
+import agencies from '../agencies/reducer';
 // redux-recycle higher-order reducer
 import recycleState from 'redux-recycle';
 
 export default combineReducers({
   auth,
+  agencies,
   config,
   device,
   intl,

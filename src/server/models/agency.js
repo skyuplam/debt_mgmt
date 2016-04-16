@@ -1,23 +1,23 @@
 export default function (sequelize, DataTypes) {
-  const Company = sequelize.define('company', {
-    name: {
-      type: DataTypes.STRING,
-    },
-    code: {
-      type: DataTypes.STRING,
-      unique: true,
+  const Agency = sequelize.define('agency', {
+    servicingFeeRate: {
+      type: DataTypes.FLOAT,
     },
     description: {
       type: DataTypes.STRING,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, {
     classMethods: {
       associate: models => {
-        Company.belongsTo(models.companyType);
-      }
+        Agency.belongsTo(models.company);
+      },
     },
     freezeTableName: true // Model tableName will be the same as the model name
   });
 
-  return Company;
+  return Agency;
 }

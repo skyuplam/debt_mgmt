@@ -19,6 +19,7 @@ export const TOGGLE_NOTE_DIALOG = 'TOGGLE_NOTE_DIALOG';
 export const TOGGLE_USER_ACTION_POPUP = 'TOGGLE_USER_ACTION_POPUP';
 export const TOGGLE_USER_ACTION_DIALOG = 'TOGGLE_USER_ACTION_DIALOG';
 export const TOGGLE_APP_BAR_ACTIONS = 'TOGGLE_APP_BAR_ACTIONS';
+export const TOGGLE_ADD_AGENCY_DIALOG = 'TOGGLE_ADD_AGENCY_DIALOG';
 
 
 export function onSideMenuChange(isOpen) {
@@ -155,5 +156,11 @@ export function toggleAppBarActions(data) {
   return {
     type: TOGGLE_APP_BAR_ACTIONS,
     payload: data,
+  };
+}
+
+export function toggleAddAgencyDialog() {
+  return {
+    type: TOGGLE_ADD_AGENCY_DIALOG,
   };
 }

@@ -5,6 +5,7 @@ import express from 'express';
 import debtors from './debtors';
 import users from './users';
 import categories from './categories';
+import agencies from './agencies';
 import upload from './upload';
 import logger from '../lib/logger';
 
@@ -17,6 +18,7 @@ app.use('/auth', auth);
 app.use('/debtors', debtors);
 app.use('/users', users);
 app.use('/categories', categories);
+app.use('/agencies', agencies);
 app.use('/upload', upload);
 
 app.on('mount', () => {

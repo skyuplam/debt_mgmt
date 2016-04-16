@@ -1,9 +1,6 @@
 export default function (sequelize, DataTypes) {
-  const Company = sequelize.define('company', {
-    name: {
-      type: DataTypes.STRING,
-    },
-    code: {
+  const CompanyType = sequelize.define('companyType', {
+    type: {
       type: DataTypes.STRING,
       unique: true,
     },
@@ -11,13 +8,13 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.STRING,
     }
   }, {
-    classMethods: {
-      associate: models => {
-        Company.belongsTo(models.companyType);
-      }
-    },
+    // classMethods: {
+    //   associate: models => {
+    //     CompanyType.belongsTo(models.province);
+    //   }
+    // },
     freezeTableName: true // Model tableName will be the same as the model name
   });
 
-  return Company;
+  return CompanyType;
 }

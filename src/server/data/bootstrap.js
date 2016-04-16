@@ -18,6 +18,7 @@ const {
   sources,
   relationships,
   roles,
+  companyTypes,
 } = typesAndStatus;
 
 export default function loadData() {
@@ -25,6 +26,9 @@ export default function loadData() {
     // Status and Types
     Promise.all([
       identityTypes.map(idType => models.identityType.create(idType, {
+        transaction: t2
+      })),
+      companyTypes.map(companyType => models.companyType.create(companyType, {
         transaction: t2
       })),
       loanTypes.map(loanType => models.loanType.create(loanType, {

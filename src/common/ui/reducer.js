@@ -24,6 +24,7 @@ const InitialState = Record({
   userActionType: undefined,
   isAppBarPopupUp: false,
   appBarActionType: undefined,
+  isAddAgencyDialogOpen: undefined,
 });
 const initialState = new InitialState;
 
@@ -136,6 +137,11 @@ export default function uiReducer(state = initialState, action) {
       }
       const actionType = action.payload.actionType;
       return newState.set('appBarActionType', actionType);
+    }
+
+    case actions.TOGGLE_ADD_AGENCY_DIALOG: {
+      return state.update('isAddAgencyDialogOpen',
+        isAddAgencyDialogOpen => !isAddAgencyDialogOpen);
     }
   }
 

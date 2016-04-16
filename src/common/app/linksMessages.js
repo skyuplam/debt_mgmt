@@ -13,6 +13,10 @@ export default defineMessages({
     defaultMessage: '用户管理',
     id: 'app.links.users'
   },
+  agencies: {
+    defaultMessage: '委外機構管理',
+    id: 'app.links.agencies'
+  },
   boarding: {
     defaultMessage: '上传资料包',
     id: 'app.links.boarding'

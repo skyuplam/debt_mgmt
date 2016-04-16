@@ -7,6 +7,7 @@ export const LINKS = {
   debtors: 'debtors',
   login: 'login',
   users: 'users',
+  agencies: 'agencies',
   boarding: 'boarding',
 };
 

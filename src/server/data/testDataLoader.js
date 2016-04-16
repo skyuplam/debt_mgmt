@@ -5,10 +5,32 @@ import bcrypt from 'bcrypt';
 export function loanTestData() {
   const { debtors, companies } = data;
   return models.sequelize.transaction(t3 =>
-    Promise.all(companies.map(company =>
-      models.company.create(company,
-        {
+    Promise.all(companies.map(theCompany =>
+      models.company.create(theCompany, {
+        transaction: t3
+      }).then(company =>
+        models.companyType.find({
+          where: {
+            type: theCompany.companyType
+          },
           transaction: t3
+        }).then(companyType => {
+          company.setCompanyType(companyType, {
+            transaction: t3
+          }).then(company => {
+            if (theCompany.companyType === 'DCA') {
+              models.agency.create({
+                servicingFeeRate: 0.3,
+              }, {
+                transaction: t3
+              }).then(agency =>
+                agency.setCompany(company, {
+                  transaction: t3
+                })
+              );
+            }
+          });
+          return company;
         }).then(company =>
           models.placement.create({
             placementCode: `${company.code}-201603`,
@@ -23,6 +45,7 @@ export function loanTestData() {
             })
           )
         )
+      )
     ))
   ).then(() =>
     models.sequelize.transaction(t1 =>

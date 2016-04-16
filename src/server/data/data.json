@@ -146,6 +146,24 @@
       "description": ""
     }
   ],
+  "companyTypes": [
+    {
+      "type": "Bank",
+      "description": ""
+    },
+    {
+      "type": "MoneyLender",
+      "description": ""
+    },
+    {
+      "type": "DCA",
+      "description": ""
+    },
+    {
+      "type": "General",
+      "description": ""
+    }
+  ],
   "sources": [
     {
       "source": "Originator",

@@ -244,15 +244,18 @@
   "companies": [
     {
       "name": "DCA 1",
-      "code": "DCA-1"
+      "code": "DCA-1",
+      "companyType": "DCA"
     },
     {
       "name": "DCA 2",
-      "code": "DCA-2"
+      "code": "DCA-2",
+      "companyType": "DCA"
     },
     {
       "name": "Bank 1",
-      "code": "BK-1"
+      "code": "BK-1",
+      "companyType": "Bank"
     }
   ]
 }
