@@ -1,5 +1,5 @@
 import express from 'express';
-import models from '../models';
+// import models from '../models';
 import logger from '../lib/logger';
 import multer from 'multer';
 import moment from 'moment';
@@ -27,9 +27,9 @@ router.route('/boarding')
       }
       const workbook = XLSX.readFile(req.file.path);
       const firstSheetName = workbook.SheetNames[0];
-      // logger.info(workbook.Sheets[firstSheetName]['A1'].v);
+      logger.info(workbook.Sheets[firstSheetName].A1.v);
 
-      res.status(201).end();
+      return res.status(201).end();
     });
   });
 

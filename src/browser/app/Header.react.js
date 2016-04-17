@@ -12,9 +12,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FlatButton from 'material-ui/FlatButton';
 import { logout } from '../../common/auth/actions';
 import { Popover, PopoverAnimationFromTop } from 'material-ui/Popover';
-import { toggleAppBarActions } from '../../common/ui/actions';
 import UserActionDialog from '../users/UserActionDialog.react';
-import { toggleUserActionDialog } from '../../common/ui/actions';
 
 const appBarAction = {
   logout: 'logout',
@@ -161,6 +159,4 @@ export default connect(state => ({
   ...uiActions,
   push,
   logout,
-  toggleAppBarActions,
-  toggleUserActionDialog,
 })(Header);

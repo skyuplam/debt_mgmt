@@ -8,7 +8,7 @@ import FlatButton from 'material-ui/FlatButton';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import { closeNewRepyamnetPlanDialog } from '../../common/ui/actions';
 import { fields } from '../../common/lib/redux-fields';
-import { FormattedNumber } from 'react-intl';
+import { FormattedNumber, injectIntl, intlShape } from 'react-intl';
 import DatePicker from 'material-ui/DatePicker';
 import { setField } from '../../common/lib/redux-fields/actions';
 import {
@@ -18,7 +18,6 @@ import {
 } from '../../common/repaymentPlans/actions';
 import RepaymentList from './RepaymentList.react';
 import { toFloat } from 'validator';
-import { injectIntl, intlShape } from 'react-intl';
 import repaymentsMessages from '../../common/repayments/repaymentsMessages';
 
 const customContentStyle = {

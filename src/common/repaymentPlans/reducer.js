@@ -24,7 +24,7 @@ export default function repaymentPlansReducer(state = initialState, action) {
 
     case actions.FETCH_REPAYMENT_PLANS_SUCCESS: {
       if (!action.payload.repaymentPlans) {
-        return state.update('map', map => Map());
+        return state.update('map', map => map.clear());
       }
       const repaymentPlans = action.payload.repaymentPlans.reduce((repaymentPlans, json) =>
         repaymentPlans.set(json.id, new RepaymentPlan(json))
@@ -61,7 +61,7 @@ export default function repaymentPlansReducer(state = initialState, action) {
     case actions.RESET_REPAYMENTS: {
       return state.update('newRepaymentPlan', newRepaymentPlan =>
         newRepaymentPlan.update('repayments', repayments =>
-        Map()
+        repayments.clear()
       ));
     }
 

@@ -6,7 +6,6 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
-import { focusInvalidField } from '../../common/lib/validation';
 import { replace } from 'react-router-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';

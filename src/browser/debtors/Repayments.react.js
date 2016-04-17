@@ -7,12 +7,11 @@ import CardActions from 'material-ui/Card/CardActions';
 import CardTitle from 'material-ui/Card/CardTitle';
 import { AutoSizer, FlexTable, FlexColumn } from 'react-virtualized';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import { FormattedDate } from 'react-intl';
+import { FormattedDate, injectIntl, intlShape } from 'react-intl';
 import { fetchRepaments } from '../../common/repayments/actions';
 import RaisedButton from 'material-ui/RaisedButton';
 import RepaymentDialog from './RepaymentDialog.react';
 import { openRepaymentDialog } from '../../common/ui/actions';
-import { injectIntl, intlShape } from 'react-intl';
 import repaymentsMessages from '../../common/repayments/repaymentsMessages';
 import moment from 'moment';
 
@@ -175,7 +174,9 @@ class Repayments extends Component {
                       cellRenderer={this._cellRenderer}
                       dataKey="repaymentPlanStatusId"
                       cellRenderer={(cellData) =>
-                        `${intl.formatMessage(repaymentsMessages['repaymentPlanStatus'+cellData])}`
+                        `${
+                          intl.formatMessage(repaymentsMessages[`repaymentPlanStatus${cellData}`])
+                        }`
                       }
                       width={100}
                     />

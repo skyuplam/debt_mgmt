@@ -7,8 +7,8 @@ export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 
 const API_VERSION = '/api/v1';
 
-export function upload(files, user = {}) {
-  // const Authorization = `Bearer ${user.token}`;
+// TODO: Add Authorization = `Bearer ${user.token}`;
+export function upload(files) {
   const form = new FormData();
   files.forEach(file => {
     form.append('boarding', file);

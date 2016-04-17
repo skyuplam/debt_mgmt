@@ -74,7 +74,7 @@ router.route('/')
 
 router.route('/')
   .post((req, res) => {
-    passport.authenticate('bearer', { session: false }, (err, user) => {
+    passport.authenticate('bearer', { session: false }, (err) => {
       if (err && Object.keys(err) > 0) {
         res.status(400).json(err);
       }

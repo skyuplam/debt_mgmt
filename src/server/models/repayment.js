@@ -37,8 +37,8 @@ export default function (sequelize, DataTypes) {
       },
       hook: models => {
         // Init Repayment Status to New
-        Repayment.afterCreate((repayment, opts) => {
-          return models.repaymentStatus.findOne({
+        Repayment.afterCreate((repayment, opts) =>
+          models.repaymentStatus.findOne({
             where: {
               status: 'New'
             }
@@ -48,8 +48,8 @@ export default function (sequelize, DataTypes) {
             repayment.setRepaymentStatus(repaymentStatus, {
               transaction: opts.transaction
             })
-          );
-        });
+          )
+        );
       }
     },
     freezeTableName: true // Model tableName will be the same as the model name

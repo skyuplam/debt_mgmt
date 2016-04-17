@@ -103,7 +103,9 @@ class DebtorInfo extends Component {
             >
               <CardHeader
                 title={
-                  `${intl.formatMessage(debtorsMessages.debtorDetail)} - ${debtor ? debtor.name : ''}`
+                  `${
+                    intl.formatMessage(debtorsMessages.debtorDetail)} - ${debtor ? debtor.name : ''
+                  }`
                 }
               />
               <div className="debtor-info">

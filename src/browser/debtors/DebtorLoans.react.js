@@ -11,9 +11,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import NewRepaymentPlan from './NewRepaymentPlan.react';
 import { openNewRepyamnetPlanDialog, openLoanDetailDialog } from '../../common/ui/actions';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import { FormattedNumber, FormattedDate } from 'react-intl';
 import LoanDetailDialog from './LoanDetailDialog.react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape, FormattedNumber, FormattedDate } from 'react-intl';
 import loansMessages from '../../common/loans/loansMessages';
 import {
   getInterestAfterCutoff,
