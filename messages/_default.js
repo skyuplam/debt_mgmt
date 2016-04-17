@@ -1,6 +1,50 @@
 /* eslint-disable max-len, quote-props, quotes */
 export default [
   {
+    "id": "agency.active",
+    "defaultMessage": "正在用"
+  },
+  {
+    "id": "agency.addAgency",
+    "defaultMessage": "增加委外机构"
+  },
+  {
+    "id": "agency.agenciesTitle",
+    "defaultMessage": "委外机构列表"
+  },
+  {
+    "id": "agency.cancel",
+    "defaultMessage": "取消"
+  },
+  {
+    "id": "agency.code",
+    "defaultMessage": "机构代码"
+  },
+  {
+    "id": "agency.name",
+    "defaultMessage": "名称"
+  },
+  {
+    "id": "agency.no",
+    "defaultMessage": "否"
+  },
+  {
+    "id": "agency.servicingFeeRate",
+    "defaultMessage": "服务费率"
+  },
+  {
+    "id": "agency.submit",
+    "defaultMessage": "提交"
+  },
+  {
+    "id": "agency.yes",
+    "defaultMessage": "是"
+  },
+  {
+    "id": "app.links.agencies",
+    "defaultMessage": "委外機構管理"
+  },
+  {
     "id": "app.links.boarding",
     "defaultMessage": "上传资料包"
   },
@@ -19,6 +63,10 @@ export default [
   {
     "id": "app.links.logout",
     "defaultMessage": "注销"
+  },
+  {
+    "id": "app.links.portfolios",
+    "defaultMessage": "投资组合管理"
   },
   {
     "id": "app.links.users",
@@ -575,6 +623,46 @@ export default [
   {
     "id": "notFound.title",
     "defaultMessage": "访问地址不存在"
+  },
+  {
+    "id": "portfolio.addPortfolio",
+    "defaultMessage": "增加投资组合"
+  },
+  {
+    "id": "portfolio.biddedAt",
+    "defaultMessage": "投标日期"
+  },
+  {
+    "id": "portfolio.cancel",
+    "defaultMessage": "取消"
+  },
+  {
+    "id": "portfolio.code",
+    "defaultMessage": "机构代码"
+  },
+  {
+    "id": "portfolio.dealtAt",
+    "defaultMessage": "成交日期"
+  },
+  {
+    "id": "portfolio.name",
+    "defaultMessage": "名称"
+  },
+  {
+    "id": "portfolio.ok",
+    "defaultMessage": "确定"
+  },
+  {
+    "id": "portfolio.portfoliosTitle",
+    "defaultMessage": "投资组合列表"
+  },
+  {
+    "id": "portfolio.submit",
+    "defaultMessage": "提交"
+  },
+  {
+    "id": "portfolio.yes",
+    "defaultMessage": "是"
   },
   {
     "id": "repayments.action",

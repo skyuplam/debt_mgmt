@@ -6,6 +6,7 @@ import debtors from './debtors';
 import users from './users';
 import categories from './categories';
 import agencies from './agencies';
+import portfolios from './portfolios';
 import upload from './upload';
 import logger from '../lib/logger';
 
@@ -19,6 +20,7 @@ app.use('/debtors', debtors);
 app.use('/users', users);
 app.use('/categories', categories);
 app.use('/agencies', agencies);
+app.use('/portfolios', portfolios);
 app.use('/upload', upload);
 
 app.on('mount', () => {

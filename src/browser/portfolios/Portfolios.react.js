@@ -1,11 +1,11 @@
 import Component from 'react-pure-render/component';
 import React, { PropTypes } from 'react';
-import { injectIntl, intlShape, FormattedNumber } from 'react-intl';
+import { injectIntl, intlShape, FormattedDate } from 'react-intl';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import fetch from '../../common/components/fetch';
-import { fetchAgencies } from '../../common/agencies/actions';
-import agencyMessages from '../../common/agencies/agencyMessages';
+import { fetchPortfolios } from '../../common/portfolios/actions';
+import portfolioMessages from '../../common/portfolios/portfolioMessages';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Card from 'material-ui/Card/Card';
@@ -16,39 +16,38 @@ import {
   Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn
 } from 'material-ui/Table';
 import { cyan500, grey900 } from 'material-ui/styles/colors';
-import AddAgencyDialog from './AddAgencyDialog.react';
-import { toggleAddAgencyDialog } from '../../common/ui/actions';
+import AddPortfolioDialog from './AddPortfolioDialog.react';
+import { toggleAddPortfolioDialog } from '../../common/ui/actions';
 
 class Users extends Component {
 
   static propTypes = {
-    agencies: PropTypes.object.isRequired,
-    targetAgency: PropTypes.object,
+    portfolios: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
-    toggleAddAgencyDialog: PropTypes.func.isRequired,
+    toggleAddPortfolioDialog: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
 
   constructor() {
     super();
-    this.showAddAgencyDialog = this.showAddAgencyDialog.bind(this);
+    this.showAddPortfolioDialog = this.showAddPortfolioDialog.bind(this);
     this.popupTarget = null;
   }
 
-  showAddAgencyDialog() {
-    const { toggleAddAgencyDialog } = this.props;
-    toggleAddAgencyDialog();
+  showAddPortfolioDialog() {
+    const { toggleAddPortfolioDialog } = this.props;
+    toggleAddPortfolioDialog();
   }
 
 
   render() {
     const {
       intl,
-      agencies,
+      portfolios,
     } = this.props;
 
-    const title = intl.formatMessage(agencyMessages.agenciesTitle);
-    const agencyList = agencies ? agencies.toList() : null;
+    const title = intl.formatMessage(portfolioMessages.portfoliosTitle);
+    const portfolioList = portfolios ? portfolios.toList() : null;
 
     const styles = {
       card: {
@@ -61,11 +60,11 @@ class Users extends Component {
     };
 
     return (
-      <div className="users">
+      <div className="portfolios">
         <Helmet title={title} />
         <Card style={styles.card}>
           <CardHeader
-            title={intl.formatMessage(agencyMessages.agenciesTitle)}
+            title={intl.formatMessage(portfolioMessages.portfoliosTitle)}
           />
           <CardText>
             <Table
@@ -79,30 +78,41 @@ class Users extends Component {
                     ID
                   </TableHeaderColumn>
                   <TableHeaderColumn>
-                    {intl.formatMessage(agencyMessages.name)}
+                    {intl.formatMessage(portfolioMessages.referenceCode)}
                   </TableHeaderColumn>
                   <TableHeaderColumn>
-                    {intl.formatMessage(agencyMessages.code)}
+                    {intl.formatMessage(portfolioMessages.name)}
                   </TableHeaderColumn>
                   <TableHeaderColumn>
-                    {intl.formatMessage(agencyMessages.servicingFeeRate)}
+                    {intl.formatMessage(portfolioMessages.code)}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    {intl.formatMessage(portfolioMessages.biddedAt)}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    {intl.formatMessage(portfolioMessages.cutoffAt)}
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {agencyList ? agencyList.map(agency =>
+                {portfolioList ? portfolioList.map(portfolio =>
                   (
-                    <TableRow key={agency.id} style={{
-                      color: agency.active ? cyan500 : grey900,
+                    <TableRow key={portfolio.id} style={{
+                      color: portfolio.active ? cyan500 : grey900,
                     }}
                     >
-                      <TableRowColumn>{agency.id}</TableRowColumn>
-                      <TableRowColumn>{agency.company.name}</TableRowColumn>
-                      <TableRowColumn>{agency.company.code}</TableRowColumn>
+                      <TableRowColumn>{portfolio.id}</TableRowColumn>
+                      <TableRowColumn>{portfolio.referenceCode}</TableRowColumn>
+                      <TableRowColumn>{portfolio.company.name}</TableRowColumn>
+                      <TableRowColumn>{portfolio.company.code}</TableRowColumn>
                       <TableRowColumn>
-                        <FormattedNumber
-                          style="percent"
-                          value={agency.servicingFeeRate}
+                        <FormattedDate
+                          value={portfolio.biddedAt}
+                        />
+                      </TableRowColumn>
+                      <TableRowColumn>
+                        <FormattedDate
+                          value={portfolio.cutoffAt}
                         />
                       </TableRowColumn>
                     </TableRow>
@@ -115,13 +125,13 @@ class Users extends Component {
             <FloatingActionButton
               mini
               style={styles.floatingActionBtn}
-              onTouchTap={() => this.showAddAgencyDialog()}
+              onTouchTap={() => this.showAddPortfolioDialog()}
             >
               <ContentAdd />
             </FloatingActionButton>
           </CardActions>
         </Card>
-        <AddAgencyDialog />
+        <AddPortfolioDialog />
       </div>
     );
   }
@@ -129,16 +139,15 @@ class Users extends Component {
 }
 
 Users = fetch(
-  fetchAgencies,
+  fetchPortfolios,
 )(Users);
 
 
 Users = injectIntl(Users);
 
 export default connect(state => ({
-  agencies: state.agencies.map,
-  targetAgency: state.agencies.targetAgency,
+  portfolios: state.portfolios.map,
   viewer: state.users.viewer,
 }), {
-  toggleAddAgencyDialog,
+  toggleAddPortfolioDialog,
 })(Users);

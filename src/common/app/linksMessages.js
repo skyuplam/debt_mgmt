@@ -17,6 +17,10 @@ export default defineMessages({
     defaultMessage: '委外機構管理',
     id: 'app.links.agencies'
   },
+  portfolios: {
+    defaultMessage: '投资组合管理',
+    id: 'app.links.portfolios'
+  },
   boarding: {
     defaultMessage: '上传资料包',
     id: 'app.links.boarding'

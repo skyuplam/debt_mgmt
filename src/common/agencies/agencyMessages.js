@@ -2,43 +2,43 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   agenciesTitle: {
-    id: 'users.agenciesTitle',
+    id: 'agency.agenciesTitle',
     defaultMessage: '委外机构列表',
   },
   name: {
-    id: 'users.name',
+    id: 'agency.name',
     defaultMessage: '名称',
   },
   code: {
-    id: 'users.code',
+    id: 'agency.code',
     defaultMessage: '机构代码',
   },
   servicingFeeRate: {
-    id: 'users.servicingFeeRate',
+    id: 'agency.servicingFeeRate',
     defaultMessage: '服务费率',
   },
   active: {
-    id: 'users.active',
+    id: 'agency.active',
     defaultMessage: '正在用',
   },
   yes: {
-    id: 'users.yes',
+    id: 'agency.yes',
     defaultMessage: '是',
   },
   no: {
-    id: 'users.no',
+    id: 'agency.no',
     defaultMessage: '否',
   },
   cancel: {
-    id: 'users.cancel',
+    id: 'agency.cancel',
     defaultMessage: '取消',
   },
   submit: {
-    id: 'users.submit',
+    id: 'agency.submit',
     defaultMessage: '提交',
   },
   addAgency: {
-    id: 'users.addAgency',
+    id: 'agency.addAgency',
     defaultMessage: '增加委外机构',
   },
 });

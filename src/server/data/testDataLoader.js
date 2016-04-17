@@ -1,6 +1,7 @@
 import models from '../models';
 import data from '../data/testData.json';
 import bcrypt from 'bcrypt';
+import moment from 'moment';
 
 export function loanTestData() {
   const { debtors, companies } = data;
@@ -25,6 +26,18 @@ export function loanTestData() {
                 transaction: t3
               }).then(agency =>
                 agency.setCompany(company, {
+                  transaction: t3
+                })
+              );
+            } else {
+              models.portfolio.create({
+                referenceCode: 'BANK-20151207',
+                biddedAt: moment('20151207', 'YYYYMMDD').toDate(),
+                cutoffAt: moment('20151207', 'YYYYMMDD').toDate(),
+              }, {
+                transaction: t3
+              }).then(portfolio =>
+                portfolio.setCompany(company, {
                   transaction: t3
                 })
               );
@@ -100,10 +113,10 @@ export function loanTestData() {
                 });
                 return loan;
               }).then(loan =>
-                models.company.findById(3, {
+                models.portfolio.findById(1, {
                   transaction: t1
-                }).then(originator =>
-                  loan.setOriginator(originator, {
+                }).then(portfolio =>
+                  loan.setPortfolio(portfolio, {
                     transaction: t1
                   })
                 )

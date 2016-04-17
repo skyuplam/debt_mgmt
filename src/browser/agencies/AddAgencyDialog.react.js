@@ -13,7 +13,7 @@ import { createAgency } from '../../common/agencies/actions';
 import FlatButton from 'material-ui/FlatButton';
 
 
-class UserActionDialog extends Component {
+class AddAgencyDialog extends Component {
   static propTypes = {
     viewer: PropTypes.object,
     fields: PropTypes.object.isRequired,
@@ -115,12 +115,12 @@ class UserActionDialog extends Component {
   }
 }
 
-UserActionDialog = fields(UserActionDialog, {
+AddAgencyDialog = fields(AddAgencyDialog, {
   path: 'agency',
   fields: ['name', 'code', 'servicingFeeRate']
 });
 
-UserActionDialog = injectIntl(UserActionDialog);
+AddAgencyDialog = injectIntl(AddAgencyDialog);
 
 export default connect(state => ({
   isAddAgencyDialogOpen: state.ui.isAddAgencyDialogOpen,
@@ -129,4 +129,4 @@ export default connect(state => ({
   setField,
   createAgency,
   toggleAddAgencyDialog,
-})(UserActionDialog);
+})(AddAgencyDialog);

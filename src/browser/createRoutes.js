@@ -7,6 +7,7 @@ import Debtor from './debtors/Debtor.react';
 import Login from './auth/Login.react';
 import Users from './users/Users.react';
 import Agencies from './agencies/Agencies.react';
+import Portfolios from './portfolios/Portfolios.react';
 import Boarding from './upload/Boarding.react';
 import { IndexRoute, Route } from 'react-router';
 import { LINKS } from '../common/app/actions';
@@ -44,6 +45,7 @@ export default function createRoutes(getState) {
         <Route component={Debtor} path={`/${LINKS.debtors}/:id`} />
       </Route>
       <Route component={Users} onEnter={requireManager} path={LINKS.users} />
+      <Route component={Portfolios} onEnter={requireManager} path={LINKS.portfolios} />
       <Route component={Agencies} onEnter={requireManager} path={LINKS.agencies} />
       <Route component={Boarding} path={LINKS.boarding} />
       <Route component={NotFound} path="*" />

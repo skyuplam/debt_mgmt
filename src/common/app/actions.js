@@ -8,6 +8,7 @@ export const LINKS = {
   login: 'login',
   users: 'users',
   agencies: 'agencies',
+  portfolios: 'portfolios',
   boarding: 'boarding',
 };
 

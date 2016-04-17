@@ -78,7 +78,7 @@ export default function (sequelize, DataTypes) {
       associate: models => {
         Loan.belongsTo(models.loanType);
         Loan.belongsTo(models.loanStatus);
-        Loan.belongsTo(models.company, { as: 'originator' });
+        Loan.belongsTo(models.portfolio);
         Loan.belongsToMany(models.person, {
           through: models.debtorLoan,
           as: 'Debtors',

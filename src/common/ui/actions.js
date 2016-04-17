@@ -20,6 +20,7 @@ export const TOGGLE_USER_ACTION_POPUP = 'TOGGLE_USER_ACTION_POPUP';
 export const TOGGLE_USER_ACTION_DIALOG = 'TOGGLE_USER_ACTION_DIALOG';
 export const TOGGLE_APP_BAR_ACTIONS = 'TOGGLE_APP_BAR_ACTIONS';
 export const TOGGLE_ADD_AGENCY_DIALOG = 'TOGGLE_ADD_AGENCY_DIALOG';
+export const TOGGLE_ADD_PORTFOLIO_DIALOG = 'TOGGLE_ADD_PORTFOLIO_DIALOG';
 
 
 export function onSideMenuChange(isOpen) {
@@ -162,5 +163,11 @@ export function toggleAppBarActions(data) {
 export function toggleAddAgencyDialog() {
   return {
     type: TOGGLE_ADD_AGENCY_DIALOG,
+  };
+}
+
+export function toggleAddPortfolioDialog() {
+  return {
+    type: TOGGLE_ADD_PORTFOLIO_DIALOG,
   };
 }

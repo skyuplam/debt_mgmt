@@ -25,6 +25,7 @@ const InitialState = Record({
   isAppBarPopupUp: false,
   appBarActionType: undefined,
   isAddAgencyDialogOpen: undefined,
+  isAddPortfolioDialogOpen: undefined,
 });
 const initialState = new InitialState;
 
@@ -142,6 +143,11 @@ export default function uiReducer(state = initialState, action) {
     case actions.TOGGLE_ADD_AGENCY_DIALOG: {
       return state.update('isAddAgencyDialogOpen',
         isAddAgencyDialogOpen => !isAddAgencyDialogOpen);
+    }
+
+    case actions.TOGGLE_ADD_PORTFOLIO_DIALOG: {
+      return state.update('isAddPortfolioDialogOpen',
+        isAddPortfolioDialogOpen => !isAddPortfolioDialogOpen);
     }
   }
 
