@@ -429,6 +429,10 @@ export default [
     "defaultMessage": "新增还款计划?"
   },
   {
+    "id": "loans.cutoffAt",
+    "defaultMessage": "数据擮取日期"
+  },
+  {
     "id": "loans.days",
     "defaultMessage": "天"
   },
@@ -629,6 +633,10 @@ export default [
     "defaultMessage": "增加投资组合"
   },
   {
+    "id": "portfolio.bank",
+    "defaultMessage": "银行"
+  },
+  {
     "id": "portfolio.biddedAt",
     "defaultMessage": "投标日期"
   },
@@ -641,12 +649,28 @@ export default [
     "defaultMessage": "机构代码"
   },
   {
-    "id": "portfolio.dealtAt",
-    "defaultMessage": "成交日期"
+    "id": "portfolio.companyType",
+    "defaultMessage": "机构类型"
+  },
+  {
+    "id": "portfolio.cutoffAt",
+    "defaultMessage": "数据擮取日期"
+  },
+  {
+    "id": "portfolio.DCA",
+    "defaultMessage": "委外机构"
+  },
+  {
+    "id": "portfolio.General",
+    "defaultMessage": "其他机构"
+  },
+  {
+    "id": "portfolio.MoneyLender",
+    "defaultMessage": "贷款机构"
   },
   {
     "id": "portfolio.name",
-    "defaultMessage": "名称"
+    "defaultMessage": "机构名称"
   },
   {
     "id": "portfolio.ok",
@@ -655,6 +679,10 @@ export default [
   {
     "id": "portfolio.portfoliosTitle",
     "defaultMessage": "投资组合列表"
+  },
+  {
+    "id": "portfolio.referenceCode",
+    "defaultMessage": "投资组合代号"
   },
   {
     "id": "portfolio.submit",
