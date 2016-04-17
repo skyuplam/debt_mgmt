@@ -109,12 +109,14 @@ router.route('/:debtorId/loans')
         lp.expectedRecalledAt,
         p.recalledAt,
         c.name agency,
-        o.name originator
+        o.name originator,
+        pf.cutoffAt
       FROM debtorLoan dl
       LEFT JOIN loan l ON l.id = dl.loanId
       LEFT JOIN loanPlacement lp ON lp.loanId = l.id AND lp.placementStatusId = 1
       LEFT JOIN placement p ON p.id = lp.placementId
-      LEFT JOIN company o ON o.id = l.originatorId
+      LEFT JOIN portfolio pf ON pf.id = l.portfolioId
+      LEFT JOIN company o ON o.id = pf.companyId
       LEFT JOIN company c ON c.id = p.companyId
       WHERE dl.debtorId = ${debtorId}
       `, { type: models.sequelize.QueryTypes.SELECT }

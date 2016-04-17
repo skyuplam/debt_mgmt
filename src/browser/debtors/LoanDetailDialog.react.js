@@ -282,6 +282,10 @@ class LoanDetailDialog extends Component {
               secondaryText={this._formatNumber(loan.collectablePenaltyFee)}
             />
             <ListItem
+              primaryText={intl.formatMessage(loansMessages.cutoffAt)}
+              secondaryText={this._formatDate(loan.cutoffAt)}
+            />
+            <ListItem
               primaryText={intl.formatMessage(loansMessages.expectedRecalledAt)}
               secondaryText={this._formatDate(loan.expectedRecalledAt)}
               onTouchTap={this.handlePostponeRecall}

@@ -73,6 +73,10 @@ export default defineMessages({
     defaultMessage: '违约金费率',
     id: 'loans.penaltyFeeRate',
   },
+  cutoffAt: {
+    defaultMessage: '数据擮取日期',
+    id: 'loans.cutoffAt',
+  },
   interestAfterCutoff: {
     defaultMessage: '转后利息',
     id: 'loans.interestAfterCutoff',

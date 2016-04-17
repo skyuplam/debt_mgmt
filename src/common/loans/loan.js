@@ -34,6 +34,7 @@ const Loan = Record({
   expectedRecalledAt: null,
   recalledAt: null,
   agency: '',
+  cutoffAt: undefined,
 });
 
 export function getInterestAfterCutoff(loan) {
