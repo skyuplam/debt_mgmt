@@ -30,6 +30,7 @@ const Loan = Record({
   placementStatusId: null,
   placementCode: '',
   placementServicingFeeRate: 0.0,
+  packageReference: undefined,
   placedAt: null,
   expectedRecalledAt: null,
   recalledAt: null,

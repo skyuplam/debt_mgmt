@@ -8,13 +8,16 @@ export default function (sequelize, DataTypes) {
     },
     expiredDate: {
       type: DataTypes.DATEONLY,
+    },
+    issueAuthority: {
+      type: DataTypes.STRING,
     }
   }, {
     classMethods: {
       associate: models => {
         Identity.belongsTo(models.identityType);
         Identity.belongsTo(models.city, { as: 'censusRegisteredCity' });
-        Identity.belongsTo(models.city, { as: 'issueAuthority' });
+        Identity.belongsTo(models.address, { as: 'censusRegisteredAddress' });
         Identity.belongsToMany(models.person, { through: 'personIdentity' });
       }
     },

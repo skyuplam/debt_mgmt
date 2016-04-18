@@ -15,6 +15,7 @@ export default function (sequelize, DataTypes) {
         PersonContactNumber.belongsTo(models.contactNumber);
         PersonContactNumber.belongsTo(models.person);
         PersonContactNumber.belongsTo(models.source);
+        PersonContactNumber.belongsTo(models.company);
         PersonContactNumber.belongsTo(models.relationship);
       }
     },

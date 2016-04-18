@@ -17,6 +17,10 @@
     {
       "type": "ID Card",
       "description": "身分证"
+    },
+    {
+      "type": "Portfolio Company ID",
+      "description": "原贷款机构ID"
     }
   ],
   "loanTypes": [

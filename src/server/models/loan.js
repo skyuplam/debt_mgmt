@@ -70,9 +70,15 @@ export default function (sequelize, DataTypes) {
     originatedAgreementNo: {
       type: DataTypes.STRING
     },
+    originatedLoanType: {
+      type: DataTypes.STRING
+    },
     originatedLoanProcessingBranch: {
       type: DataTypes.STRING
-    }
+    },
+    packageReference: {
+      type: DataTypes.STRING,
+    },
   }, {
     classMethods: {
       associate: models => {
