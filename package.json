@@ -151,5 +151,8 @@
     "webpack-isomorphic-tools": "^2.2.46",
     "xlsx": "^0.8.0",
     "yargs": "^4.6.0"
+  },
+  "devDependencies": {
+    "dirty-chai": "^1.2.2"
   }
 }
