@@ -12,6 +12,8 @@ import runSequence from 'run-sequence';
 import shell from 'gulp-shell';
 import webpackBuild from './webpack/build';
 import yargs from 'yargs';
+import istanbul from 'gulp-istanbul';
+import { Instrumenter } from 'isparta';
 
 const args = yargs
   .alias('p', 'production')
@@ -45,9 +47,27 @@ gulp.task('eslint', () => runEslint());
 // Exit process with an error code (1) on lint error for CI build.
 gulp.task('eslint-ci', () => runEslint().pipe(eslint.failAfterError()));
 
-gulp.task('mocha', () => {
-  mochaRunCreator('process')();
-});
+// istanbul code coverage
+gulp.task('pre-test', () =>
+  gulp.src([
+    'src/browser/**/*.js',
+    'src/common/**/*.js',
+    'src/server/**/*.js',
+    '!src/**/__test__/**/*.js'
+  ])
+    .pipe(istanbul({
+      instrumenter: Instrumenter
+    }))
+    .pipe(istanbul.hookRequire())
+);
+
+gulp.task('coverage', done =>
+  runSequence('pre-test', 'mocha', done)
+);
+
+gulp.task('mocha', () =>
+  mochaRunCreator('process')()
+);
 
 // Enable to run single test file
 // ex. gulp mocha-file --file src/browser/components/__test__/Button.js

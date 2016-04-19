@@ -8,6 +8,8 @@ import gulp from 'gulp';
 import gutil from 'gulp-util';
 import mocha from 'gulp-mocha';
 import path from 'path';
+import istanbul from 'gulp-istanbul';
+import gulpif from 'gulp-if';
 
 // To ignore webpack custom loaders on server.
 ['css', 'less', 'sass', 'scss', 'styl'].forEach(ext => {
@@ -45,6 +47,7 @@ export default function mochaRunCreator(errorReporter = 'process') {
         require: ['./test/mochaSetup.js'],
         reporter: 'spec'
       }))
+      .pipe(gulpif(errorReporter === 'process', istanbul.writeReports()))
       .on('error', reportError(errorReporter));
   };
 }

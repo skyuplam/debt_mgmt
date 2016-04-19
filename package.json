@@ -127,6 +127,7 @@
     "gulp-if": "^2.0.0",
     "gulp-istanbul": "^0.10.4",
     "gulp-mocha": "^2.2.0",
+    "gulp-run": "^1.6.12",
     "gulp-shell": "^0.5.2",
     "gulp-util": "^3.0.7",
     "isparta": "^4.0.0",
