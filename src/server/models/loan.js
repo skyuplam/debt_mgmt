@@ -79,6 +79,38 @@ export default function (sequelize, DataTypes) {
     packageReference: {
       type: DataTypes.STRING,
     },
+    accruedPrincipal: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    accruedInterest: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    accruedMgmtFee: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    accruedHandlingFee: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    accruedLateFee: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    accruedPenaltyFee: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    lastRepaidAmount: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    lastRepaidAt: {
+      type: DataTypes.DATE,
+      defaultValue: 0.0,
+    },
   }, {
     classMethods: {
       associate: models => {

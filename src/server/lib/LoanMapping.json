@@ -1,0 +1,9 @@
+{
+  "loanMap": {
+    "中安薪贷": "Salary Loan",
+    "老板贷": "Executive Loan",
+    "业主贷": "Property Owner Loan",
+    "头家贷": "General Loan",
+    "随心贷": "Revolving Loan"
+  }
+}

@@ -8,6 +8,7 @@ import Boarding from '../Boarding';
 import BoardingValidationError from '../BoardingValidationError';
 import { boardingFields } from '../boardingFields.json';
 import models from '../../models';
+import { loanMap } from '../LoanMapping.json';
 
 chai.use(dirtyChai);
 chai.use(chaiAsPromised);
@@ -197,7 +198,7 @@ describe('Boarding', function () {
       const idNumber = '440301197209104105';
       const issueAuthority = 'Authority';
       const censusRegisteredAddress = 'Long Address';
-      const origainatorRefDebtorId = 'ZAC_456788484833';
+      const origRefDebtorId = 'ZAC_456788484833';
       const name = 'Perter Pan';
       const dob = new Date(1980, 8, 13);
       const gender = 'M';
@@ -206,7 +207,7 @@ describe('Boarding', function () {
           idNumber,
           issueAuthority,
           censusRegisteredAddress,
-          origainatorRefDebtorId,
+          origRefDebtorId,
           name,
           dob,
           gender,
@@ -233,7 +234,7 @@ describe('Boarding', function () {
           }).then(function () {
             models.identity.find({
               where: {
-                idNumber: origainatorRefDebtorId
+                idNumber: origRefDebtorId
               },
               include: [{
                 model: models.identityType,
@@ -242,9 +243,65 @@ describe('Boarding', function () {
                 },
               }],
             }).then(function (identity) {
-              expect(identity.idNumber).to.be.eql(origainatorRefDebtorId);
+              expect(identity.idNumber).to.be.eql(origRefDebtorId);
             });
           });
+      });
+    });
+  });
+
+  describe('#saveLoan', function () {
+    it('should map the loan type', function () {
+      expect(loanMap['老板贷']).to.be.eql('Executive Loan');
+      expect(loanMap.XXX).to.be.undefined();
+    });
+    it('should save the loan data into database', function () {
+      const loan = {
+        originatedAgreementNo: 'ZAC_3456712838',
+        packageReference: 1,
+        issuedAt: new Date(2010, 10, 19),
+        originatedLoanProcessingBranch: 'Branch',
+        originatedLoanType: '老板贷',
+        amount: 50000,
+        terms: 12,
+        delinquentAt: new Date(2011, 2, 19),
+        transferredAt: new Date(2015, 12, 7),
+        apr: 0.276,
+        managementFeeRate: 0,
+        handlingFeeRate: 0,
+        lateFeeRate: 0.001,
+        penaltyFeeRate: 0,
+        collectablePrincipal: 40000.0,
+        collectableInterest: 12343.0,
+        collectableMgmtFee: 6573.0,
+        collectableHandlingFee: 9283.0,
+        collectableLateFee: 3453.0,
+        collectablePenaltyFee: 1246.5,
+        repaidTerms: 1,
+        accruedPrincipal: 10000.0,
+        accruedInterest: 3454.5,
+        accruedMgmtFee: 2344.0,
+        accruedHandlingFee: 434.0,
+        accruedLateFee: 423.0,
+        accruedPenaltyFee: 4234.0,
+        lastRepaidAmount: 3644.0,
+        lastRepaidAt: new Date(2010, 11, 19),
+      };
+      return models.sequelize.transaction(function (t) {
+        return Boarding.saveLoan(loan, t).then(function (theLoan) {
+          Object.keys(loan).forEach(function (k) {
+            if ([
+              'issuedAt',
+              'delinquentAt',
+              'transferredAt',
+              'lastRepaidAt',
+            ].indexOf(k) !== -1) {
+              expect(new Date(theLoan[k])).to.be.eql(loan[k]);
+            } else {
+              expect(theLoan[k]).to.be.eql(loan[k]);
+            }
+          });
+        });
       });
     });
   });

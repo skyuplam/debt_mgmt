@@ -3,6 +3,7 @@ import BoardingValidationError from './BoardingValidationError';
 import { boardingFields } from './boardingFields.json';
 import models from '../models';
 import logger from '../lib/logger';
+import { loanMap } from './LoanMapping.json';
 
 
 function getFieldNames(fields) {
@@ -151,7 +152,7 @@ function savePersonInfo({
   idNumber,
   issueAuthority,
   censusRegisteredAddress,
-  origainatorRefDebtorId,
+  origRefDebtorId,
   name,
   dob,
   gender,
@@ -191,7 +192,7 @@ function savePersonInfo({
           }).then(() =>
             models.identity.findOrCreate({
               where: {
-                idNumber: origainatorRefDebtorId
+                idNumber: origRefDebtorId
               },
               include: [{
                 model: models.identityType,
@@ -200,7 +201,7 @@ function savePersonInfo({
                 },
               }],
               defaults: {
-                idNumber: origainatorRefDebtorId
+                idNumber: origRefDebtorId
               },
               transaction: t
             }).all().then(([debtorId, created]) => {
@@ -250,6 +251,83 @@ function savePersonInfo({
   );
 }
 
+function saveLoan({
+  originatedAgreementNo,
+  packageReference,
+  issuedAt,
+  originatedLoanProcessingBranch,
+  originatedLoanType,
+  amount,
+  terms,
+  delinquentAt,
+  transferredAt,
+  apr,
+  managementFeeRate,
+  handlingFeeRate,
+  lateFeeRate,
+  penaltyFeeRate,
+  collectablePrincipal,
+  collectableInterest,
+  collectableMgmtFee,
+  collectableHandlingFee,
+  collectableLateFee,
+  collectablePenaltyFee,
+  repaidTerms,
+  accruedPrincipal,
+  accruedInterest,
+  accruedMgmtFee,
+  accruedHandlingFee,
+  accruedLateFee,
+  accruedPenaltyFee,
+  lastRepaidAmount,
+  lastRepaidAt,
+}, t) {
+  return models.loan.create({
+    originatedAgreementNo,
+    packageReference,
+    issuedAt,
+    originatedLoanProcessingBranch,
+    originatedLoanType,
+    amount,
+    terms,
+    delinquentAt,
+    transferredAt,
+    apr,
+    managementFeeRate,
+    handlingFeeRate,
+    lateFeeRate,
+    penaltyFeeRate,
+    collectablePrincipal,
+    collectableInterest,
+    collectableMgmtFee,
+    collectableHandlingFee,
+    collectableLateFee,
+    collectablePenaltyFee,
+    repaidTerms,
+    accruedPrincipal,
+    accruedInterest,
+    accruedMgmtFee,
+    accruedHandlingFee,
+    accruedLateFee,
+    accruedPenaltyFee,
+    lastRepaidAmount,
+    lastRepaidAt,
+  }, {
+    transaction: t
+  }).then(loan =>
+    models.loanType.find({
+      where: {
+        type: loanMap[originatedLoanType],
+      },
+      transaction: t
+    }).then(loanType =>
+      loan.setLoanType(loanType, {
+        transaction: t
+      })
+    )
+  );
+}
+
 function boarding(ws, fields = boardingFields) {
   if (!validateBoarding(ws, fields)) {
     return false;
@@ -266,71 +344,7 @@ function boarding(ws, fields = boardingFields) {
   }).then(portfolio =>
     Promise.all(rows.forEach(r =>
       models.sequelize.transaction(t =>
-        models.identity.findOrCreate({
-          where: {
-            idNumber: getCell({ ws, r, c: cols['身份证号'] }),
-          },
-          include: [
-            {
-              model: models.identityType,
-              where: {
-                type: 'ID Card'
-              }
-            }
-          ],
-          defaults: {
-            idNumber: getCell({ ws, r, c: cols['身份证号'] }),
-            issueAuthority: getCell({ ws, r, c: cols['发证机关'] }),
-          },
-          transaction: t
-        }).all().then(([identity, created]) => {
-          if (created) {
-            return models.identityType.find({
-              where: {
-                type: 'ID Card'
-              },
-              transaction: t
-            }).then(idType =>
-              identity.setIdentityType(idType, {
-                transaction: t
-              })
-            ).then(identity =>
-              models.address.create({
-                longAddress: getCell({ ws, r, c: cols['身份证户籍地址'] }),
-              }, {
-                transaction: t
-              }).then(address =>
-                identity.setCensusRegisteredAddress(address, {
-                  transaction: t
-                })
-              )
-            ).then(identity =>
-              models.person.create({
-                name: getCell({ ws, r, c: cols['姓名'] }),
-                dob: getIdInfo(identity.idNumber).dob,
-                gender: getIdInfo(identity.idNumber).gender,
-              }, {
-                transaction: t
-              }).then(person => {
-                person.addIdentity(identity, {
-                  transaction: t
-                });
-                return person;
-              })
-            );
-          }
-          return models.person.find({
-            include: [
-              {
-                model: models.identity,
-                where: {
-                  id: identity.id
-                }
-              }
-            ],
-            transaction: t
-          });
-        })
+        portfolio
       ).catch(error => logger.error(error))
     ))
   );
@@ -346,6 +360,7 @@ Boarding.getCell = getCell;
 Boarding.validateBoarding = validateBoarding;
 Boarding.checkIfPortfolioExists = checkIfPortfolioExists;
 Boarding.savePersonInfo = savePersonInfo;
+Boarding.saveLoan = saveLoan;
 Boarding.boarding = boarding;
 
 export default Boarding;

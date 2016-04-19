@@ -29,6 +29,10 @@
       "description": "薪贷"
     },
     {
+      "type": "General Loan",
+      "description": "一般贷款"
+    },
+    {
       "type": "Executive Loan",
       "description": "老板贷"
     },
