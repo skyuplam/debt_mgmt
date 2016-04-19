@@ -230,6 +230,20 @@ describe('Boarding', function () {
               expect(new Date(person.dob)).to.be.eql(dob);
               expect(person.gender).to.be.eql(gender);
             });
+          }).then(function () {
+            models.identity.find({
+              where: {
+                idNumber: origainatorRefDebtorId
+              },
+              include: [{
+                model: models.identityType,
+                where: {
+                  type: 'Portfolio Company ID',
+                },
+              }],
+            }).then(function (identity) {
+              expect(identity.idNumber).to.be.eql(origainatorRefDebtorId);
+            });
           });
       });
     });
