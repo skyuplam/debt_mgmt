@@ -4,12 +4,14 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    gender: {
+      type: DataTypes.STRING,
+    },
     maritalStatus: {
       type: DataTypes.STRING,
     },
     dob: {
       type: DataTypes.DATEONLY,
-      allowNull: false
     }
   }, {
     classMethods: {

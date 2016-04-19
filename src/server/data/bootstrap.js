@@ -79,9 +79,9 @@ export default function loadData() {
       ),
     ])
   ).then((data) => {
-    if (!isProduction) {
-      return loanTestData();
-    }
+    // if (!isProduction) {
+    //   return loanTestData();
+    // }
     return data;
   })
   .catch(error => {

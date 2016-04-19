@@ -2,7 +2,7 @@ import bunyan from 'bunyan';
 import config from '../config';
 import expressBunyanLogger from 'express-bunyan-logger';
 
-const { appName } = config;
+const { appName, isProduction } = config;
 
 const loggerName = `${appName}Server`;
 
@@ -14,7 +14,7 @@ const logger = bunyan.createLogger({
 });
 
 // Config the loggin level accordingly
-// logger.level(isProduction ? bunyan.INFO : bunyan.DEBUG);
+logger.level(isProduction ? bunyan.INFO : bunyan.DEBUG);
 
 logger.expressLogger = expressBunyanLogger({
   name: loggerName,

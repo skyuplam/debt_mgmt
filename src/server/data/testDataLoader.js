@@ -31,7 +31,7 @@ export function loanTestData() {
               );
             } else {
               models.portfolio.create({
-                referenceCode: 'BANK-20151207',
+                referenceCode: 'SZYZ-Z-201512070001',
                 biddedAt: moment('20151207', 'YYYYMMDD').toDate(),
                 cutoffAt: moment('20151207', 'YYYYMMDD').toDate(),
               }, {

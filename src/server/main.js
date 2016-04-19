@@ -74,7 +74,9 @@ app.use('/api/v1', api);
 app.use(frontend);
 app.use(errorHandler);
 
-models.sequelize.sync({ force: !isProduction }).then(() => {
+const force = { force: !isProduction };
+
+models.sequelize.sync(force).then(() => {
   bootstrap();
   const server = app.listen(port, () => {
     logger.info('Server started at port %d', port);
