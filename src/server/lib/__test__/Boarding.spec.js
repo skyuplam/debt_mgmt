@@ -214,7 +214,7 @@ describe('Boarding', function () {
           }).then(function (company) {
             return models.companyType.find({
               where: {
-                type: 'Money Lender'
+                type: 'MoneyLender'
               },
               transaction: t
             }).then(function (companyType) {
