@@ -147,6 +147,109 @@ function validateBoarding(worksheet, fields = boardingFields) {
     checkRequiredFields(worksheet, fields);
 }
 
+function savePersonInfo({
+  idNumber,
+  issueAuthority,
+  censusRegisteredAddress,
+  origainatorRefDebtorId,
+  name,
+  dob,
+  gender,
+}, t) {
+  return models.identityType.find({
+    where: {
+      type: 'ID Card',
+    },
+    transaction: t
+  }).then(idType =>
+    models.identity.findOrCreate({
+      where: {
+        idNumber
+      },
+      include: [{
+        model: models.identityType,
+        where: {
+          type: idType.type,
+        }
+      }],
+      defaults: {
+        idNumber,
+        issueAuthority,
+      },
+      transaction: t
+    }).all().then(([identity, created]) => {
+      if (created) {
+        return models.person.create({
+          name,
+          dob,
+          gender,
+        }, {
+          transaction: t
+        }).then(person =>
+          person.addIdentity(identity, {
+            transaction: t
+          }).then(() =>
+            models.identity.findOrCreate({
+              where: {
+                idNumber: origainatorRefDebtorId
+              },
+              include: [{
+                model: models.identityType,
+                where: {
+                  type: 'Portfolio Company ID'
+                },
+              }],
+              defaults: {
+                idNumber: origainatorRefDebtorId
+              },
+              transaction: t
+            }).all().then(([debtorId, created]) => {
+              if (created) {
+                return models.identityType.find({
+                  where: {
+                    type: 'Portfolio Company ID'
+                  },
+                  transaction: t
+                }).then(debtorIdType =>
+                  debtorId.setIdentityType(debtorIdType, {
+                    transaction: t
+                  })
+                ).then(() =>
+                  person.addIdentity(debtorId, {
+                    transaction: t
+                  }).then(() => person)
+                );
+              }
+              return person.addIdentity(debtorId, {
+                transaction: t
+              }).then(() => person);
+            })
+          )
+        ).then(() =>
+          identity.setIdentityType(idType, {
+            transaction: t
+          })
+        ).then(() =>
+          models.address.findOrCreate({
+            where: {
+              longAddress: censusRegisteredAddress,
+            },
+            defaults: {
+              longAddress: censusRegisteredAddress,
+            },
+            transaction: t
+          }).all().then(([address]) =>
+            identity.setCensusRegisteredAddress(address, {
+              transaction: t
+            })
+          ).then(() => identity)
+        );
+      }
+      return identity;
+    })
+  );
+}
+
 function boarding(ws, fields = boardingFields) {
   if (!validateBoarding(ws, fields)) {
     return false;
@@ -242,6 +345,7 @@ Boarding.getRows = getRows;
 Boarding.getCell = getCell;
 Boarding.validateBoarding = validateBoarding;
 Boarding.checkIfPortfolioExists = checkIfPortfolioExists;
+Boarding.savePersonInfo = savePersonInfo;
 Boarding.boarding = boarding;
 
 export default Boarding;

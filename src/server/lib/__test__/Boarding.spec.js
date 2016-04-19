@@ -192,6 +192,49 @@ describe('Boarding', function () {
     });
   });
 
+  describe('#savePersonInfo()', function () {
+    it('should save the data into database', function () {
+      const idNumber = '440301197209104105';
+      const issueAuthority = 'Authority';
+      const censusRegisteredAddress = 'Long Address';
+      const origainatorRefDebtorId = 'ZAC_456788484833';
+      const name = 'Perter Pan';
+      const dob = new Date(1980, 8, 13);
+      const gender = 'M';
+      return models.sequelize.transaction(function (t) {
+        return Boarding.savePersonInfo({
+          idNumber,
+          issueAuthority,
+          censusRegisteredAddress,
+          origainatorRefDebtorId,
+          name,
+          dob,
+          gender,
+        }, t);
+      }).then(function (identity) {
+        expect(identity.idNumber).to.be.eql(idNumber);
+        expect(identity.issueAuthority).to.be.eql(issueAuthority);
+        return models.address.findById(identity.censusRegisteredAddressId)
+          .then(function (address) {
+            expect(address.longAddress).to.be.eql(censusRegisteredAddress);
+          }).then(function () {
+            return models.person.find({
+              include: [{
+                model: models.identity,
+                where: {
+                  idNumber
+                }
+              }]
+            }).then(function (person) {
+              expect(person.name).to.be.eql(name);
+              expect(new Date(person.dob)).to.be.eql(dob);
+              expect(person.gender).to.be.eql(gender);
+            });
+          });
+      });
+    });
+  });
+
   describe('#boarding', function () {
     let worksheet;
     before(function () {
