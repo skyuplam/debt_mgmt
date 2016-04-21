@@ -16,6 +16,7 @@ export default function (sequelize, DataTypes) {
         PersonAddress.belongsTo(models.address);
         PersonAddress.belongsTo(models.addressType);
         PersonAddress.belongsTo(models.source);
+        PersonAddress.belongsTo(models.company);
         PersonAddress.belongsTo(models.relationship);
       }
     },

@@ -1,0 +1,11 @@
+{
+  "relationshipMap": {
+    "直系亲属": "Parent",
+    "配偶": "Spouse",
+    "其它亲属": "Family",
+    "现单位同事": "Colleague",
+    "共同经营者": "BusinessPartner",
+    "其它联系人": "Others",
+    "nan": "Others"
+  }
+}

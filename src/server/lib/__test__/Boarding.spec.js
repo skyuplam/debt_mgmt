@@ -306,7 +306,48 @@ describe('Boarding', function () {
     });
   });
 
-  describe('#boarding', function () {
+  describe('#savePersonAddresses()', function () {
+    beforeEach(function () {
+      models.person.truncate({
+        cascade: true,
+      });
+      models.personAddress.truncate({
+        cascade: true,
+      });
+      models.address.truncate({
+        cascade: true,
+      });
+      models.company.truncate({
+        cascade: true,
+      });
+      models.identity.truncate({ cascade: true });
+    });
+    it('should save the address to database', function () {
+      const addresses = [{
+        longAddress: 'Long Long Address',
+        addressType: 'Home',
+        source: 'Originator',
+        relationship: 'Personal',
+        contactPerson: '',
+        companyName: '',
+      }];
+      return models.sequelize.transaction(function (t) {
+        return models.person.create({
+          name: 'Tester',
+        }, {
+          transaction: t
+        }).then(function (person) {
+          return Boarding.savePersonAddresses(person, addresses, t)
+            .then(function (personAddresses) {
+              expect(personAddresses).is.an('array');
+              expect(personAddresses.length).is.eql(1);
+            });
+        });
+      });
+    });
+  });
+
+  describe('#boarding()', function () {
     let worksheet;
     before(function () {
       const workbook = XLSX.readFile(testFielPath);

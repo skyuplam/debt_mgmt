@@ -4,6 +4,7 @@ import { boardingFields } from './boardingFields.json';
 import models from '../models';
 import logger from '../lib/logger';
 import { loanMap } from './LoanMapping.json';
+import { relationshipMap } from './RelationshipMapping.json';
 
 
 function getFieldNames(fields) {
@@ -328,6 +329,115 @@ function saveLoan({
   );
 }
 
+/*
+ * addresses: an array of address containing
+ *   loangAddress
+ *   addressType
+ *   source
+ *   relationship
+ *   contactPerson: allowNull
+ *   companyName: allowNull
+ * person: sequelize instance
+ * t: transaction
+ */
+function savePersonAddresses(person, addresses, t) {
+  if (!person || !Array.isArray(addresses)) {
+    throw new BoardingValidationError('Invalid param', {
+      person,
+      addresses,
+    });
+  }
+  return models.companyType.find({
+    where: {
+      type: 'General'
+    },
+    transaction: t
+  }).then(generalCompanyType =>
+    Promise.all(addresses.map(address =>
+      models.address.findOrCreate({
+        where: {
+          longAddress: address.longAddress,
+        },
+        defaults: {
+          longAddress: address.longAddress
+        },
+        transaction: t,
+      }).all().then(([theAddress]) =>
+        models.addressType.find({
+          where: {
+            type: address.addressType
+          },
+          transaction: t,
+        }).then(addressType =>
+          models.personAddress.create({
+            contactPerson: address.contactPerson
+          }, {
+            transaction: t
+          }).then(personAddress =>
+            personAddress.setPerson(person, {
+              transaction: t
+            }).then(() =>
+              personAddress.setAddress(theAddress, {
+                transaction: t,
+              })
+            ).then(() =>
+              personAddress.setAddressType(addressType, {
+                transaction: t,
+              })
+            ).then(() =>
+              models.relationship.find({
+                where: {
+                  relationship: address.relationship
+                },
+                transaction: t,
+              }).then(relationship =>
+                personAddress.setRelationship(relationship, {
+                  transaction: t,
+                })
+              ).then(() =>
+                models.source.find({
+                  where: {
+                    source: address.source,
+                  },
+                  transaction: t,
+                }).then(source =>
+                  personAddress.setSource(source, {
+                    transaction: t,
+                  })
+                ).then(() => {
+                  if (address.company) {
+                    return models.company.findOrCreate({
+                      where: {
+                        name: address.companyName,
+                      },
+                      defaults: {
+                        name: address.companyName,
+                      },
+                      transaction: t,
+                    }).all().then(([company, created]) => {
+                      if (created) {
+                        return company.setCompanyType(generalCompanyType, {
+                          transaction: t,
+                        });
+                      }
+                      return company;
+                    }).then(company =>
+                      personAddress.setCompany(company, {
+                        transaction: t,
+                      })
+                    );
+                  }
+                  return personAddress;
+                })
+              )
+            )
+          )
+        )
+      )
+    ))
+  );
+}
+
 function boarding(ws, fields = boardingFields) {
   if (!validateBoarding(ws, fields)) {
     return false;
@@ -361,6 +471,7 @@ Boarding.validateBoarding = validateBoarding;
 Boarding.checkIfPortfolioExists = checkIfPortfolioExists;
 Boarding.savePersonInfo = savePersonInfo;
 Boarding.saveLoan = saveLoan;
+Boarding.savePersonAddresses = savePersonAddresses;
 Boarding.boarding = boarding;
 
 export default Boarding;
