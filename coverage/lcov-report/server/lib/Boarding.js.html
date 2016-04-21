@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">91.9% </span>
+        <span class="strong">91.77% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>227/247</span>
+        <span class='fraction'>223/243</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">77.5% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>15/16</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">89.44% </span>
+        <span class="strong">89.2% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>161/180</span>
+        <span class='fraction'>157/176</span>
       </div>
     </div>
   </div>
@@ -629,8 +629,7 @@
 584
 585
 586
-587
-588</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+587</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -1009,7 +1008,16 @@
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1017,23 +1025,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1060,7 +1059,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1593,17 +1591,16 @@ function savePersonAddresses(person, addresses, t) {
           }, {
             transaction: t
           }).then(personAddress =&gt;
-            personAddress.setPerson(person, {
-              transaction: t
-            }).then(() =&gt;
+            Promise.all([
+              personAddress.setPerson(person, {
+                transaction: t
+              }),
               personAddress.setAddress(theAddress, {
                 transaction: t,
-              })
-            ).then(() =&gt;
+              }),
               personAddress.setAddressType(addressType, {
                 transaction: t,
-              })
-            ).then(() =&gt;
+              }),
               models.relationship.find({
                 where: {
                   relationship: address.relationship
@@ -1613,47 +1610,47 @@ function savePersonAddresses(person, addresses, t) {
                 personAddress.setRelationship(relationship, {
                   transaction: t,
                 })
-              ).then(() =&gt;
-                models.source.find({
+              ),
+              models.source.find({
+                where: {
+                  source: address.source,
+                },
+                transaction: t,
+              }).then(source =&gt;
+                personAddress.setSource(source, {
+                  transaction: t,
+                })
+              ),
+            ]).then(() =&gt; {
+              if (address.companyName) {
+                return models.company.findOrCreate({
                   where: {
-                    source: address.source,
+                    name: address.companyName,
+                  },
+                  defaults: {
+                    name: address.companyName,
                   },
                   transaction: t,
-                }).then(source =&gt;
-                  personAddress.setSource(source, {
+                }).all().then(([company, created]) =&gt; {
+                  <span class="missing-if-branch" title="if path not taken" >I</span>if (created) {
+<span class="cstat-no" title="statement not covered" >                    r</span>eturn company.setCompanyType(generalCompanyType, {
+                      transaction: t,
+                    });
+                  }
+                  return company;
+                }).then(company =&gt;
+                  personAddress.setCompany(company, {
                     transaction: t,
                   })
-                ).then(() =&gt; {
-                  if (address.companyName) {
-                    return models.company.findOrCreate({
-                      where: {
-                        name: address.companyName,
-                      },
-                      defaults: {
-                        name: address.companyName,
-                      },
-                      transaction: t,
-                    }).all().then(([company, created]) =&gt; {
-                      <span class="missing-if-branch" title="if path not taken" >I</span>if (created) {
-<span class="cstat-no" title="statement not covered" >                        r</span>eturn company.setCompanyType(generalCompanyType, {
-                          transaction: t,
-                        });
-                      }
-                      return company;
-                    }).then(company =&gt;
-                      personAddress.setCompany(company, {
-                        transaction: t,
-                      })
-                    );
-                  }
-                  return personAddress;
-                })
-              )
+                );
+              }
+              return personAddress;
+            })
             )
           )
         )
       )
-    ))
+    )
   );
 }
 /*
@@ -1810,7 +1807,7 @@ export default Boarding;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Apr 21 2016 22:06:35 GMT+0800 (CST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Apr 21 2016 22:20:31 GMT+0800 (CST)
 </div>
 </div>
 <script src="../../prettify.js"></script>

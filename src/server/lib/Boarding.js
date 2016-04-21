@@ -374,17 +374,16 @@ function savePersonAddresses(person, addresses, t) {
           }, {
             transaction: t
           }).then(personAddress =>
-            personAddress.setPerson(person, {
-              transaction: t
-            }).then(() =>
+            Promise.all([
+              personAddress.setPerson(person, {
+                transaction: t
+              }),
               personAddress.setAddress(theAddress, {
                 transaction: t,
-              })
-            ).then(() =>
+              }),
               personAddress.setAddressType(addressType, {
                 transaction: t,
-              })
-            ).then(() =>
+              }),
               models.relationship.find({
                 where: {
                   relationship: address.relationship
@@ -394,47 +393,47 @@ function savePersonAddresses(person, addresses, t) {
                 personAddress.setRelationship(relationship, {
                   transaction: t,
                 })
-              ).then(() =>
-                models.source.find({
+              ),
+              models.source.find({
+                where: {
+                  source: address.source,
+                },
+                transaction: t,
+              }).then(source =>
+                personAddress.setSource(source, {
+                  transaction: t,
+                })
+              ),
+            ]).then(() => {
+              if (address.companyName) {
+                return models.company.findOrCreate({
                   where: {
-                    source: address.source,
+                    name: address.companyName,
+                  },
+                  defaults: {
+                    name: address.companyName,
                   },
                   transaction: t,
-                }).then(source =>
-                  personAddress.setSource(source, {
+                }).all().then(([company, created]) => {
+                  if (created) {
+                    return company.setCompanyType(generalCompanyType, {
+                      transaction: t,
+                    });
+                  }
+                  return company;
+                }).then(company =>
+                  personAddress.setCompany(company, {
                     transaction: t,
                   })
-                ).then(() => {
-                  if (address.companyName) {
-                    return models.company.findOrCreate({
-                      where: {
-                        name: address.companyName,
-                      },
-                      defaults: {
-                        name: address.companyName,
-                      },
-                      transaction: t,
-                    }).all().then(([company, created]) => {
-                      if (created) {
-                        return company.setCompanyType(generalCompanyType, {
-                          transaction: t,
-                        });
-                      }
-                      return company;
-                    }).then(company =>
-                      personAddress.setCompany(company, {
-                        transaction: t,
-                      })
-                    );
-                  }
-                  return personAddress;
-                })
-              )
+                );
+              }
+              return personAddress;
+            })
             )
           )
         )
       )
-    ))
+    )
   );
 }
 /*
