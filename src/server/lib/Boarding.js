@@ -4,7 +4,7 @@ import { boardingFields } from './boardingFields.json';
 import models from '../models';
 import logger from '../lib/logger';
 import { loanMap } from './LoanMapping.json';
-import { relationshipMap } from './RelationshipMapping.json';
+// import { relationshipMap } from './RelationshipMapping.json';
 
 
 function getFieldNames(fields) {
@@ -405,7 +405,7 @@ function savePersonAddresses(person, addresses, t) {
                     transaction: t,
                   })
                 ).then(() => {
-                  if (address.company) {
+                  if (address.companyName) {
                     return models.company.findOrCreate({
                       where: {
                         name: address.companyName,
@@ -437,6 +437,115 @@ function savePersonAddresses(person, addresses, t) {
     ))
   );
 }
+/*
+ * contacts: [{
+ *   contactNumber: @ref contactNumber,
+ *   countryCode: @ref contactNumber,
+ *   contactNumberType: @ref contactNumberType,
+ *   contactPerson: @ref contactNumber,
+ *   source: @ref source,
+ *   relationship: @ref relationship,
+ *   companyName: @ref company,
+ * }]
+ */
+function savePersonContacts(person, contacts, t) {
+  if (!person || !Array.isArray(contacts)) {
+    throw new BoardingValidationError('Invalid param', {
+      person,
+      contacts,
+    });
+  }
+  return models.companyType.find({
+    where: {
+      type: 'General'
+    },
+    transaction: t
+  }).then(generalCompanyType =>
+    Promise.all(contacts.map(contact =>
+      models.contactNumber.findOrCreate({
+        where: {
+          contactNumber: contact.contactNumber,
+          countryCode: contact.countryCode,
+        },
+        transaction: t,
+        defaults: {
+          countryCode: '+86',
+        }
+      }).all().then(([contactNumber, created]) => {
+        if (created) {
+          return models.contactNumberType.find({
+            where: {
+              type: contact.contactNumberType,
+            },
+            transaction: t,
+          }).then(contactNumberType =>
+            contactNumber.setContactNumberType(contactNumberType, {
+              transaction: t,
+            })
+          );
+        }
+        return contactNumber;
+      }).then(contactNumber =>
+        models.personContactNumber.create({
+          contactPerson: contact.contactPerson,
+        }, {
+          transaction: t,
+        }).then(personContactNumber =>
+          personContactNumber.setContactNumber(contactNumber, {
+            transaction: t
+          }).then(() =>
+            personContactNumber.setPerson(person, {
+              transaction: t,
+            })
+          ).then(() =>
+            models.source.find({
+              where: {
+                source: contact.source,
+              },
+              transaction: t,
+            }).then(source =>
+              personContactNumber.setSource(source, {
+                transaction: t,
+              })
+            )
+          ).then(() =>
+            models.relationship.find({
+              where: {
+                relationship: contact.relationship,
+              },
+              transaction: t,
+            }).then(relationship =>
+              personContactNumber.setRelationship(relationship, {
+                transaction: t,
+              })
+            )
+          ).then(() => {
+            if (contact.companyName) {
+              return models.company.findOrCreate({
+                where: {
+                  name: contact.companyName,
+                },
+                transaction: t,
+              }).all().then(([company, created]) => {
+                if (created) {
+                  return company.setCompanyType(generalCompanyType, {
+                    transaction: t,
+                  });
+                }
+                return company;
+              }).then(company =>
+                personContactNumber.setCompany(company, {
+                  transaction: t,
+                })
+              );
+            }
+            return personContactNumber;
+          })
+        )
+      )
+    ))
+  );
+}
 
 function boarding(ws, fields = boardingFields) {
   if (!validateBoarding(ws, fields)) {
@@ -454,7 +563,7 @@ function boarding(ws, fields = boardingFields) {
   }).then(portfolio =>
     Promise.all(rows.forEach(r =>
       models.sequelize.transaction(t =>
-        portfolio
+        logger.debug(r, t, portfolio, cols)
       ).catch(error => logger.error(error))
     ))
   );
@@ -472,6 +581,7 @@ Boarding.checkIfPortfolioExists = checkIfPortfolioExists;
 Boarding.savePersonInfo = savePersonInfo;
 Boarding.saveLoan = saveLoan;
 Boarding.savePersonAddresses = savePersonAddresses;
+Boarding.savePersonContacts = savePersonContacts;
 Boarding.boarding = boarding;
 
 export default Boarding;

@@ -14,7 +14,7 @@ const logger = bunyan.createLogger({
 });
 
 // Config the loggin level accordingly
-logger.level(isProduction ? bunyan.INFO : bunyan.DEBUG);
+// logger.level(isProduction ? bunyan.INFO : bunyan.DEBUG);
 
 logger.expressLogger = expressBunyanLogger({
   name: loggerName,

@@ -317,9 +317,6 @@ describe('Boarding', function () {
       models.address.truncate({
         cascade: true,
       });
-      models.company.truncate({
-        cascade: true,
-      });
       models.identity.truncate({ cascade: true });
     });
     it('should save the address to database', function () {
@@ -328,8 +325,15 @@ describe('Boarding', function () {
         addressType: 'Home',
         source: 'Originator',
         relationship: 'Personal',
-        contactPerson: '',
-        companyName: '',
+        contactPerson: undefined,
+        companyName: undefined,
+      }, {
+        longAddress: 'Long Long Address 2',
+        addressType: 'Work',
+        source: 'Originator',
+        relationship: 'Spouse',
+        contactPerson: 'Tester 2',
+        companyName: 'ABC company',
       }];
       return models.sequelize.transaction(function (t) {
         return models.person.create({
@@ -340,7 +344,75 @@ describe('Boarding', function () {
           return Boarding.savePersonAddresses(person, addresses, t)
             .then(function (personAddresses) {
               expect(personAddresses).is.an('array');
-              expect(personAddresses.length).is.eql(1);
+              expect(personAddresses.length).is.eql(addresses.length);
+              personAddresses.forEach(function (pa, index) {
+                expect(pa.addressId).to.exist('pa.addressId');
+                expect(pa.addressTypeId).to.exist('pa.addressTypeId');
+                expect(pa.personId).to.exist('pa.personId');
+                expect(pa.sourceId).to.exist('pa.sourceId');
+                expect(pa.contactPerson).to.eql(addresses[index].contactPerson);
+                expect(pa.relationshipId).to.exist('pa.relationshipId');
+                if (index === 1) {
+                  expect(pa.companyId).to.exist('pa.companyId');
+                }
+              });
+            });
+        });
+      });
+    });
+  });
+
+  describe('#savePersonContacts()', function () {
+    beforeEach(function () {
+      models.person.truncate({
+        cascade: true,
+      });
+      models.personContactNumber.truncate({
+        cascade: true,
+      });
+      models.contactNumber.truncate({
+        cascade: true,
+      });
+      models.identity.truncate({ cascade: true });
+    });
+    it('should save into database', function () {
+      const contacts = [{
+        contactNumber: '157889900',
+        countryCode: '+86',
+        contactNumberType: 'Mobile',
+        contactPerson: undefined,
+        source: 'Originator',
+        relationship: 'Personal',
+        companyName: undefined,
+      }, {
+        contactNumber: '157889901',
+        countryCode: '+86',
+        contactNumberType: 'Mobile',
+        contactPerson: 'Pete Pon',
+        source: 'Originator',
+        relationship: 'Spouse',
+        companyName: 'BBC Ltd',
+      }];
+      return models.sequelize.transaction(function (t) {
+        return models.person.create({
+          name: 'Tester',
+        }, {
+          transaction: t
+        }).then(function (person) {
+          return Boarding.savePersonContacts(person, contacts, t)
+            .then(function (personContacts) {
+              expect(personContacts).is.an('array');
+              expect(personContacts.length).is.eql(contacts.length);
+              personContacts.forEach(function (pa, index) {
+                expect(pa.contactNumberId).to.exist();
+                expect(pa.contactPerson).to.eql(contacts[index].contactPerson);
+                expect(pa.personId).to.exist();
+                expect(pa.sourceId).to.exist();
+                expect(pa.relationshipId).to.exist();
+                if (index === 1) {
+                  expect(pa.companyId).to.exist('pa.companyId');
+                }
+              });
             });
         });
       });
