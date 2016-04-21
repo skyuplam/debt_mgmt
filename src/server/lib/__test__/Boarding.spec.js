@@ -193,231 +193,251 @@ describe('Boarding', function () {
     });
   });
 
-  describe('#savePersonInfo()', function () {
-    it('should save the data into database', function () {
-      const idNumber = '440301197209104105';
-      const issueAuthority = 'Authority';
-      const censusRegisteredAddress = 'Long Address';
-      const origRefDebtorId = 'ZAC_456788484833';
-      const name = 'Perter Pan';
-      const dob = new Date(1980, 8, 13);
-      const gender = 'M';
-      return models.sequelize.transaction(function (t) {
-        return Boarding.savePersonInfo({
-          idNumber,
-          issueAuthority,
-          censusRegisteredAddress,
-          origRefDebtorId,
-          name,
-          dob,
-          gender,
-        }, t);
-      }).then(function (identity) {
-        expect(identity.idNumber).to.be.eql(idNumber);
-        expect(identity.issueAuthority).to.be.eql(issueAuthority);
-        return models.address.findById(identity.censusRegisteredAddressId)
-          .then(function (address) {
-            expect(address.longAddress).to.be.eql(censusRegisteredAddress);
-          }).then(function () {
-            return models.person.find({
-              include: [{
-                model: models.identity,
+  describe('Testing against database', function () {
+    beforeEach(function () {
+      return Promise.all([
+        models.person.truncate({
+          cascade: true,
+        }),
+        models.personContactNumber.truncate({
+          cascade: true,
+        }),
+        models.contactNumber.truncate({
+          cascade: true,
+        }),
+        models.personAddress.truncate({
+          cascade: true,
+        }),
+        models.address.truncate({
+          cascade: true,
+        }),
+        models.identity.truncate({ cascade: true }),
+      ]);
+    });
+    afterEach(function () {
+      return Promise.all([
+        models.person.truncate({
+          cascade: true,
+        }),
+        models.personContactNumber.truncate({
+          cascade: true,
+        }),
+        models.contactNumber.truncate({
+          cascade: true,
+        }),
+        models.personAddress.truncate({
+          cascade: true,
+        }),
+        models.address.truncate({
+          cascade: true,
+        }),
+        models.identity.truncate({ cascade: true }),
+      ]);
+    });
+
+    describe('#savePersonInfo()', function () {
+      it('should save the data into database', function () {
+        const idNumber = '440301197209104105';
+        const issueAuthority = 'Authority';
+        const censusRegisteredAddress = 'Long Address';
+        const origRefDebtorId = 'ZAC_456788484833';
+        const name = 'Perter Pan';
+        const dob = new Date(1980, 8, 13);
+        const gender = 'M';
+        return models.sequelize.transaction(function (t) {
+          return Boarding.savePersonInfo({
+            idNumber,
+            issueAuthority,
+            censusRegisteredAddress,
+            origRefDebtorId,
+            name,
+            dob,
+            gender,
+          }, t);
+        }).then(function (identity) {
+          expect(identity.idNumber).to.be.eql(idNumber);
+          expect(identity.issueAuthority).to.be.eql(issueAuthority);
+          return models.address.findById(identity.censusRegisteredAddressId)
+            .then(function (address) {
+              expect(address.longAddress).to.be.eql(censusRegisteredAddress);
+            }).then(function () {
+              return models.person.find({
+                include: [{
+                  model: models.identity,
+                  where: {
+                    idNumber
+                  }
+                }]
+              }).then(function (person) {
+                expect(person.name).to.be.eql(name);
+                expect(new Date(person.dob)).to.be.eql(dob);
+                expect(person.gender).to.be.eql(gender);
+              });
+            }).then(function () {
+              return models.identity.find({
                 where: {
-                  idNumber
-                }
-              }]
-            }).then(function (person) {
-              expect(person.name).to.be.eql(name);
-              expect(new Date(person.dob)).to.be.eql(dob);
-              expect(person.gender).to.be.eql(gender);
-            });
-          }).then(function () {
-            models.identity.find({
-              where: {
-                idNumber: origRefDebtorId
-              },
-              include: [{
-                model: models.identityType,
-                where: {
-                  type: 'Portfolio Company ID',
+                  idNumber: origRefDebtorId
                 },
-              }],
-            }).then(function (identity) {
-              expect(identity.idNumber).to.be.eql(origRefDebtorId);
-            });
-          });
-      });
-    });
-  });
-
-  describe('#saveLoan', function () {
-    it('should map the loan type', function () {
-      expect(loanMap['老板贷']).to.be.eql('Executive Loan');
-      expect(loanMap.XXX).to.be.undefined();
-    });
-    it('should save the loan data into database', function () {
-      const loan = {
-        originatedAgreementNo: 'ZAC_3456712838',
-        packageReference: 1,
-        issuedAt: new Date(2010, 10, 19),
-        originatedLoanProcessingBranch: 'Branch',
-        originatedLoanType: '老板贷',
-        amount: 50000,
-        terms: 12,
-        delinquentAt: new Date(2011, 2, 19),
-        transferredAt: new Date(2015, 12, 7),
-        apr: 0.276,
-        managementFeeRate: 0,
-        handlingFeeRate: 0,
-        lateFeeRate: 0.001,
-        penaltyFeeRate: 0,
-        collectablePrincipal: 40000.0,
-        collectableInterest: 12343.0,
-        collectableMgmtFee: 6573.0,
-        collectableHandlingFee: 9283.0,
-        collectableLateFee: 3453.0,
-        collectablePenaltyFee: 1246.5,
-        repaidTerms: 1,
-        accruedPrincipal: 10000.0,
-        accruedInterest: 3454.5,
-        accruedMgmtFee: 2344.0,
-        accruedHandlingFee: 434.0,
-        accruedLateFee: 423.0,
-        accruedPenaltyFee: 4234.0,
-        lastRepaidAmount: 3644.0,
-        lastRepaidAt: new Date(2010, 11, 19),
-      };
-      return models.sequelize.transaction(function (t) {
-        return Boarding.saveLoan(loan, t).then(function (theLoan) {
-          Object.keys(loan).forEach(function (k) {
-            if ([
-              'issuedAt',
-              'delinquentAt',
-              'transferredAt',
-              'lastRepaidAt',
-            ].indexOf(k) !== -1) {
-              expect(new Date(theLoan[k])).to.be.eql(loan[k]);
-            } else {
-              expect(theLoan[k]).to.be.eql(loan[k]);
-            }
-          });
-        });
-      });
-    });
-  });
-
-  describe('#savePersonAddresses()', function () {
-    beforeEach(function () {
-      models.person.truncate({
-        cascade: true,
-      });
-      models.personAddress.truncate({
-        cascade: true,
-      });
-      models.address.truncate({
-        cascade: true,
-      });
-      models.identity.truncate({ cascade: true });
-    });
-    it('should save the address to database', function () {
-      const addresses = [{
-        longAddress: 'Long Long Address',
-        addressType: 'Home',
-        source: 'Originator',
-        relationship: 'Personal',
-        contactPerson: undefined,
-        companyName: undefined,
-      }, {
-        longAddress: 'Long Long Address 2',
-        addressType: 'Work',
-        source: 'Originator',
-        relationship: 'Spouse',
-        contactPerson: 'Tester 2',
-        companyName: 'ABC company',
-      }];
-      return models.sequelize.transaction(function (t) {
-        return models.person.create({
-          name: 'Tester',
-        }, {
-          transaction: t
-        }).then(function (person) {
-          return Boarding.savePersonAddresses(person, addresses, t)
-            .then(function (personAddresses) {
-              expect(personAddresses).is.an('array');
-              expect(personAddresses.length).is.eql(addresses.length);
-              personAddresses.forEach(function (pa, index) {
-                expect(pa.addressId).to.exist('pa.addressId');
-                expect(pa.addressTypeId).to.exist('pa.addressTypeId');
-                expect(pa.personId).to.exist('pa.personId');
-                expect(pa.sourceId).to.exist('pa.sourceId');
-                expect(pa.contactPerson).to.eql(addresses[index].contactPerson);
-                expect(pa.relationshipId).to.exist('pa.relationshipId');
-                if (index === 1) {
-                  expect(pa.companyId).to.exist('pa.companyId');
-                }
+                include: [{
+                  model: models.identityType,
+                  where: {
+                    type: 'Portfolio Company ID',
+                  },
+                }],
+              }).then(function (identity) {
+                expect(identity.idNumber).to.be.eql(origRefDebtorId);
               });
             });
         });
       });
     });
-  });
 
-  describe('#savePersonContacts()', function () {
-    beforeEach(function () {
-      models.person.truncate({
-        cascade: true,
+    describe('#saveLoan', function () {
+      it('should map the loan type', function () {
+        expect(loanMap['老板贷']).to.be.eql('Executive Loan');
+        expect(loanMap.XXX).to.be.undefined();
       });
-      models.personContactNumber.truncate({
-        cascade: true,
-      });
-      models.contactNumber.truncate({
-        cascade: true,
-      });
-      models.identity.truncate({ cascade: true });
-    });
-    it('should save into database', function () {
-      const contacts = [{
-        contactNumber: '157889900',
-        countryCode: '+86',
-        contactNumberType: 'Mobile',
-        contactPerson: undefined,
-        source: 'Originator',
-        relationship: 'Personal',
-        companyName: undefined,
-      }, {
-        contactNumber: '157889901',
-        countryCode: '+86',
-        contactNumberType: 'Mobile',
-        contactPerson: 'Pete Pon',
-        source: 'Originator',
-        relationship: 'Spouse',
-        companyName: 'BBC Ltd',
-      }];
-      return models.sequelize.transaction(function (t) {
-        return models.person.create({
-          name: 'Tester',
-        }, {
-          transaction: t
-        }).then(function (person) {
-          return Boarding.savePersonContacts(person, contacts, t)
-            .then(function (personContacts) {
-              expect(personContacts).is.an('array');
-              expect(personContacts.length).is.eql(contacts.length);
-              personContacts.forEach(function (pa, index) {
-                expect(pa.contactNumberId).to.exist();
-                expect(pa.contactPerson).to.eql(contacts[index].contactPerson);
-                expect(pa.personId).to.exist();
-                expect(pa.sourceId).to.exist();
-                expect(pa.relationshipId).to.exist();
-                if (index === 1) {
-                  expect(pa.companyId).to.exist('pa.companyId');
-                }
-              });
+      it('should save the loan data into database', function () {
+        const loan = {
+          originatedAgreementNo: 'ZAC_3456712838',
+          packageReference: 1,
+          issuedAt: new Date(2010, 10, 19),
+          originatedLoanProcessingBranch: 'Branch',
+          originatedLoanType: '老板贷',
+          amount: 50000,
+          terms: 12,
+          delinquentAt: new Date(2011, 2, 19),
+          transferredAt: new Date(2015, 12, 7),
+          apr: 0.276,
+          managementFeeRate: 0,
+          handlingFeeRate: 0,
+          lateFeeRate: 0.001,
+          penaltyFeeRate: 0,
+          collectablePrincipal: 40000.0,
+          collectableInterest: 12343.0,
+          collectableMgmtFee: 6573.0,
+          collectableHandlingFee: 9283.0,
+          collectableLateFee: 3453.0,
+          collectablePenaltyFee: 1246.5,
+          repaidTerms: 1,
+          accruedPrincipal: 10000.0,
+          accruedInterest: 3454.5,
+          accruedMgmtFee: 2344.0,
+          accruedHandlingFee: 434.0,
+          accruedLateFee: 423.0,
+          accruedPenaltyFee: 4234.0,
+          lastRepaidAmount: 3644.0,
+          lastRepaidAt: new Date(2010, 11, 19),
+        };
+        return models.sequelize.transaction(function (t) {
+          return Boarding.saveLoan(loan, t).then(function (theLoan) {
+            Object.keys(loan).forEach(function (k) {
+              if ([
+                'issuedAt',
+                'delinquentAt',
+                'transferredAt',
+                'lastRepaidAt',
+              ].indexOf(k) !== -1) {
+                expect(new Date(theLoan[k])).to.be.eql(loan[k]);
+              } else {
+                expect(theLoan[k]).to.be.eql(loan[k]);
+              }
             });
+          });
+        });
+      });
+    });
+
+    describe('#savePersonAddresses()', function () {
+      it('should save the address to database', function () {
+        const addresses = [{
+          longAddress: 'Long Long Address',
+          addressType: 'Home',
+          source: 'Originator',
+          relationship: 'Personal',
+          contactPerson: undefined,
+          companyName: undefined,
+        }, {
+          longAddress: 'Long Long Address 2',
+          addressType: 'Work',
+          source: 'Originator',
+          relationship: 'Spouse',
+          contactPerson: 'Tester 2',
+          companyName: 'ABC company',
+        }];
+        return models.sequelize.transaction(function (t) {
+          return models.person.create({
+            name: 'Tester',
+          }, {
+            transaction: t
+          }).then(function (person) {
+            return Boarding.savePersonAddresses(person, addresses, t)
+              .then(function (personAddresses) {
+                expect(personAddresses).is.an('array');
+                expect(personAddresses.length).is.eql(addresses.length);
+                personAddresses.forEach(function (pa, index) {
+                  expect(pa.addressId).to.exist('pa.addressId');
+                  expect(pa.addressTypeId).to.exist('pa.addressTypeId');
+                  expect(pa.personId).to.exist('pa.personId');
+                  expect(pa.sourceId).to.exist('pa.sourceId');
+                  expect(pa.contactPerson).to.eql(addresses[index].contactPerson);
+                  expect(pa.relationshipId).to.exist('pa.relationshipId');
+                  if (index === 1) {
+                    expect(pa.companyId).to.exist('pa.companyId');
+                  }
+                });
+              });
+          });
+        });
+      });
+    });
+
+    describe('#savePersonContacts()', function () {
+      it('should save into database', function () {
+        const contacts = [{
+          contactNumber: '157889900',
+          countryCode: '+86',
+          contactNumberType: 'Mobile',
+          contactPerson: undefined,
+          source: 'Originator',
+          relationship: 'Personal',
+          companyName: undefined,
+        }, {
+          contactNumber: '157889901',
+          countryCode: '+86',
+          contactNumberType: 'Mobile',
+          contactPerson: 'Pete Pon',
+          source: 'Originator',
+          relationship: 'Spouse',
+          companyName: 'BBC Ltd',
+        }];
+        return models.sequelize.transaction(function (t) {
+          return models.person.create({
+            name: 'Tester',
+          }, {
+            transaction: t
+          }).then(function (person) {
+            return Boarding.savePersonContacts(person, contacts, t)
+              .then(function (personContacts) {
+                expect(personContacts).is.an('array');
+                expect(personContacts.length).is.eql(contacts.length);
+                personContacts.forEach(function (pa, index) {
+                  expect(pa.contactNumberId).to.exist();
+                  expect(pa.contactPerson).to.eql(contacts[index].contactPerson);
+                  expect(pa.personId).to.exist();
+                  expect(pa.sourceId).to.exist();
+                  expect(pa.relationshipId).to.exist();
+                  if (index === 1) {
+                    expect(pa.companyId).to.exist('pa.companyId');
+                  }
+                });
+              });
+          });
         });
       });
     });
   });
+
 
   describe('#boarding()', function () {
     let worksheet;
