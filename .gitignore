@@ -1,6 +1,8 @@
 # App
 uploads
 uploads/
+coverage
+coverage/
 
 # Este
 *.sublime-workspace

@@ -119,19 +119,19 @@
     "required": false
   }, {
     "field": "年利率",
-    "required": false
+    "required": true
   }, {
     "field": "管理费率",
-    "required": false
+    "required": true
   }, {
     "field": "手续费率",
-    "required": false
+    "required": true
   }, {
     "field": "滞纳金率",
-    "required": false
+    "required": true
   }, {
     "field": "违约金率",
-    "required": false
+    "required": true
   }, {
     "field": "累计已还本金",
     "required": false

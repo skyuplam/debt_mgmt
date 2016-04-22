@@ -2,7 +2,6 @@ import { utils } from 'xlsx';
 import BoardingValidationError from './BoardingValidationError';
 import { boardingFields } from './boardingFields.json';
 import models from '../models';
-import logger from '../lib/logger';
 import { loanMap } from './LoanMapping.json';
 import moment from 'moment';
 import { relationshipMap } from './RelationshipMapping.json';
@@ -110,7 +109,8 @@ function checkRequiredFields(worksheet, fields = boardingFields) {
     if (field.required) {
       for (let i = range.s.r; i <= range.e.r; i++) {
         if (!worksheet[utils.encode_cell({ r: i, c: idx })] ||
-          !worksheet[utils.encode_cell({ r: i, c: idx })].v
+          worksheet[utils.encode_cell({ r: i, c: idx })].v === undefined ||
+          worksheet[utils.encode_cell({ r: i, c: idx })].v === null
         ) {
           throw new BoardingValidationError('Missing Required Field', {
             field: field.field
@@ -764,7 +764,7 @@ function boarding(ws, fields = boardingFields) {
         relationship: 'Family',
         companyName: undefined,
       }];
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i <= 6; i++) {
         addresses.push({
           loangAddress: getCell({ ws, r, c: cols[`所有联系人现居住地址${i}`] }),
           addressType: 'Home',
