@@ -364,6 +364,13 @@ describe('Boarding', function () {
           relationship: 'Spouse',
           contactPerson: 'Tester 2',
           companyName: 'ABC company',
+        }, {
+          longAddress: undefined,
+          addressType: 'Work',
+          source: 'Originator',
+          relationship: 'Spouse',
+          contactPerson: undefined,
+          companyName: undefined,
         }];
         return models.sequelize.transaction(function (t) {
           return models.person.create({
@@ -376,14 +383,18 @@ describe('Boarding', function () {
                 expect(personAddresses).is.an('array');
                 expect(personAddresses.length).is.eql(addresses.length);
                 personAddresses.forEach(function (pa, index) {
-                  expect(pa.addressId).to.exist('pa.addressId');
-                  expect(pa.addressTypeId).to.exist('pa.addressTypeId');
-                  expect(pa.personId).to.exist('pa.personId');
-                  expect(pa.sourceId).to.exist('pa.sourceId');
-                  expect(pa.contactPerson).to.eql(addresses[index].contactPerson);
-                  expect(pa.relationshipId).to.exist('pa.relationshipId');
-                  if (index === 1) {
-                    expect(pa.companyId).to.exist('pa.companyId');
+                  if (index !== addresses.length - 1) {
+                    expect(pa.addressId).to.exist('pa.addressId');
+                    expect(pa.addressTypeId).to.exist('pa.addressTypeId');
+                    expect(pa.personId).to.exist('pa.personId');
+                    expect(pa.sourceId).to.exist('pa.sourceId');
+                    expect(pa.contactPerson).to.eql(addresses[index].contactPerson);
+                    expect(pa.relationshipId).to.exist('pa.relationshipId');
+                    if (index === 1) {
+                      expect(pa.companyId).to.exist('pa.companyId');
+                    }
+                  } else {
+                    expect(pa).to.be.null('pa');
                   }
                 });
               });
@@ -410,6 +421,14 @@ describe('Boarding', function () {
           source: 'Originator',
           relationship: 'Spouse',
           companyName: 'BBC Ltd',
+        }, {
+          contactNumber: '',
+          countryCode: undefined,
+          contactNumberType: 'Mobile',
+          contactPerson: undefined,
+          source: 'Originator',
+          relationship: 'Spouse',
+          companyName: undefined,
         }];
         return models.sequelize.transaction(function (t) {
           return models.person.create({
@@ -422,13 +441,17 @@ describe('Boarding', function () {
                 expect(personContacts).is.an('array');
                 expect(personContacts.length).is.eql(contacts.length);
                 personContacts.forEach(function (pa, index) {
-                  expect(pa.contactNumberId).to.exist();
-                  expect(pa.contactPerson).to.eql(contacts[index].contactPerson);
-                  expect(pa.personId).to.exist();
-                  expect(pa.sourceId).to.exist();
-                  expect(pa.relationshipId).to.exist();
-                  if (index === 1) {
-                    expect(pa.companyId).to.exist('pa.companyId');
+                  if (index !== contacts.length - 1) {
+                    expect(pa.contactNumberId).to.exist();
+                    expect(pa.contactPerson).to.eql(contacts[index].contactPerson);
+                    expect(pa.personId).to.exist();
+                    expect(pa.sourceId).to.exist();
+                    expect(pa.relationshipId).to.exist();
+                    if (index === 1) {
+                      expect(pa.companyId).to.exist('pa.companyId');
+                    }
+                  } else {
+                    expect(pa).is.be.null('pa');
                   }
                 });
               });

@@ -118,6 +118,21 @@
     "field": "已还期数",
     "required": false
   }, {
+    "field": "年利率",
+    "required": false
+  }, {
+    "field": "管理费率",
+    "required": false
+  }, {
+    "field": "手续费率",
+    "required": false
+  }, {
+    "field": "滞纳金率",
+    "required": false
+  }, {
+    "field": "违约金率",
+    "required": false
+  }, {
     "field": "累计已还本金",
     "required": false
   }, {

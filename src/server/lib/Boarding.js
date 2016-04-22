@@ -4,7 +4,8 @@ import { boardingFields } from './boardingFields.json';
 import models from '../models';
 import logger from '../lib/logger';
 import { loanMap } from './LoanMapping.json';
-// import { relationshipMap } from './RelationshipMapping.json';
+import moment from 'moment';
+import { relationshipMap } from './RelationshipMapping.json';
 
 
 function getFieldNames(fields) {
@@ -65,6 +66,11 @@ function getIdInfo(idNumber) {
 function getCell({ ws, r, c }) {
   const cell = ws[utils.encode_cell({ r, c })];
   return cell ? cell.v : undefined;
+}
+
+function getDateCell({ ws, r, c }) {
+  const cellValue = getCell({ ws, r, c });
+  return moment(cellValue).isValid() ? new Date(cellValue) : undefined;
 }
 
 function getRows(ws) {
@@ -353,8 +359,11 @@ function savePersonAddresses(person, addresses, t) {
     },
     transaction: t
   }).then(generalCompanyType =>
-    Promise.all(addresses.map(address =>
-      models.address.findOrCreate({
+    Promise.all(addresses.map(address => {
+      if (!address.longAddress || address.longAddress.length < 4) {
+        return null;
+      }
+      return models.address.findOrCreate({
         where: {
           longAddress: address.longAddress,
         },
@@ -431,8 +440,8 @@ function savePersonAddresses(person, addresses, t) {
             })
             )
           )
-        )
-      )
+        );
+    })
     )
   );
 }
@@ -460,8 +469,11 @@ function savePersonContacts(person, contacts, t) {
     },
     transaction: t
   }).then(generalCompanyType =>
-    Promise.all(contacts.map(contact =>
-      models.contactNumber.findOrCreate({
+    Promise.all(contacts.map(contact => {
+      if (!contact.contactNumber || contact.contactNumber.length < 6) {
+        return null;
+      }
+      return models.contactNumber.findOrCreate({
         where: {
           contactNumber: contact.contactNumber,
           countryCode: contact.countryCode,
@@ -541,8 +553,8 @@ function savePersonContacts(person, contacts, t) {
             return personContactNumber;
           })
         )
-      )
-    ))
+      );
+    }))
   );
 }
 
@@ -560,11 +572,264 @@ function boarding(ws, fields = boardingFields) {
       referenceCode
     },
   }).then(portfolio =>
-    Promise.all(rows.forEach(r =>
-      models.sequelize.transaction(t =>
-        logger.debug(r, t, portfolio, cols)
-      ).catch(error => logger.error(error))
-    ))
+    Promise.all(rows.forEach(r => {
+      const personInfo = {
+        idNumber: getCell({ ws, r, c: cols['身份证号'] }),
+        issueAuthority: getCell({ ws, r, c: cols['发证机关'] }),
+        censusRegisteredAddress: getCell({ ws, r, c: cols['身份证户籍地址'] }),
+        origRefDebtorId: getCell({ ws, r, c: cols.DID }),
+        name: getCell({ ws, r, c: cols['姓名'] }),
+        dob: getIdInfo(getCell({ ws, r, c: cols['身份证号'] })),
+        gender: getIdInfo(getCell({ ws, r, c: cols['身份证号'] })),
+      };
+      const loan = {
+        originatedAgreementNo: getCell({ ws, r, c: cols.LAID }),
+        packageReference: getCell({ ws, r, c: cols['资产包编号'] }),
+        issuedAt: getDateCell({ ws, r, c: cols['贷款日期'] }),
+        originatedLoanProcessingBranch: getCell({ ws, r, c: cols['分行'] }),
+        originatedLoanType: getCell({ ws, r, c: cols['产品类别'] }),
+        amount: getCell({ ws, r, c: cols['原贷款本金'] }),
+        terms: getCell({ ws, r, c: cols['贷款总期数'] }),
+        delinquentAt: getDateCell({ ws, r, c: cols['逾期日'] }),
+        transferredAt: getDateCell({ ws, r, c: cols['转让日期'] }),
+        apr: getCell({ ws, r, c: cols['年利率'] }),
+        managementFeeRate: getCell({ ws, r, c: cols['管理费率'] }),
+        handlingFeeRate: getCell({ ws, r, c: cols['手续费率'] }),
+        lateFeeRate: getCell({ ws, r, c: cols['滞纳金率'] }),
+        penaltyFeeRate: getCell({ ws, r, c: cols['违约金率'] }),
+        collectablePrincipal: getCell({ ws, r, c: cols['本金应收'] }),
+        collectableInterest: getCell({ ws, r, c: cols['利息应收'] }),
+        collectableMgmtFee: getCell({ ws, r, c: cols['管理费应收'] }),
+        collectableHandlingFee: getCell({ ws, r, c: cols['手续费应收'] }),
+        collectableLateFee: getCell({ ws, r, c: cols['滞纳金应收'] }),
+        collectablePenaltyFee: getCell({ ws, r, c: cols['违约金应收'] }),
+        repaidTerms: getCell({ ws, r, c: cols['已还期数'] }),
+        accruedPrincipal: getCell({ ws, r, c: cols['累计已还本金'] }),
+        accruedInterest: getCell({ ws, r, c: cols['累计已还利息'] }),
+        accruedMgmtFee: getCell({ ws, r, c: cols['累计已还管理费'] }),
+        accruedHandlingFee: getCell({ ws, r, c: cols['累计已还手续费'] }),
+        accruedLateFee: getCell({ ws, r, c: cols['累计已还滞纳金'] }),
+        accruedPenaltyFee: getCell({ ws, r, c: cols['累计已还违约金'] }),
+        lastRepaidAmount: getCell({ ws, r, c: cols['最后一次还款金额'] }),
+        lastRepaidAt: getDateCell({ ws, r, c: cols['最后一次还款时间'] }),
+      };
+      // Address Mappings
+      const addresses = [{
+        loangAddress: getCell({ ws, r, c: cols['地址'] }),
+        addressType: 'Home',
+        source: 'Originator',
+        relationship: 'Personal',
+        contactPerson: undefined,
+        companyName: undefined,
+      }, {
+        loangAddress: getCell({ ws, r, c: cols['单位地址1'] }),
+        addressType: 'Work',
+        source: 'Originator',
+        relationship: 'Personal',
+        contactPerson: undefined,
+        companyName: getCell({ ws, r, c: cols['单位1'] }),
+      }, {
+        loangAddress: getCell({ ws, r, c: cols['单位地址2'] }),
+        addressType: 'Work',
+        source: 'Originator',
+        relationship: 'Personal',
+        contactPerson: undefined,
+        companyName: getCell({ ws, r, c: cols['单位2'] }),
+      }, {
+        loangAddress: getCell({ ws, r, c: cols['亲属现居住地址1'] }),
+        addressType: 'Home',
+        source: 'Originator',
+        relationship: 'Family',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名1'] }),
+        companyName: undefined,
+      }, {
+        loangAddress: getCell({ ws, r, c: cols['亲属现居住地址2'] }),
+        addressType: 'Home',
+        source: 'Originator',
+        relationship: 'Family',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名2'] }),
+        companyName: undefined,
+      }];
+      // Contact Mappings
+      const contacts = [{
+        contactNumber: getCell({ ws, r, c: cols['住宅电话'] }),
+        countryCode: undefined,
+        contactNumberType: 'Home',
+        contactPerson: undefined,
+        source: 'Originator',
+        relationship: 'Personal',
+        companyName: undefined,
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['手机号'] }),
+        countryCode: undefined,
+        contactNumberType: 'Mobile',
+        contactPerson: undefined,
+        source: 'Originator',
+        relationship: 'Personal',
+        companyName: undefined,
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['单位电话1'] }),
+        countryCode: undefined,
+        contactNumberType: 'Work',
+        contactPerson: undefined,
+        source: 'Originator',
+        relationship: 'Personal',
+        companyName: getCell({ ws, r, c: cols['单位1'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['单位同事电话1-0'] }),
+        countryCode: undefined,
+        contactNumberType: 'Mobile',
+        contactPerson: getCell({ ws, r, c: cols['单位同事姓名1'] }),
+        source: 'Originator',
+        relationship: 'Colleague',
+        companyName: getCell({ ws, r, c: cols['单位1'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['单位同事电话1-1'] }),
+        countryCode: undefined,
+        contactNumberType: 'Mobile',
+        contactPerson: getCell({ ws, r, c: cols['单位同事姓名1'] }),
+        source: 'Originator',
+        relationship: 'Colleague',
+        companyName: getCell({ ws, r, c: cols['单位1'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['单位电话2'] }),
+        countryCode: undefined,
+        contactNumberType: 'Work',
+        contactPerson: undefined,
+        source: 'Originator',
+        relationship: 'Personal',
+        companyName: getCell({ ws, r, c: cols['单位2'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['单位同事电话2-0'] }),
+        countryCode: undefined,
+        contactNumberType: 'Mobile',
+        contactPerson: getCell({ ws, r, c: cols['单位同事姓名2'] }),
+        source: 'Originator',
+        relationship: 'Colleague',
+        companyName: getCell({ ws, r, c: cols['单位2'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['单位同事电话2-1'] }),
+        countryCode: undefined,
+        contactNumberType: 'Mobile',
+        contactPerson: getCell({ ws, r, c: cols['单位同事姓名2'] }),
+        source: 'Originator',
+        relationship: 'Colleague',
+        companyName: getCell({ ws, r, c: cols['单位2'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['亲属公司电话1'] }),
+        countryCode: undefined,
+        contactNumberType: 'Work',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名1'] }),
+        source: 'Originator',
+        relationship: 'Family',
+        companyName: getCell({ ws, r, c: cols['亲属工作单位1'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['亲属手机号码1'] }),
+        countryCode: undefined,
+        contactNumberType: 'Mobile',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名1'] }),
+        source: 'Originator',
+        relationship: 'Family',
+        companyName: undefined,
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['亲属住宅电话1'] }),
+        countryCode: undefined,
+        contactNumberType: 'Home',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名1'] }),
+        source: 'Originator',
+        relationship: 'Family',
+        companyName: undefined,
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['亲属公司电话2'] }),
+        countryCode: undefined,
+        contactNumberType: 'Work',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名2'] }),
+        source: 'Originator',
+        relationship: 'Family',
+        companyName: getCell({ ws, r, c: cols['亲属工作单位2'] }),
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['亲属手机号码2'] }),
+        countryCode: undefined,
+        contactNumberType: 'Mobile',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名2'] }),
+        source: 'Originator',
+        relationship: 'Family',
+        companyName: undefined,
+      }, {
+        contactNumber: getCell({ ws, r, c: cols['亲属住宅电话2'] }),
+        countryCode: undefined,
+        contactNumberType: 'Home',
+        contactPerson: getCell({ ws, r, c: cols['亲属姓名2'] }),
+        source: 'Originator',
+        relationship: 'Family',
+        companyName: undefined,
+      }];
+      for (let i = 0; i < 6; i++) {
+        addresses.push({
+          loangAddress: getCell({ ws, r, c: cols[`所有联系人现居住地址${i}`] }),
+          addressType: 'Home',
+          source: 'Originator',
+          relationship: relationshipMap[`所有联系人关系${i}`],
+          contactPerson: getCell({ ws, r, c: cols[`所有联系人姓名${i}`] }),
+          companyName: undefined,
+        });
+        contacts.push({
+          contactNumber: getCell({ ws, r, c: cols['所有联系人手机号码${i}'] }),
+          countryCode: undefined,
+          contactNumberType: 'Mobile',
+          contactPerson: getCell({ ws, r, c: cols[`所有联系人姓名${i}`] }),
+          source: 'Originator',
+          relationship: relationshipMap[`所有联系人关系${i}`],
+          companyName: undefined,
+        });
+        contacts.push({
+          contactNumber: getCell({ ws, r, c: cols['所有联系人住宅电话${i}'] }),
+          countryCode: undefined,
+          contactNumberType: 'Home',
+          contactPerson: getCell({ ws, r, c: cols[`所有联系人姓名${i}`] }),
+          source: 'Originator',
+          relationship: relationshipMap[`所有联系人关系${i}`],
+          companyName: undefined,
+        });
+        contacts.push({
+          contactNumber: getCell({ ws, r, c: cols['所有联系人公司电话${i}'] }),
+          countryCode: undefined,
+          contactNumberType: 'Work',
+          contactPerson: getCell({ ws, r, c: cols[`所有联系人姓名${i}`] }),
+          source: 'Originator',
+          relationship: relationshipMap[`所有联系人关系${i}`],
+          companyName: getCell({ ws, r, c: cols[`所有联系人工作单位${i}`] }),
+        });
+      }
+      return models.sequelize.transaction(t =>
+        savePersonInfo(personInfo, t).then(identity =>
+          saveLoan(loan, t).then(loan =>
+            Promise.all([
+              loan.setPortfolio(portfolio, {
+                transaction: t,
+              }),
+              models.person.find({
+                include: [{
+                  model: models.identity,
+                  where: {
+                    id: identity.id,
+                  }
+                }],
+                transaction: t,
+              }).then(person =>
+                Promise.all([
+                  person.addLoan(loan, {
+                    transaction: t,
+                  }),
+                  savePersonAddresses(person, addresses, t),
+                  savePersonContacts(person, contacts, t),
+                ])
+              )
+            ])
+          )
+        )
+      );
+    }))
   );
 }
 
