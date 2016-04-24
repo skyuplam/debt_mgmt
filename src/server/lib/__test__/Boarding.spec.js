@@ -212,6 +212,7 @@ describe('Boarding', function () {
           cascade: true,
         }),
         models.identity.truncate({ cascade: true }),
+        models.loan.truncate({ cascade: true }),
       ]);
     });
     afterEach(function () {
@@ -232,62 +233,47 @@ describe('Boarding', function () {
           cascade: true,
         }),
         models.identity.truncate({ cascade: true }),
+        models.loan.truncate({ cascade: true }),
       ]);
     });
 
     describe('#savePersonInfo()', function () {
       it('should save the data into database', function () {
-        const idNumber = '440301197209104105';
-        const issueAuthority = 'Authority';
-        const censusRegisteredAddress = 'Long Address';
-        const origRefDebtorId = 'ZAC_456788484833';
-        const name = 'Perter Pan';
-        const dob = new Date(1980, 8, 13);
-        const gender = 'M';
+        const personInfos = [{
+          idNumber: '440301197209104105',
+          issueAuthority: 'Authority',
+          censusRegisteredAddress: 'Long Address',
+          origRefDebtorId: 'ZAC_456788484833',
+          name: 'Perter Pan',
+          dob: new Date(1980, 8, 13),
+          gender: 'M',
+        }, {
+          idNumber: '440301197209104104',
+          issueAuthority: 'Authority',
+          censusRegisteredAddress: 'Long Long Address',
+          origRefDebtorId: 'ZAC_456788484834',
+          name: 'Marry Lim',
+          dob: new Date(1988, 8, 13),
+          gender: 'F',
+        }];
         return models.sequelize.transaction(function (t) {
-          return Boarding.savePersonInfo({
-            idNumber,
-            issueAuthority,
-            censusRegisteredAddress,
-            origRefDebtorId,
-            name,
-            dob,
-            gender,
-          }, t);
-        }).then(function (identity) {
-          expect(identity.idNumber).to.be.eql(idNumber);
-          expect(identity.issueAuthority).to.be.eql(issueAuthority);
-          return models.address.findById(identity.censusRegisteredAddressId)
-            .then(function (address) {
-              expect(address.longAddress).to.be.eql(censusRegisteredAddress);
-            }).then(function () {
-              return models.person.find({
-                include: [{
-                  model: models.identity,
-                  where: {
-                    idNumber
-                  }
-                }]
-              }).then(function (person) {
-                expect(person.name).to.be.eql(name);
-                expect(new Date(person.dob)).to.be.eql(dob);
-                expect(person.gender).to.be.eql(gender);
-              });
-            }).then(function () {
-              return models.identity.find({
-                where: {
-                  idNumber: origRefDebtorId
-                },
-                include: [{
-                  model: models.identityType,
-                  where: {
-                    type: 'Portfolio Company ID',
-                  },
-                }],
-              }).then(function (identity) {
-                expect(identity.idNumber).to.be.eql(origRefDebtorId);
-              });
+          return Promise.all(personInfos.map(function (personInfo) {
+            return Boarding.savePersonInfo(personInfo, t);
+          }));
+        }).then(function (ids) {
+          expect(ids).is.an('array');
+          expect(ids.length).is.eql(personInfos.length);
+          return Promise.all(ids.map(function (id, index) {
+            return models.identity.find({
+              where: {
+                id: id.id,
+              },
+              include: models.person,
+            }).then(function (idP) {
+              expect(idP.people[0].name).to.eql(personInfos[index].name);
+              return idP;
             });
+          }));
         });
       });
     });
@@ -459,89 +445,44 @@ describe('Boarding', function () {
         });
       });
     });
-  });
 
-
-  describe('#boarding()', function () {
-    let worksheet;
-    before(function () {
-      const workbook = XLSX.readFile(testFielPath);
-      const firstSheetName = workbook.SheetNames[0];
-      worksheet = workbook.Sheets[firstSheetName];
-      return models.sequelize.transaction(function (t) {
+    describe('#boarding()', function () {
+      let worksheet;
+      before(function () {
+        const workbook = XLSX.readFile(testFielPath);
+        const firstSheetName = workbook.SheetNames[0];
+        worksheet = workbook.Sheets[firstSheetName];
         return models.portfolio.create({
-          referenceCode: Boarding.getCell({ ws: worksheet, r: 1, c: 0 }),
+          referenceCode: 'SZYZ-Z-201512070001',
           biddedAt: new Date(2015, 12, 7),
           cutoffAt: new Date(2015, 12, 7),
-        }, {
-          transaction: t
-        }).then(function (portfolio) {
-          return models.company.create({
-            name: 'ZAC',
-            code: 'ZAC',
-          }, {
-            transaction: t
-          }).then(function (company) {
-            return models.companyType.find({
+        });
+      });
+      after(function () {
+        return models.portfolio.truncate({
+          cascade: true,
+        });
+      });
+      it('should save the data into database from the worksheet provided', function () {
+        const ws = worksheet;
+        return Boarding.boarding(ws).then(function () {
+          const rows = Boarding.getRows(ws);
+          const cols = Boarding.getColIndexes();
+          return Promise.all(rows.map(function (r, index) {
+            return models.identity.find({
               where: {
-                type: 'MoneyLender'
+                idNumber: Boarding.getCell({ ws, r, c: cols['身份证号'] }),
               },
-              transaction: t
-            }).then(function (companyType) {
-              return company.setCompanyType(companyType, {
-                transaction: t
-              });
+              include: [models.person]
+            }).then(function (id) {
+              expect(id).to.exist();
+              expect(id.people).is.an('array');
+              expect(id.people[0]).to.exist();
+              expect(id.people[0].name).to.eql(Boarding.getCell({ ws, r, c: cols['姓名'] }));
             });
-          }).then(function (company) {
-            return portfolio.setCompany(company, {
-              transaction: t
-            });
-          });
-        });
-      }).then(function () {
-        return Boarding.boarding(worksheet);
-      });
-    });
-    after(function () {
-      return models.sequelize.transaction(function (t) {
-        return models.portfolio.destroy({
-          where: {
-            referenceCode: Boarding.getCell({ ws: worksheet, r: 1, c: 0 }),
-          },
-          transaction: t
-        }).then(function () {
-          return models.company.destroy({
-            where: {
-              code: 'ZAC'
-            },
-            transaction: t
-          });
+          }));
         });
       });
     });
-    // it('should add identity', function () {
-    //   return models.identity.findAll({
-    //     include: [
-    //       {
-    //         model: models.identityType,
-    //         where: {
-    //           type: 'ID Card',
-    //         }
-    //       }
-    //     ]
-    //   }).then(function (ids) {
-    //     const colIdxes = Boarding.getColIndexes();
-    //     const rows = Boarding.getRows(worksheet);
-    //     const identities = ids.reduce(function (prev, cur) {
-    //       return prev.concat(cur.idNumber);
-    //     }, []);
-    //     expect(rows).to.exist();
-    //     return rows.forEach(function (r) {
-    //       const cell = Boarding.getCell({ ws: worksheet, r, c: colIdxes['身份证号'] });
-    //       return expect(identities.indexOf(cell) !== -1).to.be
-    //         .true(`${cell} is not in ${JSON.stringify(identities)}`);
-    //     });
-    //   });
-    // });
   });
 });
