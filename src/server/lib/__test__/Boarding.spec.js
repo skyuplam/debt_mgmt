@@ -468,7 +468,7 @@ describe('Boarding', function () {
         return Boarding.boarding(ws).then(function () {
           const rows = Boarding.getRows(ws);
           const cols = Boarding.getColIndexes();
-          return Promise.all(rows.map(function (r, index) {
+          return Promise.all(rows.map(function (r) {
             return models.identity.find({
               where: {
                 idNumber: Boarding.getCell({ ws, r, c: cols['身份证号'] }),
