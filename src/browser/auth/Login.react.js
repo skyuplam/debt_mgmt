@@ -6,9 +6,11 @@ import React, { PropTypes } from 'react';
 import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
-import { replace } from 'react-router-redux';
+import { browserHistory } from 'react-router';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import { EE } from '../../common/eventEmitter/eventEmitter';
+import { focusInvalidField } from '../../common/lib/validation';
 
 const messages = defineMessages({
   formLegend: {
@@ -37,26 +39,38 @@ class Login extends Component {
     intl: intlShape.isRequired,
     location: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
-    replace: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
     this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
+  }
+
+  componentDidMount() {
+    EE.on('auth/loginSuccess', this.redirectAfterLogin);
+  }
+
+  componentWillUnmount() {
+    EE.removeListener('auth/loginSuccess');
   }
 
   async onFormSubmit(e) {
     e.preventDefault();
     const { login, fields } = this.props;
-    login(fields.$values());
-    fields.$reset();
+    try {
+      await login(fields.$values());
+    } catch (error) {
+      focusInvalidField(this, error.reason);
+      return;
+    }
     this.redirectAfterLogin();
   }
 
   redirectAfterLogin() {
-    const { location, replace } = this.props;
+    const { location } = this.props;
     const nextPathname = location.state && location.state.nextPathname || '/';
-    replace(nextPathname);
+    browserHistory.replace(nextPathname);
   }
 
   render() {
@@ -108,4 +122,4 @@ Login = injectIntl(Login);
 
 export default connect(state => ({
   auth: state.auth
-}), { ...authActions, replace })(Login);
+}), { ...authActions })(Login);
