@@ -16,6 +16,7 @@ class Boarding extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     upload: PropTypes.func.isRequired,
+    viewer: PropTypes.object.isRequired,
   }
 
   constructor(props, context) {
@@ -27,9 +28,8 @@ class Boarding extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   handleDrop(files) {
-    const { upload } = this.props;
-
-    upload(files);
+    const { upload, viewer } = this.props;
+    upload(files, viewer);
   }
 
 
@@ -89,6 +89,7 @@ Boarding = injectIntl(Boarding);
 
 export default connect(state => ({
   note: state.ui.selectedNote,
+  viewer: state.users.viewer,
 }), {
   upload
 })(Boarding);

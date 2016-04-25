@@ -5,7 +5,7 @@ import multer from 'multer';
 import moment from 'moment';
 import XLSX from 'xlsx';
 import Boarding from '../lib/Boarding';
-
+import passport from 'passport';
 
 const storage = multer.diskStorage({
   destination: 'uploads/',
@@ -20,7 +20,7 @@ const upload = multer({
 const router = express.Router();
 // TODO: Check Bearer Token
 router.route('/boarding')
-  .post((req, res) => {
+  .post(passport.authenticate('bearer', { session: false }), (req, res) => {
     upload(req, res, err => {
       if (err) {
         logger.warn(err);
@@ -29,9 +29,9 @@ router.route('/boarding')
       const workbook = XLSX.readFile(req.file.path);
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
-      Boarding.boarding(worksheet);
-
-      return res.status(202).end();
+      return Boarding.boarding(worksheet).then(() =>
+        res.status(202).end()
+      );
     });
   });
 

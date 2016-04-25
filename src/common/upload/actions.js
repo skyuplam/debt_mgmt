@@ -8,7 +8,8 @@ export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 const API_VERSION = '/api/v1';
 
 // TODO: Add Authorization = `Bearer ${user.token}`;
-export function upload(files) {
+export function upload(files, user) {
+  const Authorization = `?access_token=${user.token}`;
   const form = new FormData();
   files.forEach(file => {
     form.append('boarding', file);
@@ -17,7 +18,7 @@ export function upload(files) {
     const getPromise = async () => {
       try {
         // Sure we can use smarter api than raw fetch.
-        const response = await fetch(`${API_VERSION}/upload/boarding`, {
+        const response = await fetch(`${API_VERSION}/upload/boarding${Authorization}`, {
           method: 'POST',
           body: form
         });

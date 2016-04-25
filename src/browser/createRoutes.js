@@ -47,7 +47,7 @@ export default function createRoutes(getState) {
       <Route component={Users} onEnter={requireManager} path={LINKS.users} />
       <Route component={Portfolios} onEnter={requireManager} path={LINKS.portfolios} />
       <Route component={Agencies} onEnter={requireManager} path={LINKS.agencies} />
-      <Route component={Boarding} path={LINKS.boarding} />
+      <Route component={Boarding} onEnter={requireManager} path={LINKS.boarding} />
       <Route component={NotFound} path="*" />
     </Route>
   );
