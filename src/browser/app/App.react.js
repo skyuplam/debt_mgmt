@@ -11,6 +11,9 @@ import { cyan500 } from 'material-ui/styles/colors';
 import NotificationSystem from 'react-notification-system';
 import { EE } from '../../common/eventEmitter/eventEmitter';
 import { logout } from '../../common/auth/actions';
+import notifyMessages from '../../common/app/notifyMessages';
+import { injectIntl, intlShape } from 'react-intl';
+
 
 const errorCode = {
   401: 'unauthorized'
@@ -31,6 +34,7 @@ class App extends Component {
     currentLocale: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
+    intl: intlShape.isRequired,
   };
 
   constructor() {
@@ -53,6 +57,19 @@ class App extends Component {
     if (this[errorCode[notification.uid]]) {
       notification.onRemove = this[errorCode[notification.uid]];
     }
+    const { intl } = this.props;
+    const notifyMessageMap = {
+      congratuation: {
+        title: intl.formatMessage(notifyMessages.congratuation),
+        message: intl.formatMessage(notifyMessages.success),
+        level: 'success',
+      }
+    };
+
+    if (notifyMessageMap[notification.message]) {
+      notification = notifyMessageMap[notification.message];
+    }
+
     this._notificationSystem.addNotification(notification);
   }
 
@@ -82,6 +99,7 @@ class App extends Component {
 
 }
 
+App = injectIntl(App);
 App = start(App);
 
 export default connect(state => ({

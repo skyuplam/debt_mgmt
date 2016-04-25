@@ -3,6 +3,19 @@ import { Record } from 'immutable';
 import Repayment from '../repayments/repayment';
 import Loan from '../loans/loan';
 import Note from '../notes/note';
+import { LOGIN_SUCCESS } from '../auth/actions';
+import { ADD_NEW_ADDRESS_SUCCESS } from '../addresses/actions';
+import { CREATE_AGENCY_SUCCESS } from '../agencies/actions';
+import { NEW_CONTACT_NUMBER_SUCCESS } from '../contactNumbers/actions';
+import { SEARCH_DEBTORS_SUCCESS } from '../debtors/actions';
+import { POSTPONE_PLACEMENT_RECALL_SUCCESS } from '../loans/actions';
+import { ADD_NEW_NOTE_SUCCESS } from '../notes/actions';
+import { CREATE_PORTFOLIO_SUCCESS } from '../portfolios/actions';
+import { NEW_REPAYMENT_PLAN_SUCCESS } from '../repaymentPlans/actions';
+import { PAY_REPAYMENT_SUCCESS } from '../repayments/actions';
+import { UPLOAD_SUCCESS } from '../upload/actions';
+import { NEW_USER_SUCCESS, UPDATE_USER_SUCCESS } from '../users/actions';
+import { notify } from '../eventEmitter/eventEmitter';
 
 const InitialState = Record({
   isSideMenuOpen: false,
@@ -148,6 +161,25 @@ export default function uiReducer(state = initialState, action) {
     case actions.TOGGLE_ADD_PORTFOLIO_DIALOG: {
       return state.update('isAddPortfolioDialogOpen',
         isAddPortfolioDialogOpen => !isAddPortfolioDialogOpen);
+    }
+
+    case ADD_NEW_ADDRESS_SUCCESS:
+    case NEW_CONTACT_NUMBER_SUCCESS:
+    case SEARCH_DEBTORS_SUCCESS:
+    case POSTPONE_PLACEMENT_RECALL_SUCCESS:
+    case CREATE_AGENCY_SUCCESS:
+    case ADD_NEW_NOTE_SUCCESS:
+    case CREATE_PORTFOLIO_SUCCESS:
+    case NEW_REPAYMENT_PLAN_SUCCESS:
+    case PAY_REPAYMENT_SUCCESS:
+    case UPLOAD_SUCCESS:
+    case NEW_USER_SUCCESS:
+    case UPDATE_USER_SUCCESS:
+    case LOGIN_SUCCESS: {
+      notify({
+        message: 'congratuation',
+      });
+      return state;
     }
   }
 

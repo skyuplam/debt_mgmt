@@ -1,5 +1,4 @@
 import { ValidationError } from '../lib/validation';
-import { loginSuccess } from '../../common/eventEmitter/eventEmitter';
 
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_START = 'LOGIN_START';
