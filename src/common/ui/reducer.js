@@ -24,8 +24,8 @@ const InitialState = Record({
   userActionType: undefined,
   isAppBarPopupUp: false,
   appBarActionType: undefined,
-  isAddAgencyDialogOpen: undefined,
-  isAddPortfolioDialogOpen: undefined,
+  isAddAgencyDialogOpen: false,
+  isAddPortfolioDialogOpen: false,
 });
 const initialState = new InitialState;
 

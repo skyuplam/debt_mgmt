@@ -181,6 +181,10 @@ export default defineMessages({
     defaultMessage: '同事',
     id: 'contacts.Colleague',
   },
+  BusinessPartner: {
+    defaultMessage: '合伙人',
+    id: 'contacts.BusinessPartner',
+  },
   Subordinate: {
     defaultMessage: '下属',
     id: 'contacts.Subordinate',
@@ -189,9 +193,9 @@ export default defineMessages({
     defaultMessage: '上司',
     id: 'contacts.Superordinate',
   },
-  Landlor: {
+  Landlord: {
     defaultMessage: '房东',
-    id: 'contacts.Landlor',
+    id: 'contacts.Landlord',
   },
   Tenant: {
     defaultMessage: '房客',
@@ -200,5 +204,9 @@ export default defineMessages({
   Customer: {
     defaultMessage: '客户',
     id: 'contacts.Customer',
+  },
+  Others: {
+    defaultMessage: '其他',
+    id: 'contacts.Others',
   },
 });

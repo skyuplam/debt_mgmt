@@ -3,7 +3,7 @@ import data from '../data/testData.json';
 import bcrypt from 'bcrypt';
 import moment from 'moment';
 
-export function loanTestData() {
+export function loadTestData() {
   const { debtors, companies } = data;
   return models.sequelize.transaction(t3 =>
     Promise.all(companies.map(theCompany =>

@@ -147,6 +147,10 @@ class AddAddressDialog extends Component {
         disabled={!this.isValid()}
       />,
     ];
+    relationships.forEach(r => {
+      console.log(r.relationship);
+      console.log(intl.formatMessage(contactsMessages[r.relationship]));
+    });
 
     const styles = {
       containerStyle: {

@@ -141,6 +141,10 @@ export default [
     "defaultMessage": "区号"
   },
   {
+    "id": "contacts.BusinessPartner",
+    "defaultMessage": "合伙人"
+  },
+  {
     "id": "contacts.cancel",
     "defaultMessage": "取消"
   },
@@ -245,7 +249,7 @@ export default [
     "defaultMessage": "家庭"
   },
   {
-    "id": "contacts.Landlor",
+    "id": "contacts.Landlord",
     "defaultMessage": "房东"
   },
   {
@@ -263,6 +267,10 @@ export default [
   {
     "id": "contacts.Originator",
     "defaultMessage": "原转让机构"
+  },
+  {
+    "id": "contacts.Others",
+    "defaultMessage": "其他"
   },
   {
     "id": "contacts.Parent",
@@ -351,10 +359,6 @@ export default [
   {
     "id": "home.intro",
     "defaultMessage": "<p>\n        贷后管理系统\n      </p>"
-  },
-  {
-    "id": "home.native.intro",
-    "defaultMessage": "Este App\n      Press CMD+R to reload\n      Press CMD+D for debug menu"
   },
   {
     "id": "home.title",
@@ -895,10 +899,6 @@ export default [
   {
     "id": "repayments.title",
     "defaultMessage": "请确认还款"
-  },
-  {
-    "id": "todos.leftTodos",
-    "defaultMessage": "{leftTodos, plural, =0 {Nothing, enjoy :-)} one {You have {leftTodos} task} other {You have {leftTodos} tasks}}"
   },
   {
     "id": "users.action",

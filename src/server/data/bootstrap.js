@@ -1,6 +1,6 @@
 import typesAndStatus from '../data/data.json';
 import models from '../models';
-import { loanTestData } from '../data/testDataLoader';
+import { loadTestData } from '../data/testDataLoader';
 import config from '../config';
 import logger from '../lib/logger';
 
@@ -79,9 +79,9 @@ export default function loadData() {
       ),
     ])
   ).then((data) => {
-    // if (!isProduction) {
-    //   return loanTestData();
-    // }
+    if (!isProduction) {
+      return loadTestData();
+    }
     return data;
   })
   .catch(error => {
