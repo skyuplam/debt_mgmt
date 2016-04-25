@@ -42,7 +42,6 @@ describe('Boarding', function () {
     });
     it('should validate the columns headers', function () {
       const result = Boarding.validateBoarding(worksheet);
-      console.log(JSON.stringify(result));
       expect(result).to.be.true();
     });
     it('should throw error if the column headers are not exactly the same', function () {

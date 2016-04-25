@@ -4,6 +4,7 @@ import logger from '../lib/logger';
 import multer from 'multer';
 import moment from 'moment';
 import XLSX from 'xlsx';
+import Boarding from '../lib/Boarding';
 
 
 const storage = multer.diskStorage({
@@ -27,9 +28,10 @@ router.route('/boarding')
       }
       const workbook = XLSX.readFile(req.file.path);
       const firstSheetName = workbook.SheetNames[0];
-      logger.info(workbook.Sheets[firstSheetName].A1.v);
+      const worksheet = workbook.Sheets[firstSheetName];
+      Boarding.boarding(worksheet);
 
-      return res.status(201).end();
+      return res.status(202).end();
     });
   });
 

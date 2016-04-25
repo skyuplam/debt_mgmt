@@ -347,7 +347,7 @@ function saveLoan({
 
 /*
  * addresses: an array of address containing
- *   loangAddress
+ *   longAddress
  *   addressType
  *   source
  *   relationship
@@ -375,10 +375,7 @@ function savePersonAddresses(person, addresses, t) {
       }
       return models.address.findOrCreate({
         where: {
-          longAddress: address.longAddress,
-        },
-        defaults: {
-          longAddress: address.longAddress
+          longAddress: address.longAddress.trim(),
         },
         transaction: t,
       }).all().then(([theAddress]) =>
@@ -626,35 +623,35 @@ function boarding(ws, fields = boardingFields) {
         };
         // Address Mappings
         const addresses = [{
-          loangAddress: getCell({ ws, r, c: cols['地址'] }),
+          longAddress: getCell({ ws, r, c: cols['地址'] }),
           addressType: 'Home',
           source: 'Originator',
           relationship: 'Personal',
           contactPerson: undefined,
           companyName: undefined,
         }, {
-          loangAddress: getCell({ ws, r, c: cols['单位地址1'] }),
+          longAddress: getCell({ ws, r, c: cols['单位地址1'] }),
           addressType: 'Work',
           source: 'Originator',
           relationship: 'Personal',
           contactPerson: undefined,
           companyName: getCell({ ws, r, c: cols['单位1'] }),
         }, {
-          loangAddress: getCell({ ws, r, c: cols['单位地址2'] }),
+          longAddress: getCell({ ws, r, c: cols['单位地址2'] }),
           addressType: 'Work',
           source: 'Originator',
           relationship: 'Personal',
           contactPerson: undefined,
           companyName: getCell({ ws, r, c: cols['单位2'] }),
         }, {
-          loangAddress: getCell({ ws, r, c: cols['亲属现居住地址1'] }),
+          longAddress: getCell({ ws, r, c: cols['亲属现居住地址1'] }),
           addressType: 'Home',
           source: 'Originator',
           relationship: 'Family',
           contactPerson: getCell({ ws, r, c: cols['亲属姓名1'] }),
           companyName: undefined,
         }, {
-          loangAddress: getCell({ ws, r, c: cols['亲属现居住地址2'] }),
+          longAddress: getCell({ ws, r, c: cols['亲属现居住地址2'] }),
           addressType: 'Home',
           source: 'Originator',
           relationship: 'Family',
@@ -681,7 +678,7 @@ function boarding(ws, fields = boardingFields) {
         }, {
           contactNumber: getCell({ ws, r, c: cols['单位电话1'] }),
           countryCode: undefined,
-          contactNumberType: 'Work',
+          contactNumberType: 'Office',
           contactPerson: undefined,
           source: 'Originator',
           relationship: 'Personal',
@@ -705,7 +702,7 @@ function boarding(ws, fields = boardingFields) {
         }, {
           contactNumber: getCell({ ws, r, c: cols['单位电话2'] }),
           countryCode: undefined,
-          contactNumberType: 'Work',
+          contactNumberType: 'Office',
           contactPerson: undefined,
           source: 'Originator',
           relationship: 'Personal',
@@ -729,7 +726,7 @@ function boarding(ws, fields = boardingFields) {
         }, {
           contactNumber: getCell({ ws, r, c: cols['亲属公司电话1'] }),
           countryCode: undefined,
-          contactNumberType: 'Work',
+          contactNumberType: 'Office',
           contactPerson: getCell({ ws, r, c: cols['亲属姓名1'] }),
           source: 'Originator',
           relationship: 'Family',
@@ -753,7 +750,7 @@ function boarding(ws, fields = boardingFields) {
         }, {
           contactNumber: getCell({ ws, r, c: cols['亲属公司电话2'] }),
           countryCode: undefined,
-          contactNumberType: 'Work',
+          contactNumberType: 'Office',
           contactPerson: getCell({ ws, r, c: cols['亲属姓名2'] }),
           source: 'Originator',
           relationship: 'Family',
@@ -777,10 +774,11 @@ function boarding(ws, fields = boardingFields) {
         }];
         for (let i = 0; i <= 6; i++) {
           addresses.push({
-            loangAddress: getCell({ ws, r, c: cols[`所有联系人现居住地址${i}`] }),
+            longAddress: getCell({ ws, r, c: cols[`所有联系人现居住地址${i}`] }),
             addressType: 'Home',
             source: 'Originator',
-            relationship: relationshipMap[`所有联系人关系${i}`],
+            relationship: relationshipMap[`所有联系人关系${i}`] ?
+              relationshipMap[`所有联系人关系${i}`] : 'Others',
             contactPerson: getCell({ ws, r, c: cols[`所有联系人姓名${i}`] }),
             companyName: undefined,
           });
@@ -805,7 +803,7 @@ function boarding(ws, fields = boardingFields) {
           contacts.push({
             contactNumber: getCell({ ws, r, c: cols['所有联系人公司电话${i}'] }),
             countryCode: undefined,
-            contactNumberType: 'Work',
+            contactNumberType: 'Office',
             contactPerson: getCell({ ws, r, c: cols[`所有联系人姓名${i}`] }),
             source: 'Originator',
             relationship: relationshipMap[`所有联系人关系${i}`],

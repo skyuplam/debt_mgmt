@@ -1,4 +1,4 @@
-import { ValidationError } from '../lib/validation';
+import { translateHttpError } from '../lib/error/error';
 import FormData from 'form-data';
 
 export const UPLOAD_ERROR = 'UPLOAD_ERROR';
@@ -21,13 +21,13 @@ export function upload(files) {
           method: 'POST',
           body: form
         });
-        if (response.status !== 201) throw response;
+        if (response.status !== 202) throw response;
         // Return JSON response.
         return response.json();
       } catch (error) {
         // Transform error status to custom error.
         if (error.status === 401) {
-          throw new ValidationError('wrongPassword', { prop: 'password' });
+          throw translateHttpError(error, { action: 'upload' });
         }
         throw error;
       }

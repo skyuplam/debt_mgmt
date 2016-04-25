@@ -14,7 +14,7 @@ export default function authReducer(state = initialState, action) {
 
     // Note how one reducer can handle several actions.
     case actions.UPLOAD_SUCCESS:
-      return state.set('formDisabled', true);
+      return state;
 
   }
 
