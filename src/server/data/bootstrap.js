@@ -3,6 +3,9 @@ import models from '../models';
 import { loadTestData } from '../data/testDataLoader';
 import config from '../config';
 import logger from '../lib/logger';
+import bcrypt from 'bcrypt';
+const ADMIN_PWD = process.env.APP_ADMIN_PWD;
+
 
 const { isProduction } = config;
 
@@ -78,7 +81,29 @@ export default function loadData() {
         })
       ),
     ])
-  ).then((data) => {
+  ).then(() => models.sequelize.transaction(t =>
+    bcrypt.hashAsync(ADMIN_PWD, 10).then(passwordHashed =>
+      models.user.create({
+        username: 'terrencelam',
+        password: passwordHashed
+      }, {
+        transaction: t
+      }).then(user =>
+        models.role.find({
+          where: {
+            role: 'admin'
+          }
+        }, {
+          transaction: t
+        }).then(role =>
+          user.addRole(role, {
+            transaction: t
+          })
+        )
+      )
+    )
+  ))
+  .then((data) => {
     if (!isProduction) {
       return loadTestData();
     }

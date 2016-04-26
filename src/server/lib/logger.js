@@ -2,7 +2,7 @@ import bunyan from 'bunyan';
 import config from '../config';
 import expressBunyanLogger from 'express-bunyan-logger';
 
-const { appName, isProduction } = config;
+const { appName } = config;
 
 const loggerName = `${appName}Server`;
 

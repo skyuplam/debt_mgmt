@@ -1,5 +1,5 @@
 # https://github.com/mhart/alpine-node
-FROM mhart/alpine-node:5.8.0
+FROM mhart/alpine-node:5.11
 
 ENV DIR=/opt/este PORT=8000 NODE_ENV=production
 
@@ -7,9 +7,9 @@ COPY package.json ${DIR}/
 
 # Installs (and removes) python and build deps for source builds, ex. node-sass.
 # Removing in the same instruction reduces image size bloat.
-RUN apk add --update python python-dev build-base && \
+RUN apk add --update python python-dev build-base git && \
   echo "# SUPPRESS WARNING" > ${DIR}/README.md && \
-  apk add git && \
+  npm install -g gulp-cli && \
   cd ${DIR} && npm install && \
   apk del python python-dev build-base && \
   rm -rf /etc/ssl /usr/share/man /tmp/* /var/cache/apk/* /root/.npm /root/.node-gyp

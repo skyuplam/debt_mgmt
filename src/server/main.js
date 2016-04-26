@@ -8,7 +8,7 @@ import models from './models';
 import passport from './auth/passport';
 import bootstrap from './data/bootstrap';
 import logger from './lib/logger';
-
+const LOAD_BOOSTRAP = process.env.BOOSTRAP === 'boostrap';
 
 const app = express();
 const { port, isProduction } = config;
@@ -25,25 +25,25 @@ app.use(helmet());
 
 const directives = isProduction ?
 {
-  defaultSrc: ["'self'"],
+  defaultSrc: ['*'],
   scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "'unsafe-eval'", 'https://cdn.polyfill.io'],
   styleSrc: ["'self'", "'unsafe-inline'"],
   imgSrc: ["'self'", 'data:'],
   sandbox: ['allow-forms', 'allow-scripts', 'allow-same-origin'],
   reportUri: '/report-violation',
-  connectSrc: ["'self'"],
+  connectSrc: ["'self'", 'allow-same-origin'],
   mediaSrc: ["'self'"],
   objectSrc: ["'self'", 'allow-same-origin'], // An empty array allows nothing through
 }
 :
 {
-  defaultSrc: ["'self'"],
+  defaultSrc: ['*'],
   scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cdn.polyfill.io', '192.168.1.210:8080', 'localhost'],
   styleSrc: ["'self'", "'unsafe-inline'", 'localhost'],
   imgSrc: ["'self'", 'data:'],
   sandbox: ['allow-forms', 'allow-scripts', 'allow-same-origin'],
   reportUri: '/report-violation',
-  connectSrc: ["'self'", '192.168.1.210:8080'],
+  connectSrc: ["'self'", 'allow-same-origin', '192.168.1.210:8080'],
   mediaSrc: ["'self'"],
   objectSrc: ["'self'", 'allow-same-origin'], // An empty array allows nothing through
 };
@@ -77,7 +77,9 @@ app.use(errorHandler);
 const force = { force: !isProduction };
 
 models.sequelize.sync(force).then(() => {
-  bootstrap();
+  if (LOAD_BOOSTRAP) {
+    bootstrap();
+  }
   const server = app.listen(port, () => {
     logger.info('Server started at port %d', port);
   });

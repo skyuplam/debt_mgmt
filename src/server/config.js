@@ -5,6 +5,9 @@ import nconf from 'nconf';
 
 const appName = require('../../package.json').name;
 const isProduction = process.env.NODE_ENV === 'production';
+const DB_ADDR = process.env.DB_PORT_5432_TCP_ADDR;
+const DB_PWD = process.env.DB_PWD;
+
 
 // Specifying an env delimiter allows us to override config when shipping to
 // production server. 'foo__bar=2 gulp' will set config to '{foo: {bar: 2}}'
@@ -37,9 +40,9 @@ nconf.defaults({
     },
     production: {
       username: 'postgres',
-      password: 'dockerDtmgmt20160401',
+      password: DB_PWD,
       database: 'loan',
-      host: '192.168.99.100',
+      host: DB_ADDR,
       dialect: 'postgres'
     }
   },

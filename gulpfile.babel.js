@@ -167,49 +167,6 @@ gulp.task('to-html', done => {
   });
 });
 
-// React Native
-
-gulp.task('native', done => {
-  // native/config.js
-  const config = require('./src/server/config');
-  const { appName, defaultLocale, firebaseUrl, locales } = config;
-  fs.writeFile('src/native/config.js',
-// Yeah, that's how ES6 template string indentation works.
-`/* eslint-disable eol-last, quotes, quote-props */
-export default ${
-  JSON.stringify({ appName, defaultLocale, firebaseUrl, locales }, null, 2)
-};`
-  );
-  // native/messages.js
-  const messages = require('./src/server/intl/loadMessages')();
-  fs.writeFile('src/native/messages.js',
-`/* eslint-disable eol-last, max-len, quotes, quote-props */
-export default ${
-  JSON.stringify(messages, null, 2)
-};`
-  );
-  done();
-});
-
-gulp.task('ios', ['native'], bg('react-native', 'run-ios'));
-gulp.task('android', ['native'], bg('react-native', 'run-android'));
-
-// Various fixes for react-native issues. Must be called after npm install.
-gulp.task('fix-react-native', done => {
-  runSequence('fix-native-babelrc-files', 'fix-native-fbjs', done);
-});
-
-// https://github.com/facebook/react-native/issues/4062#issuecomment-164598155
-// Still broken in RN 0.20. Remove fbjs from package.json after fix.
-gulp.task('fix-native-babelrc-files', () =>
-  del(['node_modules/**/.babelrc', '!node_modules/react-native/**'])
-);
-
-// https://github.com/facebook/react-native/issues/5467#issuecomment-173989493
-// Still broken in RN 0.20. Remove fbjs from package.json after fix.
-gulp.task('fix-native-fbjs', () =>
-  del(['node_modules/**/fbjs', '!node_modules/fbjs'])
-);
 
 // Tasks for issues seem to be already fixed.
 

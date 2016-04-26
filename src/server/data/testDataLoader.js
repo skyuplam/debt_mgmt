@@ -188,29 +188,6 @@ export function loadTestData() {
     )
   ).then(() =>
     models.sequelize.transaction(t =>
-      bcrypt.hashAsync('passw0rd', 10).then(passwordHashed =>
-        models.user.create({
-          username: 'terrencelam',
-          password: passwordHashed
-        }, {
-          transaction: t
-        }).then(user =>
-          models.role.find({
-            where: {
-              role: 'admin'
-            }
-          }, {
-            transaction: t
-          }).then(role =>
-            user.addRole(role, {
-              transaction: t
-            })
-          )
-        )
-      )
-    )
-  ).then(() =>
-    models.sequelize.transaction(t =>
       bcrypt.hashAsync('123', 10).then(passwordHashed =>
         models.user.create({
           username: 'manager',
