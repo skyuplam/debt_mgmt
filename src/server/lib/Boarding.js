@@ -5,7 +5,12 @@ import models from '../models';
 import { loanMap } from './LoanMapping.json';
 import moment from 'moment';
 import { relationshipMap } from './RelationshipMapping.json';
+import rabbit from 'rabbit.js';
+import logger from '../lib/logger';
+import config from '../config';
 
+const { isProduction } = config;
+const RBMQ_ADDR = isProduction ? process.env.RBMQ_PORT_5672_TCP_ADDR : '192.168.99.100';
 
 function getFieldNames(fields) {
   return fields.reduce((fieldNames, field) =>
@@ -165,15 +170,6 @@ function savePersonInfo({
   dob,
   gender,
 }, t) {
-  // console.log(JSON.stringify({
-  //   idNumber,
-  //   issueAuthority,
-  //   censusRegisteredAddress,
-  //   origRefDebtorId,
-  //   name,
-  //   dob,
-  //   gender,
-  // }));
   return models.identityType.find({
     where: {
       type: 'ID Card',
@@ -247,21 +243,24 @@ function savePersonInfo({
           identity.setIdentityType(idType, {
             transaction: t
           })
-        ).then(() =>
-          models.address.findOrCreate({
+        ).then(() => {
+          if (!censusRegisteredAddress || censusRegisteredAddress.trim().length < 4) {
+            return identity;
+          }
+          return models.address.findOrCreate({
             where: {
-              longAddress: censusRegisteredAddress,
+              longAddress: censusRegisteredAddress.trim(),
             },
             defaults: {
-              longAddress: censusRegisteredAddress,
+              longAddress: censusRegisteredAddress.trim(),
             },
             transaction: t
           }).all().then(([address]) =>
             identity.setCensusRegisteredAddress(address, {
               transaction: t
             })
-          ).then(() => identity)
-        );
+          ).then(() => identity);
+        });
       }
       return identity;
     })
@@ -370,12 +369,12 @@ function savePersonAddresses(person, addresses, t) {
     transaction: t
   }).then(generalCompanyType =>
     Promise.all(addresses.map(address => {
-      if (!address.longAddress || address.longAddress.length < 4) {
+      if (!address.longAddress || `${address.longAddress}`.trim().length < 4) {
         return null;
       }
       return models.address.findOrCreate({
         where: {
-          longAddress: address.longAddress.trim(),
+          longAddress: `${address.longAddress}`.trim(),
         },
         transaction: t,
       }).all().then(([theAddress]) =>
@@ -477,7 +476,7 @@ function savePersonContacts(person, contacts, t) {
     transaction: t
   }).then(generalCompanyType =>
     Promise.all(contacts.map(contact => {
-      if (!contact.contactNumber || contact.contactNumber.length < 6) {
+      if (!contact.contactNumber || `${contact.contactNumber}`.trim().length < 6) {
         return null;
       }
       return models.contactNumber.findOrCreate({
@@ -813,43 +812,101 @@ function boarding(ws, fields = boardingFields) {
   // Gather the rows except the 1st row
   const rows = getRows(ws);
   const cols = getColIndexes();
-  return models.portfolio.find({
-    where: {
-      referenceCode
-    },
-  }).then(portfolio =>
-    models.sequelize.transaction(t =>
-      Promise.all(rows.map(r => {
-        const theRow = boardingFieldMapping(ws, r, cols);
-        return savePersonInfo(theRow.personInfo, t).then(identity =>
-          saveLoan(theRow.loan, t).then(loan =>
-            Promise.all([
-              loan.setPortfolio(portfolio, {
-                transaction: t,
-              }),
-              models.identity.find({
-                where: {
-                  id: identity.id
-                },
-                include: [{
-                  model: models.person,
-                }],
-                transaction: t,
-              }).then(idPpl =>
-                Promise.all([
-                  idPpl.people[0].addLoan(loan, {
-                    transaction: t,
-                  }),
-                  savePersonAddresses(idPpl.people[0], theRow.addresses, t),
-                  savePersonContacts(idPpl.people[0], theRow.contacts, t),
-                ])
+
+  const context = rabbit.createContext(`amqp://terrencelam:passw0rd@${RBMQ_ADDR}`);
+  context.on('ready', () => {
+    const push = context.socket('PUSH');
+    const worker = context.socket('WORKER', { prefetch: 1 });
+    worker.setEncoding('utf8');
+    worker.connect('boarding', () => {
+      worker.on('data', row => {
+        const r = JSON.parse(row);
+        return models.sequelize.transaction(t =>
+          models.portfolio.find({
+            where: {
+              referenceCode
+            },
+          }).then(portfolio =>
+            // models.sequelize.transaction(t =>
+              savePersonInfo(r.personInfo, t).then(identity =>
+                saveLoan(r.loan, t).then(loan =>
+                  Promise.all([
+                    loan.setPortfolio(portfolio, {
+                      transaction: t,
+                    }),
+                    models.identity.find({
+                      where: {
+                        id: identity.id
+                      },
+                      include: [{
+                        model: models.person,
+                      }],
+                      transaction: t,
+                    }).then(idPpl =>
+                      idPpl.people[0].addLoan(loan, {
+                        transaction: t,
+                      })
+                      .then(() =>
+                        savePersonAddresses(idPpl.people[0], r.addresses, t)
+                      ).then(() =>
+                        savePersonContacts(idPpl.people[0], r.contacts, t)
+                      ),
+                    )
+                  ])
+                )
               )
-            ])
+            // ).then(() => worker.ack(row))
           )
-        );
-      }))
-    )
-  );
+        ).then(() => worker.ack(row));
+      });
+
+      push.connect('boarding', () => {
+        rows.forEach(r => {
+          const theRow = boardingFieldMapping(ws, r, cols);
+          push.write(JSON.stringify(theRow), 'utf8');
+        });
+      });
+    });
+  });
+  context.on('error', error => logger.warn(error));
+  // return models.portfolio.find({
+  //   where: {
+  //     referenceCode
+  //   },
+  // }).then(portfolio =>
+  //   models.sequelize.transaction(t =>
+  //     Promise.all(rows.map(r => {
+  //       const theRow = boardingFieldMapping(ws, r, cols);
+  //       return savePersonInfo(theRow.personInfo, t).then(identity =>
+  //         saveLoan(theRow.loan, t).then(loan =>
+  //           Promise.all([
+  //             loan.setPortfolio(portfolio, {
+  //               transaction: t,
+  //             }),
+  //             models.identity.find({
+  //               where: {
+  //                 id: identity.id
+  //               },
+  //               include: [{
+  //                 model: models.person,
+  //               }],
+  //               transaction: t,
+  //             }).then(idPpl =>
+  //               Promise.all([
+  //                 idPpl.people[0].addLoan(loan, {
+  //                   transaction: t,
+  //                 }),
+  //                 savePersonAddresses(idPpl.people[0], theRow.addresses, t),
+  //                 savePersonContacts(idPpl.people[0], theRow.contacts, t),
+  //               ])
+  //             )
+  //           ])
+  //         )
+  //       );
+  //     }))
+  //   )
+  // );
+  return null;
 }
 
 const Boarding = {};

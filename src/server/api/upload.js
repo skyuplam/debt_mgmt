@@ -29,9 +29,8 @@ router.route('/boarding')
         const workbook = XLSX.readFile(req.file.path);
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
-        return Boarding.boarding(worksheet).then(() =>
-          res.status(202).end()
-        );
+        Boarding.boarding(worksheet);
+        return res.status(202).end();
       });
     } catch (err) {
       logger.warn(err);
