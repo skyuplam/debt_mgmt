@@ -75,9 +75,18 @@ class Debtors extends Component {
                 <TableRow
                   key={debtor.id}
                 >
-                  <TableRowColumn>{debtor.idNumber}</TableRowColumn>
-                  <TableRowColumn>{debtor.name}</TableRowColumn>
-                  <TableRowColumn>{debtor.originatedAgreementNo}</TableRowColumn>
+                  <TableRowColumn>
+                    {debtor.identities[0].idNumber}
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    {debtor.name}
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    {
+                      debtor.loans ? debtor.loans[0].originatedAgreementNo :
+                      ''
+                    }
+                  </TableRowColumn>
                 </TableRow>
               )}
             </TableBody>

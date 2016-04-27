@@ -10,56 +10,92 @@ function authRequired() {
 }
 
 function getDebtors(criteria) {
-  let condition = '';
+  const condition = {
+    include: [
+      {
+        model: models.identity,
+        include: [{
+          model: models.identityType,
+        }]
+      },
+      {
+        model: models.loan,
+      }
+    ]
+  };
   if (criteria) {
-    const matchIdCard = criteria.idCard ? `i.idNumber = '${criteria.idCard}'` : '';
-    const matchName = criteria.name ? `p.name = '${criteria.name}'` : '';
-    const matchOriAgmentNo = criteria.originatedAgreementNo ?
-     `l.originatedAgreementNo = '${criteria.originatedAgreementNo}'` :
-     '';
-    const criteriaStr = [matchIdCard, matchName, matchOriAgmentNo].filter(a => a).join(' OR ');
-    condition = criteriaStr ? `WHERE ${criteriaStr}` : '';
+    if (criteria.idCard) {
+      condition.include[0].where = {
+        idNumber: criteria.idCard.trim()
+      };
+    }
+    if (criteria.name) {
+      condition.where = {
+        name: criteria.name,
+      };
+    }
+    if (criteria.originatedAgreementNo) {
+      condition.include[1].where = {
+        originatedAgreementNo: criteria.originatedAgreementNo
+      };
+    }
   }
 
-  return models.sequelize.query(`
-    SELECT
-      p.id,
-      p.name,
-      p.maritalStatus,
-      p.dob,
-      i.idNumber,
-      l.originatedAgreementNo
-    from person p
-    LEFT JOIN personIdentity pi ON p.id = pi.personId
-    LEFT JOIN identity i ON i.id = pi.identityId
-      AND i.identityTypeId = 1
-    LEFT JOIN debtorLoan dl ON dl.debtorId = p.id
-      AND dl.isPrimary = 1
-    LEFT JOIN loan l ON l.id = dl.loanId
-    ${condition}
-    `,
-    { type: models.sequelize.QueryTypes.SELECT });
+  return models.person.findAll(condition);
+
+  // return models.sequelize.query(`
+  //   SELECT
+  //     p.id,
+  //     p.name,
+  //     p.maritalStatus,
+  //     p.dob,
+  //     i.idNumber,
+  //     l.originatedAgreementNo
+  //   from person p
+  //   LEFT JOIN personIdentity pi ON p.id = pi.personId
+  //   LEFT JOIN identity i ON i.id = pi.identityId
+  //     AND i.identityTypeId = 1
+  //   LEFT JOIN debtorLoan dl ON dl.debtorId = p.id
+  //     AND dl.isPrimary = 1
+  //   LEFT JOIN loan l ON l.id = dl.loanId
+  //   ${condition}
+  //   `,
+  //   { type: models.sequelize.QueryTypes.SELECT });
 }
 
 function getDebtor(debtorId) {
-  return models.sequelize.query(`
-    SELECT
-      p.id,
-      p.name,
-      p.maritalStatus,
-      p.dob,
-      i.idNumber,
-      l.originatedAgreementNo
-    from person p
-    LEFT JOIN personIdentity pi ON p.id = pi.personId
-    LEFT JOIN identity i ON i.id = pi.identityId
-      AND i.identityTypeId = 1
-    LEFT JOIN debtorLoan dl ON dl.debtorId = p.id
-      AND dl.isPrimary = 1
-    LEFT JOIN loan l ON l.id = dl.loanId
-    WHERE p.id = ${debtorId}
-    `,
-    { type: models.sequelize.QueryTypes.SELECT });
+  return models.person.find({
+    where: {
+      id: debtorId,
+    },
+    include: [{
+      model: models.identity,
+    }, {
+      model: models.loan,
+    }, {
+      model: models.personContactNumber,
+    }, {
+      model: models.personAddress,
+    }]
+  });
+  // return models.sequelize.query(`
+  //   SELECT
+  //     p.id,
+  //     p.name,
+  //     p.maritalStatus,
+  //     p.dob,
+  //     i.idNumber,
+  //     l.originatedAgreementNo
+  //   from person p
+  //   LEFT JOIN personIdentity pi ON p.id = pi.personId
+  //   LEFT JOIN identity i ON i.id = pi.identityId
+  //     AND i.identityTypeId = 1
+  //   LEFT JOIN debtorLoan dl ON dl.debtorId = p.id
+  //     AND dl.isPrimary = 1
+  //   LEFT JOIN loan l ON l.id = dl.loanId
+  //   WHERE p.id = ${debtorId}
+  //   `,
+  //   { type: models.sequelize.QueryTypes.SELECT });
 }
 
 router.route('/')
@@ -90,37 +126,67 @@ router.route('/')
 router.route('/:debtorId')
   .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
-    getDebtor(debtorId).then(debtors =>
-      res.status(200).send({ debtors }).end()
+    getDebtor(debtorId).then(debtor =>
+      res.status(200).send({ debtor }).end()
     );
   });
 
 router.route('/:debtorId/loans')
   .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
-    models.sequelize.query(`
-      SELECT
-        l.*,
-        lp.placementStatusId,
-        p.placementCode,
-        p.servicingFeeRate placementServicingFeeRate,
-        p.placedAt,
-        lp.id loanPlacementId,
-        lp.expectedRecalledAt,
-        p.recalledAt,
-        c.name agency,
-        o.name originator,
-        pf.cutoffAt
-      FROM debtorLoan dl
-      LEFT JOIN loan l ON l.id = dl.loanId
-      LEFT JOIN loanPlacement lp ON lp.loanId = l.id AND lp.placementStatusId = 1
-      LEFT JOIN placement p ON p.id = lp.placementId
-      LEFT JOIN portfolio pf ON pf.id = l.portfolioId
-      LEFT JOIN company o ON o.id = pf.companyId
-      LEFT JOIN company c ON c.id = p.companyId
-      WHERE dl.debtorId = ${debtorId}
-      `, { type: models.sequelize.QueryTypes.SELECT }
-    ).then(loans => res.status(200).send({ loans }).end());
+    // models.sequelize.query(`
+    //   SELECT
+    //     l.*,
+    //     lp.placementStatusId,
+    //     p.placementCode,
+    //     p.servicingFeeRate placementServicingFeeRate,
+    //     p.placedAt,
+    //     lp.id loanPlacementId,
+    //     lp.expectedRecalledAt,
+    //     p.recalledAt,
+    //     c.name agency,
+    //     o.name originator,
+    //     pf.cutoffAt
+    //   FROM debtorLoan dl
+    //   LEFT JOIN loan l ON l.id = dl.loanId
+    //   LEFT JOIN loanPlacement lp ON lp.loanId = l.id AND lp.placementStatusId = 1
+    //   LEFT JOIN placement p ON p.id = lp.placementId
+    //   LEFT JOIN portfolio pf ON pf.id = l.portfolioId
+    //   LEFT JOIN company o ON o.id = pf.companyId
+    //   LEFT JOIN company c ON c.id = p.companyId
+    //   WHERE dl.debtorId = ${debtorId}
+    //   `, { type: models.sequelize.QueryTypes.SELECT }
+    // )
+    return models.loan.findAll({
+      include: [
+        {
+          model: models.loanType,
+        },
+        {
+          model: models.loanPlacement,
+          include: [
+            models.placement
+          ]
+        },
+        {
+          model: models.portfolio,
+          include: [
+            models.company
+          ]
+        },
+        {
+          model: models.loanStatus
+        },
+        {
+          model: models.person,
+          as: 'Debtors',
+          where: {
+            id: debtorId
+          }
+        }
+      ]
+    })
+    .then(loans => res.status(200).send({ loans }).end());
   });
 
 router.route('/:debtorId/loanPlacemnets/:loanPlacementId')
@@ -142,17 +208,32 @@ router.route('/:debtorId/loanPlacemnets/:loanPlacementId')
 router.route('/:debtorId/repaymentPlans')
   .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
-    models.sequelize.query(`
-      SELECT
-        rp.*,
-        d.id debtorId
-      FROM repaymentPlan rp
-      LEFT JOIN loan l ON l.id = rp.loanId
-      LEFT JOIN debtorLoan dl ON dl.loanId = l.id
-      LEFT JOIN person d ON d.id = dl.debtorId
-      WHERE d.id = ${debtorId}
-    `, { type: models.sequelize.QueryTypes.SELECT }
-  ).then(repaymentPlans => {
+  //   models.sequelize.query(`
+  //     SELECT
+  //       rp.*,
+  //       d.id debtorId
+  //     FROM repaymentPlan rp
+  //     LEFT JOIN loan l ON l.id = rp.loanId
+  //     LEFT JOIN debtorLoan dl ON dl.loanId = l.id
+  //     LEFT JOIN person d ON d.id = dl.debtorId
+  //     WHERE d.id = ${debtorId}
+  //   `, { type: models.sequelize.QueryTypes.SELECT }
+  // )
+    return models.repaymentPlan.findAll({
+      include: [
+        {
+          model: models.loan,
+          include: [{
+            model: models.person,
+            as: 'Debtors',
+            where: {
+              id: debtorId,
+            }
+          }]
+        }
+      ]
+    })
+  .then(repaymentPlans => {
     repaymentPlans.map(rp => {
       rp.debtorId = parseInt(debtorId, 10);
       return rp;
@@ -240,19 +321,33 @@ router.route('/:debtorId/repaymentPlans')
 router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments')
   .get(authRequired(), (req, res) => {
     const { repaymentPlanId } = req.params;
-    models.sequelize.query(`
-      SELECT
-       r.*,
-       rp.terms,
-       rps.status repaymentPlanStatus,
-       rs.status repaymentStatus
-      FROM repayment r
-      LEFT JOIN repaymentStatus rs ON rs.id = r.repaymentStatusId
-      LEFT JOIN repaymentPlan rp ON rp.id = r.repaymentPlanId
-      LEFT JOIN repaymentPlanStatus rps ON rps.id = rp.repaymentPlanStatusId
-      WHERE r.repaymentPlanId = ${repaymentPlanId}
-    `, { type: models.sequelize.QueryTypes.SELECT }
-  ).then(repayments =>
+  //   models.sequelize.query(`
+  //     SELECT
+  //      r.*,
+  //      rp.terms,
+  //      rps.status repaymentPlanStatus,
+  //      rs.status repaymentStatus
+  //     FROM repayment r
+  //     LEFT JOIN repaymentStatus rs ON rs.id = r.repaymentStatusId
+  //     LEFT JOIN repaymentPlan rp ON rp.id = r.repaymentPlanId
+  //     LEFT JOIN repaymentPlanStatus rps ON rps.id = rp.repaymentPlanStatusId
+  //     WHERE r.repaymentPlanId = ${repaymentPlanId}
+  //   `, { type: models.sequelize.QueryTypes.SELECT }
+  // )
+    return models.repayment.findAll({
+      where: {
+        repaymentPlanId,
+      },
+      include: [
+        {
+          model: models.repaymentStatus,
+        },
+        {
+          model: models.repaymentPlan,
+        }
+      ]
+    })
+  .then(repayments =>
       res.status(200).send({ repayments }).end()
     );
   });
@@ -362,24 +457,41 @@ router.route('/:debtorId/repaymentPlans/:repaymentPlanId/repayments/:repaymentId
 router.route('/:debtorId/contactNumbers')
   .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
-    models.sequelize.query(`
-      SELECT
-        cn.*,
-        cnt.type contactNumberType,
-        s.source,
-        pcn.contactPerson,
-        pcn.relationshipId,
-        pcn.verifiedAt,
-        pcn.verifiedBy,
-        pcn.personId debtorId,
-        pcn.createdAt contactLinkedAt
-      FROM contactNumber cn
-      LEFT JOIN contactNumberType cnt ON cnt.id = cn.contactNumberTypeId
-      LEFT JOIN personContactNumber pcn ON pcn.contactNumberId = cn.id
-      LEFT JOIN source s ON s.id = pcn.sourceId
-      WHERE pcn.personid = ${debtorId}
-    `, { type: models.sequelize.QueryTypes.SELECT }
-    ).then(contactNumbers =>
+    // models.sequelize.query(`
+    //   SELECT
+    //     cn.*,
+    //     cnt.type contactNumberType,
+    //     s.source,
+    //     pcn.contactPerson,
+    //     pcn.relationshipId,
+    //     pcn.verifiedAt,
+    //     pcn.verifiedBy,
+    //     pcn.personId debtorId,
+    //     pcn.createdAt contactLinkedAt
+    //   FROM contactNumber cn
+    //   LEFT JOIN contactNumberType cnt ON cnt.id = cn.contactNumberTypeId
+    //   LEFT JOIN personContactNumber pcn ON pcn.contactNumberId = cn.id
+    //   LEFT JOIN source s ON s.id = pcn.sourceId
+    //   WHERE pcn.personid = ${debtorId}
+    // `, { type: models.sequelize.QueryTypes.SELECT }
+    // )
+    return models.personContactNumber.findAll({
+      where: {
+        personId: debtorId,
+      },
+      include: [
+        {
+          model: models.contactNumber,
+          include: [
+            models.contactNumberType,
+          ]
+        },
+        models.source,
+        models.company,
+        models.relationship,
+      ]
+    })
+    .then(contactNumbers =>
       res.status(200).send({ contactNumbers }).end()
     );
   });
@@ -475,24 +587,36 @@ router.route('/:debtorId/contactNumbers')
 router.route('/:debtorId/addresses')
   .get(authRequired(), (req, res) => {
     const debtorId = req.params.debtorId;
-    models.sequelize.query(`
-      SELECT
-        ad.*,
-        adt.type addressType,
-        s.source,
-        pad.contactPerson,
-        pad.relationshipId,
-        pad.verifiedAt,
-        pad.verifiedBy,
-        pad.personId debtorId,
-        pad.createdAt contactLinkedAt
-      FROM address ad
-      LEFT JOIN personAddress pad ON pad.addressId = ad.id
-      LEFT JOIN addressType adt ON adt.id = pad.addressTypeId
-      LEFT JOIN source s ON s.id = pad.sourceId
-      WHERE pad.personid = ${debtorId}
-    `, { type: models.sequelize.QueryTypes.SELECT }
-  ).then(addresses =>
+  //   models.sequelize.query(`
+  //     SELECT
+  //       ad.*,
+  //       adt.type addressType,
+  //       s.source,
+  //       pad.contactPerson,
+  //       pad.relationshipId,
+  //       pad.verifiedAt,
+  //       pad.verifiedBy,
+  //       pad.personId debtorId,
+  //       pad.createdAt contactLinkedAt
+  //     FROM address ad
+  //     LEFT JOIN personAddress pad ON pad.addressId = ad.id
+  //     LEFT JOIN addressType adt ON adt.id = pad.addressTypeId
+  //     LEFT JOIN source s ON s.id = pad.sourceId
+  //     WHERE pad.personid = ${debtorId}
+  //   `, { type: models.sequelize.QueryTypes.SELECT }
+  // )
+    return models.personAddress.findAll({
+      where: {
+        personId: debtorId,
+      },
+      include: [
+        models.address,
+        models.addressType,
+        models.source,
+        models.company,
+      ]
+    })
+  .then(addresses =>
       res.status(200).send({ addresses }).end()
     );
   });

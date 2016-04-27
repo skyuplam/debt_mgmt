@@ -32,9 +32,7 @@ export default function debtorsReducer(state = initialState, action) {
       return state.set('map', debtors);
     }
     case actions.FETCH_DEBTOR_SUCCESS: {
-      const debtors = action.payload.debtors.reduce((debtors, json) =>
-        debtors.set(json.id, new Debtor(json))
-      , Map());
+      const debtors = Map().set(action.payload.debtor.id, action.payload.debtor)
       return state.update('map', map => map.merge(debtors));
     }
 

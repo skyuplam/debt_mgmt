@@ -13,6 +13,14 @@ export default defineMessages({
     defaultMessage: '婚姻状态',
     id: 'debtors.maritalStatus',
   },
+  gender: {
+    defaultMessage: '性别',
+    id: 'debtors.gender',
+  },
+  dob: {
+    defaultMessage: '出生日期',
+    id: 'debtors.dob',
+  },
   name: {
     defaultMessage: '姓名',
     id: 'debtors.name',

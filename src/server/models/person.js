@@ -19,8 +19,6 @@ export default function (sequelize, DataTypes) {
         Person.belongsToMany(models.identity, { through: 'personIdentity' });
         Person.belongsToMany(models.loan, {
           through: models.debtorLoan,
-          as: 'Loans',
-          foreignKey: 'debtorId',
         });
         Person.hasMany(models.personContactNumber);
         Person.hasMany(models.personAddress);

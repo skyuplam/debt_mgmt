@@ -105,7 +105,7 @@ class DebtorInfo extends Component {
                 title={
                   `${
                     intl.formatMessage(debtorsMessages.debtorDetail)} - ${debtor ? debtor.name : ''
-                  }`
+                  } (${debtor.gender ? debtor.gender : ''})`
                 }
               />
               <div className="debtor-info">
@@ -115,9 +115,9 @@ class DebtorInfo extends Component {
                   value={debtor ? debtor.idNumber : ''}
                 /><br />
                 <TextField
-                  floatingLabelText={intl.formatMessage(debtorsMessages.maritalStatus)}
+                  floatingLabelText={intl.formatMessage(debtorsMessages.dob)}
                   disabled
-                  value={debtor ? debtor.maritalStatus : ''}
+                  value={debtor ? intl.formatDate(new Date(debtor.dob)) : ''}
                 />
               </div>
             </Card>
