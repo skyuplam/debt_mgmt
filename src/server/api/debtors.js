@@ -776,16 +776,18 @@ router.route('/:debtorId/addresses')
                         transaction: t
                       })
                     )
-                  ).then(personAddress => {
-                    const addr = theAddress.toJSON();
-                    addr.source = theSource.source;
-                    addr.contactPerson = personAddress.contactPerson;
-                    addr.relationshipId = personAddress.relationshipId;
-                    addr.addressType = theAddressType.type;
-                    addr.sourceId = personAddress.sourceId;
-                    addr.debtorId = personAddress.personId;
-                    return addr;
-                  })
+                  ).then(personAddress =>
+                    models.personAddress.findById(personAddress.id, {
+                      include: [
+                        models.address,
+                        models.addressType,
+                        models.person,
+                        models.source,
+                        models.company,
+                      ],
+                      transaction: t,
+                    })
+                  )
                 )
               )
             )

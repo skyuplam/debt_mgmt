@@ -17,7 +17,7 @@ const ContactNumber = Record({
   source: undefined,
   sourceId: undefined,
   debtorId: undefined,
-  contactLinkedAt: undefined,
+  createdAt: undefined,
 });
 
 export default ContactNumber;

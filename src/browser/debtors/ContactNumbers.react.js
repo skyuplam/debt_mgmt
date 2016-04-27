@@ -66,11 +66,11 @@ class ContactNumbers extends Component {
     let contactPerson = '';
     let source = '';
     let createdAt = '';
-    if (contactNumber.contactPerson) {
+    if (contactNumber.relationshipId) {
       const relationship = intl.formatMessage(
         contactsMessages[relationships.get(contactNumber.relationshipId).relationship]
       );
-      contactPerson = `${contactNumber.contactPerson}(${relationship}) - `;
+      contactPerson = `(${relationship}) - `;
     }
     if (contactNumber.createdAt) {
       const createDate = intl.formatDate(contactNumber.createdAt);

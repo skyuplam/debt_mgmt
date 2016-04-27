@@ -45,7 +45,10 @@ class Addresses extends Component {
     if (address.contactPerson) {
       theAddress = `${address.contactPerson}-`;
     }
-    return `${theAddress}${address.longAddress}`;
+    if (address.address.longAddress) {
+      return `${theAddress}${address.address.longAddress}`;
+    }
+    return `${theAddress}${address.address.longAddress}`;
   }
 
   formatSource(address) {
@@ -53,18 +56,18 @@ class Addresses extends Component {
     let theAddress = '';
     let source = '';
     let createdAt = '';
-    if (address.contactPerson) {
+    if (address.relationshipId) {
       const relationship = intl.formatMessage(
         contactsMessages[relationships.get(address.relationshipId).relationship]
       );
-      theAddress = `${address.contactPerson}(${relationship}) - `;
+      theAddress = `(${relationship}) - `;
     }
-    if (address.contactLinkedAt) {
-      const createDate = intl.formatDate(address.contactLinkedAt);
+    if (address.createdAt) {
+      const createDate = intl.formatDate(address.createdAt);
       createdAt = ` - ${createDate}`;
     }
     if (address.source) {
-      const key = address.source.replace(/\s+/g, '');
+      const key = address.source.source.replace(/\s+/g, '');
       source = intl.formatMessage(contactsMessages[key]);
     }
     return `${theAddress}${source}${createdAt}`;
@@ -73,7 +76,7 @@ class Addresses extends Component {
   render() {
     const { intl, addresses, debtorId } = this.props;
     const addressList = addresses.filter(address =>
-      address.debtorId === debtorId
+      address.person.id === debtorId
     );
     const styles = {
       container: {
