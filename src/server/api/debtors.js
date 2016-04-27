@@ -488,6 +488,7 @@ router.route('/:debtorId/contactNumbers')
         },
         models.source,
         models.company,
+        models.person,
         models.relationship,
       ]
     })
@@ -565,15 +566,23 @@ router.route('/:debtorId/contactNumbers')
                     transaction: t
                   })
                 )
-              ).then(personContactNumber => {
-                const cn = theContactNumber.toJSON();
-                cn.source = theSource.source;
-                cn.contactPerson = personContactNumber.contactPerson;
-                cn.relationshipId = personContactNumber.relationshipId;
-                cn.sourceId = personContactNumber.sourceId;
-                cn.debtorId = personContactNumber.personId;
-                return cn;
-              })
+              ).then(personContactNumber =>
+                models.personContactNumber.findById(personContactNumber.id, {
+                  include: [
+                    {
+                      model: models.contactNumber,
+                      include: [
+                        models.contactNumberType,
+                      ]
+                    },
+                    models.source,
+                    models.company,
+                    models.person,
+                    models.relationship,
+                  ],
+                  transaction: t,
+                })
+              )
             )
           )
         )
@@ -612,6 +621,7 @@ router.route('/:debtorId/addresses')
       include: [
         models.address,
         models.addressType,
+        models.person,
         models.source,
         models.company,
       ]

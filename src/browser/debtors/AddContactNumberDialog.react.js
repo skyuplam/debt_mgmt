@@ -201,6 +201,7 @@ class AddContactNumberDialog extends Component {
           {
             relationships.toArray().map(relationship => (
               <MenuItem
+                key={relationship.id}
                 value={relationship.id}
                 label={intl.formatMessage(contactsMessages[relationship.relationship])}
                 primaryText={

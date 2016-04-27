@@ -48,16 +48,17 @@ class ContactNumbers extends Component {
     if (contact.contactPerson) {
       theContact = `${contact.contactPerson} - `;
     }
-    if (contact.countryCode) {
-      countryCode = `+${contact.countryCode}-`;
+    if (contact.contactNumber.countryCode) {
+      const n = contact.contactNumber.countryCode.replace(/\+/g, '');
+      countryCode = `+${n}-`;
     }
-    if (contact.areaCode) {
-      areaCode = `${contact.areaCode}-`;
+    if (contact.contactNumber.areaCode) {
+      areaCode = `${contact.contactNumber.areaCode}-`;
     }
-    if (contact.ext) {
-      ext = `-${contact.ext}`;
+    if (contact.contactNumber.ext) {
+      ext = `-${contact.contactNumber.ext}`;
     }
-    return `${theContact}${countryCode}${areaCode}${contact.contactNumber}${ext}`;
+    return `${theContact}${countryCode}${areaCode}${contact.contactNumber.contactNumber}${ext}`;
   }
 
   formatSource(contactNumber) {
@@ -71,12 +72,12 @@ class ContactNumbers extends Component {
       );
       contactPerson = `${contactNumber.contactPerson}(${relationship}) - `;
     }
-    if (contactNumber.contactLinkedAt) {
-      const createDate = intl.formatDate(contactNumber.contactLinkedAt);
+    if (contactNumber.createdAt) {
+      const createDate = intl.formatDate(contactNumber.createdAt);
       createdAt = ` - ${createDate}`;
     }
     if (contactNumber.source) {
-      const key = contactNumber.source.replace(/\s+/g, '');
+      const key = contactNumber.source.source.replace(/\s+/g, '');
       source = intl.formatMessage(contactsMessages[key]);
     }
     return `${contactPerson}${source}${createdAt}`;
@@ -85,7 +86,7 @@ class ContactNumbers extends Component {
   render() {
     const { intl, contactNumbers, debtorId } = this.props;
     const theContacts = contactNumbers ? contactNumbers.filter(contactNumber =>
-      contactNumber.debtorId === debtorId
+      contactNumber.person.id === debtorId
     ) : [];
     const styles = {
       container: {

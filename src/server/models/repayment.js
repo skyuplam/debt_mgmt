@@ -34,6 +34,7 @@ export default function (sequelize, DataTypes) {
     classMethods: {
       associate: models => {
         Repayment.belongsTo(models.repaymentStatus);
+        Repayment.belongsTo(models.repaymentPlan);
       },
       hook: models => {
         // Init Repayment Status to New
