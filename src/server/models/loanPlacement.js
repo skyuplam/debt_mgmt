@@ -5,10 +5,10 @@ export default function (sequelize, DataTypes) {
       unique: true
     },
     expectedRecalledAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     returnedAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
   }, {
     classMethods: {

@@ -4,10 +4,10 @@ import { loadTestData } from '../data/testDataLoader';
 import config from '../config';
 import logger from '../lib/logger';
 import bcrypt from 'bcrypt';
-const ADMIN_PWD = process.env.APP_ADMIN_PWD;
 
 
 const { isProduction } = config;
+const ADMIN_PWD = isProduction ? process.env.APP_ADMIN_PWD : 'passw0rd';
 
 const {
   identityTypes,

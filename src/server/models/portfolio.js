@@ -8,10 +8,10 @@ export default function (sequelize, DataTypes) {
       unique: true,
     },
     biddedAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     cutoffAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
   }, {
     classMethods: {

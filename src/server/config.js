@@ -28,12 +28,15 @@ nconf.defaults({
   port: process.env.PORT || 8000,
   db: {
     development: {
-      dialect: 'sqlite',
-      storage: './db.development.sqlite'
+      username: 'postgres',
+      password: 'mysecretpassword',
+      database: 'loan',
+      host: '192.168.99.100',
+      dialect: 'postgres'
     },
     test: {
-      username: 'loan',
-      password: 'passw0rd',
+      username: 'postgres',
+      password: 'mysecretpassword',
       database: 'loan',
       host: '192.168.99.100',
       dialect: 'postgres'

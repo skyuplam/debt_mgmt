@@ -9,6 +9,7 @@ import BoardingValidationError from '../BoardingValidationError';
 import { boardingFields } from '../boardingFields.json';
 import models from '../../models';
 import { loanMap } from '../LoanMapping.json';
+import moment from 'moment';
 
 chai.use(dirtyChai);
 chai.use(chaiAsPromised);
@@ -128,16 +129,16 @@ describe('Boarding', function () {
       expect(Boarding.getIdInfo('445224831225241').dob).to.be.eql(new Date(1983, 12, 25));
       expect(Boarding.getIdInfo('445224831225241').gender).to.be.eql('M');
       expect(Boarding.getIdInfo('445224831225240').gender).to.be.eql('F');
-      expect(Boarding.getIdInfo('44522483122524X').gender).to.be.undefined();
+      expect(Boarding.getIdInfo('44522483122524X').gender).not.to.exist();
     });
     it('should return an object that match a number string of length of 18', function () {
       expect(Boarding.getIdInfo('440524188001010014')).to.have.all.keys(['dob', 'gender']);
       expect(Boarding.getIdInfo('440524188001010014').dob).to.be.eql(new Date(1880, 1, 1));
       expect(Boarding.getIdInfo('440524188001010014').gender).to.be.eql('M');
       expect(Boarding.getIdInfo('440524188001010024').gender).to.be.eql('F');
-      expect(Boarding.getIdInfo('44052418800101001X').gender).to.not.be.undefined();
-      expect(Boarding.getIdInfo('44052418800101001x').gender).to.not.be.undefined();
-      expect(Boarding.getIdInfo('4405241xx00101001x').gender).to.be.undefined();
+      expect(Boarding.getIdInfo('44052418800101001X').gender).to.be.eql('M');
+      expect(Boarding.getIdInfo('44052418800101001x').gender).to.be.eql('M');
+      expect(Boarding.getIdInfo('4405241xx00101001x').gender).to.not.be.exist();
     });
   });
 
@@ -280,12 +281,11 @@ describe('Boarding', function () {
     describe('#saveLoan', function () {
       it('should map the loan type', function () {
         expect(loanMap['老板贷']).to.be.eql('Executive Loan');
-        expect(loanMap.XXX).to.be.undefined();
       });
       it('should save the loan data into database', function () {
         const loan = {
           originatedAgreementNo: 'ZAC_3456712838',
-          packageReference: 1,
+          packageReference: 'XXCC1',
           issuedAt: new Date(2010, 10, 19),
           originatedLoanProcessingBranch: 'Branch',
           originatedLoanType: '老板贷',
@@ -323,9 +323,9 @@ describe('Boarding', function () {
                 'transferredAt',
                 'lastRepaidAt',
               ].indexOf(k) !== -1) {
-                expect(new Date(theLoan[k])).to.be.eql(loan[k]);
+                expect(moment(loan[k]).isSame(theLoan[k])).to.be.true(k);
               } else {
-                expect(theLoan[k]).to.be.eql(loan[k]);
+                expect(theLoan[k]).to.be.equal(loan[k]);
               }
             });
           });
@@ -340,8 +340,8 @@ describe('Boarding', function () {
           addressType: 'Home',
           source: 'Originator',
           relationship: 'Personal',
-          contactPerson: undefined,
-          companyName: undefined,
+          contactPerson: null,
+          companyName: null,
         }, {
           longAddress: 'Long Long Address 2',
           addressType: 'Work',
@@ -350,12 +350,12 @@ describe('Boarding', function () {
           contactPerson: 'Tester 2',
           companyName: 'ABC company',
         }, {
-          longAddress: undefined,
+          longAddress: null,
           addressType: 'Work',
           source: 'Originator',
           relationship: 'Spouse',
-          contactPerson: undefined,
-          companyName: undefined,
+          contactPerson: null,
+          companyName: null,
         }];
         return models.sequelize.transaction(function (t) {
           return models.person.create({
@@ -373,7 +373,7 @@ describe('Boarding', function () {
                     expect(pa.addressTypeId).to.exist('pa.addressTypeId');
                     expect(pa.personId).to.exist('pa.personId');
                     expect(pa.sourceId).to.exist('pa.sourceId');
-                    expect(pa.contactPerson).to.eql(addresses[index].contactPerson);
+                    expect(pa.contactPerson).to.equal(addresses[index].contactPerson);
                     expect(pa.relationshipId).to.exist('pa.relationshipId');
                     if (index === 1) {
                       expect(pa.companyId).to.exist('pa.companyId');
@@ -394,10 +394,10 @@ describe('Boarding', function () {
           contactNumber: '157889900',
           countryCode: '+86',
           contactNumberType: 'Mobile',
-          contactPerson: undefined,
+          contactPerson: null,
           source: 'Originator',
           relationship: 'Personal',
-          companyName: undefined,
+          companyName: null,
         }, {
           contactNumber: '157889901',
           countryCode: '+86',
@@ -408,12 +408,12 @@ describe('Boarding', function () {
           companyName: 'BBC Ltd',
         }, {
           contactNumber: '',
-          countryCode: undefined,
+          countryCode: null,
           contactNumberType: 'Mobile',
-          contactPerson: undefined,
+          contactPerson: null,
           source: 'Originator',
           relationship: 'Spouse',
-          companyName: undefined,
+          companyName: null,
         }];
         return models.sequelize.transaction(function (t) {
           return models.person.create({
@@ -428,7 +428,7 @@ describe('Boarding', function () {
                 personContacts.forEach(function (pa, index) {
                   if (index !== contacts.length - 1) {
                     expect(pa.contactNumberId).to.exist();
-                    expect(pa.contactPerson).to.eql(contacts[index].contactPerson);
+                    expect(pa.contactPerson).to.equal(contacts[index].contactPerson);
                     expect(pa.personId).to.exist();
                     expect(pa.sourceId).to.exist();
                     expect(pa.relationshipId).to.exist();

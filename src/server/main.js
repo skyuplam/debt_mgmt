@@ -77,7 +77,7 @@ app.use(errorHandler);
 const force = { force: !isProduction };
 
 models.sequelize.sync(force).then(() => {
-  if (LOAD_BOOSTRAP) {
+  if (!isProduction || LOAD_BOOSTRAP) {
     bootstrap();
   }
   const server = app.listen(port, () => {

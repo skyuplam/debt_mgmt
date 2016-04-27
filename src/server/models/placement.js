@@ -9,13 +9,13 @@ export default function (sequelize, DataTypes) {
       defaultValue: 0.0,
     },
     placedAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     expectedRecalledAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     recalledAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
   }, {
     classMethods: {

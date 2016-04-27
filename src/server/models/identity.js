@@ -4,10 +4,10 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.STRING,
     },
     issueDate: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     expiredDate: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     issueAuthority: {
       type: DataTypes.STRING,

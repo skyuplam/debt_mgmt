@@ -22,10 +22,10 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     startedAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     endedAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     repaidAmount: {
       type: DataTypes.FLOAT,

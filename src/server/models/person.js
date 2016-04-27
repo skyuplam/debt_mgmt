@@ -11,7 +11,7 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.STRING,
     },
     dob: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     }
   }, {
     classMethods: {

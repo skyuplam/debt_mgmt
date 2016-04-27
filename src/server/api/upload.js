@@ -18,21 +18,25 @@ const upload = multer({
 }).single('boarding');
 
 const router = express.Router();
-// TODO: Check Bearer Token
 router.route('/boarding')
   .post(passport.authenticate('bearer', { session: false }), (req, res) => {
-    upload(req, res, err => {
-      if (err) {
-        logger.warn(err);
-        return res.status(400).json({ err });
-      }
-      const workbook = XLSX.readFile(req.file.path);
-      const firstSheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheetName];
-      return Boarding.boarding(worksheet).then(() =>
-        res.status(202).end()
-      );
-    });
+    try {
+      upload(req, res, err => {
+        if (err) {
+          logger.warn(err);
+          return res.status(400).json({ err });
+        }
+        const workbook = XLSX.readFile(req.file.path);
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        return Boarding.boarding(worksheet).then(() =>
+          res.status(202).end()
+        );
+      });
+    } catch (err) {
+      logger.warn(err);
+      res.status(400).json({ err });
+    }
   });
 
 export default router;

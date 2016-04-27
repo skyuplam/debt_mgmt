@@ -10,7 +10,7 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     delinquentAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     amount: {
       type: DataTypes.FLOAT
@@ -19,7 +19,7 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.FLOAT
     },
     transferredAt: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
     },
     managementFeeRate: {
       type: DataTypes.FLOAT,
