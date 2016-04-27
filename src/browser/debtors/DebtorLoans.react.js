@@ -17,7 +17,9 @@ import loansMessages from '../../common/loans/loansMessages';
 import {
   getInterestAfterCutoff,
   getLateFeeAfterCutoff,
-  getServicingFee
+  getServicingFee,
+  getAgencyName,
+  getServicingFeeRate,
 } from '../../common/loans/loan';
 
 class DebtorLoans extends Component {
@@ -42,6 +44,8 @@ class DebtorLoans extends Component {
     this._formatInterestCell = this._formatInterestCell.bind(this);
     this._handleTotalFeeRender = this._handleTotalFeeRender.bind(this);
     this._handleRowClicked = this._handleRowClicked.bind(this);
+    this._formatAgencyCell = this._formatAgencyCell.bind(this);
+    this._formatServicingFeeRate = this._formatServicingFeeRate.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -81,6 +85,19 @@ class DebtorLoans extends Component {
     return (
       <FormattedNumber
         value={cellData}
+      />
+    );
+  }
+
+  _formatAgencyCell(cellData, cellDataKey, rowData) {
+    return getAgencyName(rowData);
+  }
+
+  _formatServicingFeeRate(cellData, cellDataKey, rowData) {
+    return (
+      <FormattedNumber
+        value={getServicingFeeRate(rowData)}
+        style="percent"
       />
     );
   }
@@ -177,12 +194,15 @@ class DebtorLoans extends Component {
                 <FlexColumn
                   label={intl.formatMessage(loansMessages.agency)}
                   dataKey="agency"
+                  cellRenderer={
+                    this._formatAgencyCell
+                  }
                   width={100}
                 />
                 <FlexColumn
                   label={intl.formatMessage(loansMessages.placementServicingFeeRate)}
                   dataKey="placementServicingFeeRate"
-                  cellRenderer={this._formatPercentageCell}
+                  cellRenderer={this._formatServicingFeeRate}
                   width={100}
                 />
                 <FlexColumn

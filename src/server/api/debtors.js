@@ -165,7 +165,12 @@ router.route('/:debtorId/loans')
         {
           model: models.loanPlacement,
           include: [
-            models.placement
+            {
+              model: models.placement,
+              include: [
+                models.company,
+              ]
+            }
           ]
         },
         {

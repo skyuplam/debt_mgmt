@@ -2,14 +2,14 @@ import { Record } from 'immutable';
 import moment from 'moment';
 
 const Loan = Record({
-  id: null,
-  appliedAt: null,
-  issuedAt: null,
+  id: undefined,
+  appliedAt: undefined,
+  issuedAt: undefined,
   terms: 0,
-  delinquentAt: null,
+  delinquentAt: undefined,
   amount: 0,
   apr: 0,
-  transferredAt: null,
+  transferredAt: undefined,
   managementFeeRate: 0,
   handlingFeeRate: 0,
   lateFeeRate: 0,
@@ -21,21 +21,26 @@ const Loan = Record({
   collectableLateFee: 0,
   collectablePenaltyFee: 0,
   repaidTerms: 0,
-  completedAt: null,
-  originator: null,
-  originatedAgreementNo: null,
-  originatedLoanProcessingBranch: null,
-  loanStatusId: null,
-  loanPlacementId: null,
-  placementStatusId: null,
+  completedAt: undefined,
+  originator: undefined,
+  originatedAgreementNo: undefined,
+  originatedLoanProcessingBranch: undefined,
+  loanStatus: undefined,
+  loanStatusId: undefined,
+  loanPlacementId: undefined,
+  loanPlacements: undefined,
+  placementStatusId: undefined,
   placementCode: '',
   placementServicingFeeRate: 0.0,
   packageReference: undefined,
-  placedAt: null,
-  expectedRecalledAt: null,
-  recalledAt: null,
+  placedAt: undefined,
+  portfolio: undefined,
+  expectedRecalledAt: undefined,
+  recalledAt: undefined,
   agency: '',
   cutoffAt: undefined,
+  lastRepaidAmount: undefined,
+  lastRepaidAt: undefined,
 });
 
 export function getInterestAfterCutoff(loan) {
@@ -77,8 +82,34 @@ export function getTotalAmount(loan) {
   getLateFeeAfterCutoff(loan);
 }
 
+export function getAgencyName(loan) {
+  if (!loan.loanPlacements || loan.loanPlacements.length < 1) {
+    return '';
+  }
+  const loanPlacements = loan.loanPlacements.filter(lp => lp.placementStatusId === 1);
+  if (!loanPlacements || loanPlacements.length < 1) {
+    return '';
+  }
+  return loanPlacements[0].placement.company.name;
+}
+
+export function getServicingFeeRate(loan) {
+  if (!loan.loanPlacements || loan.loanPlacements.length < 1) {
+    return 0;
+  }
+  const loanPlacements = loan.loanPlacements.filter(lp => lp.placementStatusId === 1);
+  if (!loanPlacements || loanPlacements.length < 1) {
+    return 0;
+  }
+  return loanPlacements[0].placement.servicingFeeRate;
+}
+
+export function getOriginator(loan) {
+  return loan.portfolio.company.name;
+}
+
 export function getServicingFee(loan) {
-  const placementServicingFeeRate = loan.placementServicingFeeRate;
+  const placementServicingFeeRate = getServicingFeeRate(loan);
   return Math.round(getTotalAmount(loan) * placementServicingFeeRate * 100.0) / 100.0;
 }
 

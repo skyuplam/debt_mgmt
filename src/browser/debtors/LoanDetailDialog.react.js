@@ -21,7 +21,10 @@ import {
   getInterestAfterCutoff,
   getLateFeeAfterCutoff,
   getServicingFee,
-  getTotalAmount
+  getTotalAmount,
+  getOriginator,
+  getAgencyName,
+  getServicingFeeRate,
 } from '../../common/loans/loan';
 import moment from 'moment';
 
@@ -220,7 +223,7 @@ class LoanDetailDialog extends Component {
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.originator)}
-              secondaryText={loan.originator}
+              secondaryText={getOriginator(loan)}
             />
             <ListItem
               primaryText={
@@ -233,11 +236,11 @@ class LoanDetailDialog extends Component {
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.agency)}
-              secondaryText={loan.agency}
+              secondaryText={getAgencyName(loan)}
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.placementServicingFeeRate)}
-              secondaryText={this._formatPercentage(loan.placementServicingFeeRate)}
+              secondaryText={this._formatPercentage(getServicingFeeRate(loan))}
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.servicingFee)}
