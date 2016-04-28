@@ -85,6 +85,8 @@ class DebtorInfo extends Component {
         marginLeft: 8,
       }
     };
+    const idNumber = debtor ?
+      debtor.identities.filter(identity => identity.identityTypeId === 1)[0].idNumber : null;
     return (
       <div style={styles.root}>
         <GridList
@@ -112,7 +114,7 @@ class DebtorInfo extends Component {
                 <TextField
                   floatingLabelText={intl.formatMessage(debtorsMessages.idCard)}
                   disabled
-                  value={debtor ? debtor.idNumber : ''}
+                  value={debtor ? idNumber : ''}
                 /><br />
                 <TextField
                   floatingLabelText={intl.formatMessage(debtorsMessages.dob)}
