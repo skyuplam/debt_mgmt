@@ -25,6 +25,10 @@ export default defineMessages({
     defaultMessage: '上传资料包',
     id: 'app.links.boarding'
   },
+  placement: {
+    defaultMessage: '上传委外数据',
+    id: 'app.links.placement'
+  },
   logout: {
     defaultMessage: '注销',
     id: 'app.links.logout'

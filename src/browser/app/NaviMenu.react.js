@@ -73,6 +73,11 @@ class NaviMenu extends Component {
                   {...linksMessages.boarding}
                 />
               </MenuItem>
+              <MenuItem onTouchTap={() => this.redirectTo(LINKS.placement)}>
+                <FormattedMessage
+                  {...linksMessages.placement}
+                />
+              </MenuItem>
             </div>
             : null
           }

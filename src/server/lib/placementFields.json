@@ -1,0 +1,10 @@
+{
+  "boardingFields": [
+  {
+    "field": "合同号",
+    "required": true
+  }, {
+    "field": "批次号",
+    "required": true
+  }
+]}

@@ -9,6 +9,7 @@ import Users from './users/Users.react';
 import Agencies from './agencies/Agencies.react';
 import Portfolios from './portfolios/Portfolios.react';
 import Boarding from './upload/Boarding.react';
+import Placement from './upload/Placement.react';
 import { IndexRoute, Route } from 'react-router';
 import { LINKS } from '../common/app/actions';
 
@@ -48,6 +49,7 @@ export default function createRoutes(getState) {
       <Route component={Portfolios} onEnter={requireManager} path={LINKS.portfolios} />
       <Route component={Agencies} onEnter={requireManager} path={LINKS.agencies} />
       <Route component={Boarding} onEnter={requireManager} path={LINKS.boarding} />
+      <Route component={Placement} onEnter={requireManager} path={LINKS.placement} />
       <Route component={NotFound} path="*" />
     </Route>
   );

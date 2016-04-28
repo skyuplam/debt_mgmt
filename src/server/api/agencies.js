@@ -100,4 +100,76 @@ router.route('/')
     })(req, res);
   });
 
+router.route('/placements')
+  .get((req, res) => {
+    passport.authenticate('bearer', { session: false }, (err, sender) => {
+      if (err || !sender) {
+        return res.status(400).json({ error: err });
+      }
+      return isAdmin(sender).then(isAdmin =>
+        isManager(sender).then(isManager => {
+          if (isAdmin || isManager) {
+            const roles = ['user', 'manager'];
+            if (isAdmin) {
+              roles.push('admin');
+            }
+            return models.placement.findAll({
+              include: [
+                {
+                  model: models.company,
+                }
+              ]
+            }).then(placements => res.json({ placements }));
+          }
+          return res.status(401).json({ error: 'Unauthorized' });
+        })
+      );
+    })(req, res);
+  });
+
+router.route('/:agencyId/placements')
+  .post((req, res) => {
+    passport.authenticate('bearer', { session: false }, (err, sender) => {
+      if (err || !sender) {
+        return res.status(400).json({ error: err });
+      }
+
+      const { placement } = req.body;
+      const agencyId = parseInt(req.params.agencyId, 10);
+      return models.sequelize.transaction(t =>
+        isAdmin(sender, {
+          transaction: t
+        }).then(isAdmin =>
+          isManager(sender, {
+            transaction: t
+          }).then(isManager => {
+            if (isAdmin || isManager) {
+              return models.placement.create({
+                placementCode: placement.placementCode,
+                placedAt: new Date(placement.placedAt),
+                expectedRecalledAt: new Date(placement.expectedRecalledAt),
+                servicingFeeRate: parseFloat(placement.servicingFeeRate)
+              }, {
+                transaction: t,
+              }).then(placement =>
+                models.company.findById(agencyId, {
+                  transaction: t,
+                }).then(company =>
+                  placement.setCompany(company, {
+                    transaction: t,
+                  }).then(placement => {
+                    const p = placement.toJSON();
+                    p.company = company.toJSON();
+                    return res.status(201).json({ placement: p });
+                  })
+                )
+              );
+            }
+            return res.status(401).json({ error: 'Unauthorized' });
+          })
+        )
+      );
+    })(req, res);
+  });
+
 export default router;

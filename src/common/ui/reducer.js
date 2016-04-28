@@ -39,6 +39,7 @@ const InitialState = Record({
   appBarActionType: undefined,
   isAddAgencyDialogOpen: false,
   isAddPortfolioDialogOpen: false,
+  isAddPlacementDialogOpen: false,
 });
 const initialState = new InitialState;
 
@@ -161,6 +162,11 @@ export default function uiReducer(state = initialState, action) {
     case actions.TOGGLE_ADD_PORTFOLIO_DIALOG: {
       return state.update('isAddPortfolioDialogOpen',
         isAddPortfolioDialogOpen => !isAddPortfolioDialogOpen);
+    }
+
+    case actions.TOGGLE_ADD_PLACEMENT_DIALOG: {
+      return state.update('isAddPlacementDialogOpen',
+        isAddPlacementDialogOpen => !isAddPlacementDialogOpen);
     }
 
     case ADD_NEW_ADDRESS_SUCCESS:

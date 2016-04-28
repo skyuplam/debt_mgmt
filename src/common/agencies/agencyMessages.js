@@ -7,7 +7,7 @@ export default defineMessages({
   },
   name: {
     id: 'agency.name',
-    defaultMessage: '名称',
+    defaultMessage: '机构名称',
   },
   code: {
     id: 'agency.code',
@@ -40,5 +40,29 @@ export default defineMessages({
   addAgency: {
     id: 'agency.addAgency',
     defaultMessage: '增加委外机构',
+  },
+  addPlacement: {
+    id: 'agency.addPlacement',
+    defaultMessage: '增加委外批次',
+  },
+  placementTitle: {
+    id: 'agency.placementTitle',
+    defaultMessage: '委外批次列表',
+  },
+  placementCode: {
+    id: 'agency.placementCode',
+    defaultMessage: '委外批次号',
+  },
+  placedAt: {
+    id: 'agency.placedAt',
+    defaultMessage: '委外日期',
+  },
+  expectedRecalledAt: {
+    id: 'agency.expectedRecalledAt',
+    defaultMessage: '预期回收日',
+  },
+  recalledAt: {
+    id: 'agency.recalledAt',
+    defaultMessage: '回收日',
   },
 });

@@ -10,6 +10,7 @@ export const LINKS = {
   agencies: 'agencies',
   portfolios: 'portfolios',
   boarding: 'boarding',
+  placement: 'placement',
 };
 
 export function updateAppStateFromStorage() {
