@@ -63,6 +63,11 @@ class App extends Component {
         title: intl.formatMessage(notifyMessages.congratuation),
         message: intl.formatMessage(notifyMessages.success),
         level: 'success',
+      },
+      failure: {
+        title: intl.formatMessage(notifyMessages.sorry),
+        message: intl.formatMessage(notifyMessages.failure),
+        level: 'error',
       }
     };
 

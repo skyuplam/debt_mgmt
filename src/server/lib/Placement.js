@@ -32,6 +32,9 @@ export default function placement(ws) {
     worker.connect('placement', () => {
       worker.on('data', row => {
         const r = JSON.parse(row);
+        logger.info({
+          placementProgress: r.originatedAgreementNo,
+        });
         return models.sequelize.transaction(t =>
           models.placement.find({
             where: {
@@ -62,7 +65,10 @@ export default function placement(ws) {
               )
             )
           )
-        ).then(() => worker.ack(row));
+        ).then(() => worker.ack(row)).catch(error => {
+          logger.error(error, row);
+          worker.ack(row);
+        });
       });
 
       push.connect('placement', () => {

@@ -9,4 +9,12 @@ export default defineMessages({
     defaultMessage: '成功',
     id: 'app.notify.success'
   },
+  sorry: {
+    defaultMessage: '不好意思',
+    id: 'app.notify.sorry'
+  },
+  failure: {
+    defaultMessage: '失败',
+    id: 'app.notify.failure'
+  },
 });

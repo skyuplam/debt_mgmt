@@ -3,18 +3,56 @@ import { Record } from 'immutable';
 import Repayment from '../repayments/repayment';
 import Loan from '../loans/loan';
 import Note from '../notes/note';
-import { LOGIN_SUCCESS } from '../auth/actions';
-import { ADD_NEW_ADDRESS_SUCCESS } from '../addresses/actions';
-import { CREATE_AGENCY_SUCCESS } from '../agencies/actions';
-import { NEW_CONTACT_NUMBER_SUCCESS } from '../contactNumbers/actions';
-import { SEARCH_DEBTORS_SUCCESS } from '../debtors/actions';
-import { POSTPONE_PLACEMENT_RECALL_SUCCESS } from '../loans/actions';
-import { ADD_NEW_NOTE_SUCCESS } from '../notes/actions';
-import { CREATE_PORTFOLIO_SUCCESS } from '../portfolios/actions';
-import { NEW_REPAYMENT_PLAN_SUCCESS } from '../repaymentPlans/actions';
-import { PAY_REPAYMENT_SUCCESS } from '../repayments/actions';
-import { UPLOAD_SUCCESS } from '../upload/actions';
-import { NEW_USER_SUCCESS, UPDATE_USER_SUCCESS } from '../users/actions';
+import {
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
+} from '../auth/actions';
+import {
+  ADD_NEW_ADDRESS_SUCCESS,
+  ADD_NEW_ADDRESS_ERROR,
+} from '../addresses/actions';
+import {
+  CREATE_AGENCY_SUCCESS,
+  CREATE_AGENCY_ERROR,
+} from '../agencies/actions';
+import {
+  NEW_CONTACT_NUMBER_SUCCESS,
+  NEW_CONTACT_NUMBER_ERROR,
+} from '../contactNumbers/actions';
+import {
+  SEARCH_DEBTORS_SUCCESS,
+  SEARCH_DEBTORS_ERROR,
+} from '../debtors/actions';
+import {
+  POSTPONE_PLACEMENT_RECALL_SUCCESS,
+  POSTPONE_PLACEMENT_RECALL_ERROR,
+} from '../loans/actions';
+import {
+  ADD_NEW_NOTE_SUCCESS,
+  ADD_NEW_NOTE_ERROR,
+} from '../notes/actions';
+import {
+  CREATE_PORTFOLIO_SUCCESS,
+  CREATE_PORTFOLIO_ERROR,
+} from '../portfolios/actions';
+import {
+  NEW_REPAYMENT_PLAN_SUCCESS,
+  NEW_REPAYMENT_PLAN_ERROR,
+} from '../repaymentPlans/actions';
+import {
+  PAY_REPAYMENT_SUCCESS,
+  PAY_REPAYMENT_ERROR,
+} from '../repayments/actions';
+import {
+  UPLOAD_SUCCESS,
+  UPLOAD_ERROR,
+} from '../upload/actions';
+import {
+  NEW_USER_SUCCESS,
+  NEW_USER_ERROR,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
+} from '../users/actions';
 import { notify } from '../eventEmitter/eventEmitter';
 
 const InitialState = Record({
@@ -184,6 +222,25 @@ export default function uiReducer(state = initialState, action) {
     case LOGIN_SUCCESS: {
       notify({
         message: 'congratuation',
+      });
+      return state;
+    }
+
+    case LOGIN_ERROR:
+    case ADD_NEW_ADDRESS_ERROR:
+    case CREATE_AGENCY_ERROR:
+    case NEW_CONTACT_NUMBER_ERROR:
+    case SEARCH_DEBTORS_ERROR:
+    case POSTPONE_PLACEMENT_RECALL_ERROR:
+    case ADD_NEW_NOTE_ERROR:
+    case CREATE_PORTFOLIO_ERROR:
+    case NEW_REPAYMENT_PLAN_ERROR:
+    case PAY_REPAYMENT_ERROR:
+    case UPLOAD_ERROR:
+    case NEW_USER_ERROR:
+    case UPDATE_USER_ERROR: {
+      notify({
+        message: 'failure',
       });
       return state;
     }

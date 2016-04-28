@@ -1,8 +1,8 @@
 export const FETCH_NOTES_START = 'FETCH_NOTES_START';
-export const FETCH_NOTES_FAILURE = 'FETCH_NOTES_FAILURE';
+export const FETCH_NOTES_ERROR = 'FETCH_NOTES_ERROR';
 export const FETCH_NOTES_SUCCESS = 'FETCH_NOTES_SUCCESS';
 export const ADD_NEW_NOTE_START = 'ADD_NEW_NOTE_START';
-export const ADD_NEW_NOTE_FAILURE = 'ADD_NEW_NOTE_FAILURE';
+export const ADD_NEW_NOTE_ERROR = 'ADD_NEW_NOTE_ERROR';
 export const ADD_NEW_NOTE_SUCCESS = 'ADD_NEW_NOTE_SUCCESS';
 
 import { translateHttpError } from '../lib/error/error';

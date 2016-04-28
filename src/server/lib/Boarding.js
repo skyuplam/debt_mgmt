@@ -821,6 +821,9 @@ function boarding(ws, fields = boardingFields) {
     worker.connect('boarding', () => {
       worker.on('data', row => {
         const r = JSON.parse(row);
+        logger.info({
+          boardingProgress: r.loan.originatedAgreementNo,
+        });
         return models.sequelize.transaction(t =>
           models.portfolio.find({
             where: {
@@ -857,7 +860,10 @@ function boarding(ws, fields = boardingFields) {
               )
             // ).then(() => worker.ack(row))
           )
-        ).then(() => worker.ack(row));
+        ).then(() => worker.ack(row)).catch(error => {
+          logger.error(error, row);
+          worker.ack(row);
+        });
       });
 
       push.connect('boarding', () => {

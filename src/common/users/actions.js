@@ -5,13 +5,13 @@ import { translateHttpError } from '../lib/error/error';
 const API_VERSION = '/api/v1';
 
 export const FETCH_USERS_START = 'FETCH_USERS_START';
-export const FETCH_USERS_FAILURE = 'FETCH_USERS_FAILURE';
+export const FETCH_USERS_ERROR = 'FETCH_USERS_ERROR';
 export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
 export const NEW_USER_START = 'NEW_USER_START';
-export const NEW_USER_FAILURE = 'NEW_USER_FAILURE';
+export const NEW_USER_ERROR = 'NEW_USER_ERROR';
 export const NEW_USER_SUCCESS = 'NEW_USER_SUCCESS';
 export const UPDATE_USER_START = 'UPDATE_USER_START';
-export const UPDATE_USER_FAILURE = 'UPDATE_USER_FAILURE';
+export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 
 export const ON_USERS_LIST = 'ON_USERS_LIST';
