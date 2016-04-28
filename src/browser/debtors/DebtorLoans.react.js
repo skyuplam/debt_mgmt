@@ -20,6 +20,7 @@ import {
   getServicingFee,
   getAgencyName,
   getServicingFeeRate,
+  getPlacement,
 } from '../../common/loans/loan';
 
 class DebtorLoans extends Component {
@@ -46,6 +47,8 @@ class DebtorLoans extends Component {
     this._handleRowClicked = this._handleRowClicked.bind(this);
     this._formatAgencyCell = this._formatAgencyCell.bind(this);
     this._formatServicingFeeRate = this._formatServicingFeeRate.bind(this);
+    this._formatPlacedAt = this._formatPlacedAt.bind(this);
+    this._formatExpectedRecalledAt = this._formatExpectedRecalledAt.bind(this);
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -99,6 +102,24 @@ class DebtorLoans extends Component {
         value={getServicingFeeRate(rowData)}
         style="percent"
       />
+    );
+  }
+
+  _formatPlacedAt(cellData, cellDataKey, rowData) {
+    const placedAt = getPlacement(rowData) ? getPlacement(rowData).placedAt : null;
+    return (
+      <FormattedDate
+        value={placedAt}
+      />:null
+    );
+  }
+
+  _formatExpectedRecalledAt(cellData, cellDataKey, rowData) {
+    const placedAt = getPlacement(rowData) ? getPlacement(rowData).expectedRecalledAt : null;
+    return (
+      <FormattedDate
+        value={placedAt}
+      />:null
     );
   }
 
@@ -208,13 +229,13 @@ class DebtorLoans extends Component {
                 <FlexColumn
                   label={intl.formatMessage(loansMessages.placedAt)}
                   dataKey="placedAt"
-                  cellRenderer={this._formatDateCell}
+                  cellRenderer={this._formatPlacedAt}
                   width={100}
                 />
                 <FlexColumn
                   label={intl.formatMessage(loansMessages.expectedRecalledAt)}
                   dataKey="expectedRecalledAt"
-                  cellRenderer={this._formatDateCell}
+                  cellRenderer={this._formatExpectedRecalledAt}
                   width={100}
                 />
                 <FlexColumn

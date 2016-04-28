@@ -25,6 +25,7 @@ import {
   getOriginator,
   getAgencyName,
   getServicingFeeRate,
+  getPlacement,
 } from '../../common/loans/loan';
 import moment from 'moment';
 
@@ -248,7 +249,7 @@ class LoanDetailDialog extends Component {
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.placedAt)}
-              secondaryText={this._formatDate(loan.placedAt)}
+              secondaryText={this._formatDate(getPlacement(loan).placedAt)}
             />
           </List>
           <List>
@@ -290,7 +291,7 @@ class LoanDetailDialog extends Component {
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.expectedRecalledAt)}
-              secondaryText={this._formatDate(loan.expectedRecalledAt)}
+              secondaryText={this._formatDate(getPlacement(loan).expectedRecalledAt)}
               onTouchTap={this.handlePostponeRecall}
             />
           </List>

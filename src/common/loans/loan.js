@@ -82,30 +82,32 @@ export function getTotalAmount(loan) {
   getLateFeeAfterCutoff(loan);
 }
 
-export function getAgencyName(loan) {
+export function getPlacement(loan) {
   if (!loan.loanPlacements || loan.loanPlacements.length < 1) {
-    return '';
+    return null;
   }
-  const loanPlacements = loan.loanPlacements.filter(lp => lp.placementStatusId === 1);
+  const loanPlacements = loan.loanPlacements;
   if (!loanPlacements || loanPlacements.length < 1) {
-    return '';
+    return null;
   }
-  return loanPlacements[0].placement.company.name;
+  return loanPlacements[loanPlacements.length - 1].placement;
+}
+
+export function getAgencyName(loan) {
+  const placement = getPlacement(loan);
+  return placement.company.name;
 }
 
 export function getServicingFeeRate(loan) {
-  if (!loan.loanPlacements || loan.loanPlacements.length < 1) {
-    return 0;
-  }
-  const loanPlacements = loan.loanPlacements.filter(lp => lp.placementStatusId === 1);
-  if (!loanPlacements || loanPlacements.length < 1) {
-    return 0;
-  }
-  return loanPlacements[0].placement.servicingFeeRate;
+  const placement = getPlacement(loan);
+  return placement.servicingFeeRate;
 }
 
 export function getOriginator(loan) {
-  return loan.portfolio.company.name;
+  if (loan.portfolio && loan.portfolio.company) {
+    return loan.portfolio.company.name;
+  }
+  return '';
 }
 
 export function getServicingFee(loan) {

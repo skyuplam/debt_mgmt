@@ -1,5 +1,5 @@
 {
-  "boardingFields": [
+  "placementFields": [
   {
     "field": "合同号",
     "required": true

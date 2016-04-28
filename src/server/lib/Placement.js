@@ -18,11 +18,11 @@ function placementFieldMapping(ws, r, c) {
 }
 
 export default function placement(ws) {
-  if (!Boarding.validateBoarding(ws, placementFields)) {
+  if (!Boarding.validateBoarding(ws, placementFields.placementFields)) {
     return false;
   }
   const rows = Boarding.getRows(ws);
-  const cols = Boarding.getColIndexes(placementFields);
+  const cols = Boarding.getColIndexes(placementFields.placementFields);
 
   const context = rabbit.createContext(`amqp://terrencelam:passw0rd@${RBMQ_ADDR}`);
   context.on('ready', () => {
