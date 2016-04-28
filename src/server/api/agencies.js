@@ -69,8 +69,9 @@ router.route('/')
                   transaction: t
                 }).then(company =>
                   models.companyType.find({
-                    type: 'DCA'
-                  }, {
+                    where: {
+                      type: 'DCA'
+                    },
                     transaction: t
                   }).then(companyType =>
                     company.setCompanyType(companyType, {
