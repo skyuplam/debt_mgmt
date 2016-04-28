@@ -8,6 +8,8 @@ import models from '../models';
 
 const { isProduction } = config;
 const RBMQ_ADDR = isProduction ? process.env.RBMQ_PORT_5672_TCP_ADDR : '192.168.99.100';
+const RBMQ_USER = isProduction ? process.env.RBMQ_USER : 'user';
+const RBMQ_PWD = isProduction ? process.env.RBMQ_PWD : 'passw0rd';
 
 
 function placementFieldMapping(ws, r, c) {
@@ -17,6 +19,7 @@ function placementFieldMapping(ws, r, c) {
   };
 }
 
+
 export default function placement(ws) {
   if (!Boarding.validateBoarding(ws, placementFields.placementFields)) {
     return false;
@@ -24,7 +27,7 @@ export default function placement(ws) {
   const rows = Boarding.getRows(ws);
   const cols = Boarding.getColIndexes(placementFields.placementFields);
 
-  const context = rabbit.createContext(`amqp://terrencelam:passw0rd@${RBMQ_ADDR}`);
+  const context = rabbit.createContext(`amqp://${RBMQ_USER}:${RBMQ_PWD}@${RBMQ_ADDR}`);
   context.on('ready', () => {
     const push = context.socket('PUSH');
     const worker = context.socket('WORKER', { prefetch: 1 });
