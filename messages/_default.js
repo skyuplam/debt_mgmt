@@ -9,6 +9,10 @@ export default [
     "defaultMessage": "增加委外机构"
   },
   {
+    "id": "agency.addPlacement",
+    "defaultMessage": "增加委外批次"
+  },
+  {
     "id": "agency.agenciesTitle",
     "defaultMessage": "委外机构列表"
   },
@@ -21,12 +25,32 @@ export default [
     "defaultMessage": "机构代码"
   },
   {
+    "id": "agency.expectedRecalledAt",
+    "defaultMessage": "预期回收日"
+  },
+  {
     "id": "agency.name",
-    "defaultMessage": "名称"
+    "defaultMessage": "机构名称"
   },
   {
     "id": "agency.no",
     "defaultMessage": "否"
+  },
+  {
+    "id": "agency.placedAt",
+    "defaultMessage": "委外日期"
+  },
+  {
+    "id": "agency.placementCode",
+    "defaultMessage": "委外批次号"
+  },
+  {
+    "id": "agency.placementTitle",
+    "defaultMessage": "委外批次列表"
+  },
+  {
+    "id": "agency.recalledAt",
+    "defaultMessage": "回收日"
   },
   {
     "id": "agency.servicingFeeRate",
@@ -65,12 +89,32 @@ export default [
     "defaultMessage": "注销"
   },
   {
+    "id": "app.links.placement",
+    "defaultMessage": "上传委外数据"
+  },
+  {
     "id": "app.links.portfolios",
     "defaultMessage": "投资组合管理"
   },
   {
     "id": "app.links.users",
     "defaultMessage": "用户管理"
+  },
+  {
+    "id": "app.notify.congratuation",
+    "defaultMessage": "恭喜"
+  },
+  {
+    "id": "app.notify.failure",
+    "defaultMessage": "失败"
+  },
+  {
+    "id": "app.notify.sorry",
+    "defaultMessage": "不好意思"
+  },
+  {
+    "id": "app.notify.success",
+    "defaultMessage": "成功"
   },
   {
     "id": "auth.login.error.email",
@@ -323,6 +367,14 @@ export default [
   {
     "id": "debtors.debtorDetail",
     "defaultMessage": "借款人详细"
+  },
+  {
+    "id": "debtors.dob",
+    "defaultMessage": "出生日期"
+  },
+  {
+    "id": "debtors.gender",
+    "defaultMessage": "性别"
   },
   {
     "id": "debtors.headerTitle",
@@ -959,6 +1011,10 @@ export default [
   {
     "id": "users.password",
     "defaultMessage": "密码"
+  },
+  {
+    "id": "users.placementTitle",
+    "defaultMessage": "上传委外数据"
   },
   {
     "id": "users.role",
