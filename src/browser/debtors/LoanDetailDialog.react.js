@@ -249,7 +249,10 @@ class LoanDetailDialog extends Component {
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.placedAt)}
-              secondaryText={this._formatDate(getPlacement(loan).placedAt)}
+              secondaryText={getPlacement(loan) ?
+                this._formatDate(getPlacement(loan).placedAt)
+                : null
+              }
             />
           </List>
           <List>
@@ -291,7 +294,10 @@ class LoanDetailDialog extends Component {
             />
             <ListItem
               primaryText={intl.formatMessage(loansMessages.expectedRecalledAt)}
-              secondaryText={this._formatDate(getPlacement(loan).expectedRecalledAt)}
+              secondaryText={getPlacement(loan) ?
+                this._formatDate(getPlacement(loan).expectedRecalledAt)
+                : null
+              }
               onTouchTap={this.handlePostponeRecall}
             />
           </List>

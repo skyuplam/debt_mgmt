@@ -95,12 +95,18 @@ export function getPlacement(loan) {
 
 export function getAgencyName(loan) {
   const placement = getPlacement(loan);
-  return placement.company.name;
+  if (placement) {
+    return placement.company.name;
+  }
+  return null;
 }
 
 export function getServicingFeeRate(loan) {
   const placement = getPlacement(loan);
-  return placement.servicingFeeRate;
+  if (placement) {
+    return placement.servicingFeeRate;
+  }
+  return null;
 }
 
 export function getOriginator(loan) {

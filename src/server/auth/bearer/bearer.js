@@ -24,11 +24,13 @@ const strategy = new Strategy((token, done) => {
           done(null, user);
           return null;
         }
-        return done(null, false);
+        done(null, false);
+        return null;
       });
     }
-    return done(null, false);
-  }).catch(err => {
+    done(null, false);
+    return null;
+  }, () => null).catch(err => {
     logger.error(err);
     done(err);
   });

@@ -97,29 +97,30 @@ class DebtorLoans extends Component {
   }
 
   _formatServicingFeeRate(cellData, cellDataKey, rowData) {
-    return (
+    const feeRate = getServicingFeeRate(rowData);
+    return (feeRate ?
       <FormattedNumber
-        value={getServicingFeeRate(rowData)}
+        value={feeRate}
         style="percent"
-      />
+      /> : null
     );
   }
 
   _formatPlacedAt(cellData, cellDataKey, rowData) {
     const placedAt = getPlacement(rowData) ? getPlacement(rowData).placedAt : null;
-    return (
+    return (placedAt ?
       <FormattedDate
         value={placedAt}
-      />:null
+      /> : null
     );
   }
 
   _formatExpectedRecalledAt(cellData, cellDataKey, rowData) {
     const placedAt = getPlacement(rowData) ? getPlacement(rowData).expectedRecalledAt : null;
-    return (
+    return (placedAt ?
       <FormattedDate
         value={placedAt}
-      />:null
+      /> : null
     );
   }
 
@@ -137,12 +138,12 @@ class DebtorLoans extends Component {
 
   _formatDateCell(cellData) {
     const theDate = cellData ? new Date(cellData) : null;
-    return (
+    return (theDate ?
       <div>
         <FormattedDate
           value={theDate}
         />
-      </div>
+      </div> : null
     );
   }
 

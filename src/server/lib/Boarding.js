@@ -152,7 +152,7 @@ function checkIfPortfolioExists(worksheet) {
     where: {
       referenceCode: firstPortfolioValue
     }
-  });
+  }).then(() => true, () => false);
 }
 
 function validateBoarding(worksheet, fields = boardingFields) {
@@ -831,38 +831,39 @@ function boarding(ws, fields = boardingFields) {
             where: {
               referenceCode
             },
+            transaction: t,
           }).then(portfolio =>
-            // models.sequelize.transaction(t =>
-              savePersonInfo(r.personInfo, t).then(identity =>
-                saveLoan(r.loan, t).then(loan =>
-                  Promise.all([
-                    loan.setPortfolio(portfolio, {
+            savePersonInfo(r.personInfo, t).then(identity =>
+              saveLoan(r.loan, t).then(loan =>
+                Promise.all([
+                  loan.setPortfolio(portfolio, {
+                    transaction: t,
+                  }),
+                  models.identity.find({
+                    where: {
+                      id: identity.id
+                    },
+                    include: [{
+                      model: models.person,
+                    }],
+                    transaction: t,
+                  }).then(idPpl =>
+                    idPpl.people[0].addLoan(loan, {
                       transaction: t,
-                    }),
-                    models.identity.find({
-                      where: {
-                        id: identity.id
-                      },
-                      include: [{
-                        model: models.person,
-                      }],
-                      transaction: t,
-                    }).then(idPpl =>
-                      idPpl.people[0].addLoan(loan, {
-                        transaction: t,
-                      })
-                      .then(() =>
-                        savePersonAddresses(idPpl.people[0], r.addresses, t)
-                      ).then(() =>
-                        savePersonContacts(idPpl.people[0], r.contacts, t)
-                      ),
-                    )
-                  ])
-                )
+                    })
+                    .then(() =>
+                      savePersonAddresses(idPpl.people[0], r.addresses, t)
+                    ).then(() =>
+                      savePersonContacts(idPpl.people[0], r.contacts, t)
+                    ),
+                  )
+                ])
               )
-            // ).then(() => worker.ack(row))
+            )
           )
-        ).then(() => worker.ack(row)).catch(error => {
+        ).then(() =>
+          worker.ack(row)
+        ).catch(error => {
           logger.error(error, row);
           worker.ack(row);
         });
@@ -877,44 +878,7 @@ function boarding(ws, fields = boardingFields) {
     });
   });
   context.on('error', error => logger.warn(error));
-  // return models.portfolio.find({
-  //   where: {
-  //     referenceCode
-  //   },
-  // }).then(portfolio =>
-  //   models.sequelize.transaction(t =>
-  //     Promise.all(rows.map(r => {
-  //       const theRow = boardingFieldMapping(ws, r, cols);
-  //       return savePersonInfo(theRow.personInfo, t).then(identity =>
-  //         saveLoan(theRow.loan, t).then(loan =>
-  //           Promise.all([
-  //             loan.setPortfolio(portfolio, {
-  //               transaction: t,
-  //             }),
-  //             models.identity.find({
-  //               where: {
-  //                 id: identity.id
-  //               },
-  //               include: [{
-  //                 model: models.person,
-  //               }],
-  //               transaction: t,
-  //             }).then(idPpl =>
-  //               Promise.all([
-  //                 idPpl.people[0].addLoan(loan, {
-  //                   transaction: t,
-  //                 }),
-  //                 savePersonAddresses(idPpl.people[0], theRow.addresses, t),
-  //                 savePersonContacts(idPpl.people[0], theRow.contacts, t),
-  //               ])
-  //             )
-  //           ])
-  //         )
-  //       );
-  //     }))
-  //   )
-  // );
-  return null;
+  return true;
 }
 
 const Boarding = {};
