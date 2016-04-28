@@ -521,6 +521,14 @@ export default [
     "defaultMessage": "贷款日期"
   },
   {
+    "id": "loans.lastRepaidAmount",
+    "defaultMessage": "转前最后还款金额"
+  },
+  {
+    "id": "loans.lastRepaidAt",
+    "defaultMessage": "转前最后还款日期"
+  },
+  {
     "id": "loans.lateFee",
     "defaultMessage": "罚息"
   },

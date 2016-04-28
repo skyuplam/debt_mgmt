@@ -293,6 +293,14 @@ class LoanDetailDialog extends Component {
               secondaryText={this._formatDate(loan.cutoffAt)}
             />
             <ListItem
+              primaryText={intl.formatMessage(loansMessages.lastRepaidAt)}
+              secondaryText={this._formatDate(loan.lastRepaidAt)}
+            />
+            <ListItem
+              primaryText={intl.formatMessage(loansMessages.lastRepaidAmount)}
+              secondaryText={this._formatNumber(loan.lastRepaidAmount)}
+            />
+            <ListItem
               primaryText={intl.formatMessage(loansMessages.expectedRecalledAt)}
               secondaryText={getPlacement(loan) ?
                 this._formatDate(getPlacement(loan).expectedRecalledAt)

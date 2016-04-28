@@ -169,6 +169,14 @@ export default defineMessages({
     defaultMessage: '还款计划',
     id: 'loans.repaymentPlan',
   },
+  lastRepaidAt: {
+    defaultMessage: '转前最后还款日期',
+    id: 'loans.lastRepaidAt',
+  },
+  lastRepaidAmount: {
+    defaultMessage: '转前最后还款金额',
+    id: 'loans.lastRepaidAmount',
+  },
   add: {
     defaultMessage: '新增',
     id: 'loans.add',
