@@ -99,8 +99,8 @@ class AddPlacementDialog extends Component {
           {
             agencies.toArray().map(agency => (
               <MenuItem
-                key={agency.id}
-                value={agency.id}
+                key={agency.company.id}
+                value={agency.company.id}
                 label={agency.company.name}
                 primaryText={agency.company.name}
               />
