@@ -12,9 +12,13 @@ import { FormattedNumber, injectIntl, intlShape } from 'react-intl';
 import DatePicker from 'material-ui/DatePicker';
 import { setField } from '../../common/lib/redux-fields/actions';
 import {
+  getTotalAmount,
+  getServicingFee,
+} from '../../common/loans/loan';
+import {
   newRepaymentPlan,
   addRepayments,
-  resetRepyments
+  resetRepyments,
 } from '../../common/repaymentPlans/actions';
 import RepaymentList from './RepaymentList.react';
 import { toFloat } from 'validator';
@@ -111,12 +115,8 @@ class NewRepaymentPlan extends Component {
     const { loans, currentLoanId } = this.props;
     const currentLoan = loans.get(currentLoanId);
     const totalAmt = currentLoan ?
-      currentLoan.collectablePrincipal
-      + currentLoan.collectableInterest
-      + currentLoan.collectableMgmtFee
-      + currentLoan.collectableHandlingFee
-      + currentLoan.collectableLateFee
-      + currentLoan.collectablePenaltyFee : 0;
+    Math.round((getTotalAmount(currentLoan) + getServicingFee(currentLoan)) * 100) / 100
+    : 0;
     return totalAmt;
   }
 
