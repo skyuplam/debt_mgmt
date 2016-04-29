@@ -1,7 +1,7 @@
 import { Record } from 'immutable';
 
 const repaymentPlan = Record({
-  id: '',
+  id: undefined,
   principal: 0,
   apr: 0,
   servicingFeeRate: 0,
@@ -9,11 +9,14 @@ const repaymentPlan = Record({
   lateFeeRate: 0,
   penaltyFeeRate: 0,
   terms: 0,
-  startedAt: null,
-  endedAt: null,
-  repaymentPlanStatusId: null,
+  loan: undefined,
+  loanId: undefined,
+  loanPlacementId: undefined,
+  startedAt: undefined,
+  endedAt: undefined,
+  repaymentPlanStatusId: undefined,
   repaidAmount: 0,
-  debtorId: null,
+  debtorId: undefined,
 });
 
 export default repaymentPlan;

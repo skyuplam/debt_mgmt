@@ -245,6 +245,7 @@ Repayments = injectIntl(Repayments);
 
 export default connect(state => ({
   repayments: state.repayments.map,
+  repaymentPlans: state.repaymentPlans.map,
   viewer: state.users.viewer,
 }), {
   fetchRepaments,
