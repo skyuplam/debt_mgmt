@@ -8,10 +8,9 @@ import models from './models';
 import passport from './auth/passport';
 import bootstrap from './data/bootstrap';
 import logger from './lib/logger';
-const LOAD_BOOSTRAP = process.env.BOOSTRAP === 'boostrap';
 
 const app = express();
-const { port, isProduction } = config;
+const { port, isProduction, loadBootstrap } = config;
 // passport setup
 app.use(passport.initialize());
 // passport piggy backs of express sessions, still need to set express session options
@@ -77,7 +76,7 @@ app.use(errorHandler);
 const force = { force: !isProduction };
 
 models.sequelize.sync(force).then(() => {
-  if (!isProduction || LOAD_BOOSTRAP) {
+  if (loadBootstrap) {
     bootstrap();
   }
   const server = app.listen(port, () => {

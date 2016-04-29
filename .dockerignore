@@ -1,5 +1,8 @@
 # Standard Ignore
 .git/
+build/
+coverage/
+uploads/
 node_modules/
 npm-debug.log
 

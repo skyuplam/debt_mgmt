@@ -5,9 +5,13 @@ import nconf from 'nconf';
 
 const appName = require('../../package.json').name;
 const isProduction = process.env.NODE_ENV === 'production';
-const DB_ADDR = process.env.DB_PORT_5432_TCP_ADDR;
-const DB_PWD = process.env.DB_PWD;
-
+const DB_ADDR = isProduction ? process.env.DB_ADDR : '192.168.99.100';
+const DB_PWD = isProduction ? process.env.DB_PWD : 'passw0rd';
+const ADMIN_PWD = isProduction ? process.env.APP_ADMIN_PWD : 'passw0rd';
+const LOAD_BOOTSTRAP = isProduction ? process.env.BOOTSTRAP === 'boostrap' : true;
+const RBMQ_ADDR = isProduction ? process.env.RBMQ_ADDR : '192.168.99.100';
+const RBMQ_USER = isProduction ? process.env.RBMQ_USER : 'user';
+const RBMQ_PWD = isProduction ? process.env.RBMQ_PWD : 'passw0rd';
 
 // Specifying an env delimiter allows us to override config when shipping to
 // production server. 'foo__bar=2 gulp' will set config to '{foo: {bar: 2}}'
@@ -24,21 +28,26 @@ nconf.defaults({
   saltRounds: 10,
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction,
+  adminPwd: ADMIN_PWD,
   tokenExpiredIn: '1h',
+  loadBootstrap: LOAD_BOOTSTRAP,
+  rbmqUri: RBMQ_ADDR,
+  rbmqUser: RBMQ_USER,
+  rbmqPwd: RBMQ_PWD,
   port: process.env.PORT || 8000,
   db: {
     development: {
       username: 'postgres',
-      password: 'mysecretpassword',
+      password: DB_PWD,
       database: 'loan',
-      host: '192.168.99.100',
+      host: DB_ADDR,
       dialect: 'postgres'
     },
     test: {
       username: 'postgres',
-      password: 'mysecretpassword',
+      password: DB_PWD,
       database: 'loan',
-      host: '192.168.99.100',
+      host: DB_ADDR,
       dialect: 'postgres'
     },
     production: {

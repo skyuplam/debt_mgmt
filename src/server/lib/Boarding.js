@@ -9,10 +9,11 @@ import rabbit from 'rabbit.js';
 import logger from '../lib/logger';
 import config from '../config';
 
-const { isProduction } = config;
-const RBMQ_ADDR = isProduction ? process.env.RBMQ_PORT_5672_TCP_ADDR : '192.168.99.100';
-const RBMQ_USER = isProduction ? process.env.RBMQ_USER : 'user';
-const RBMQ_PWD = isProduction ? process.env.RBMQ_PWD : 'passw0rd';
+const {
+  rbmqUri,
+  rbmqUser,
+  rbmqPwd,
+} = config;
 
 function getFieldNames(fields) {
   return fields.reduce((fieldNames, field) =>
@@ -815,7 +816,7 @@ function boarding(ws, fields = boardingFields) {
   const rows = getRows(ws);
   const cols = getColIndexes();
 
-  const context = rabbit.createContext(`amqp://${RBMQ_USER}:${RBMQ_PWD}@${RBMQ_ADDR}`);
+  const context = rabbit.createContext(`amqp://${rbmqUser}:${rbmqPwd}@${rbmqUri}`);
   context.on('ready', () => {
     const push = context.socket('PUSH');
     const worker = context.socket('WORKER', { prefetch: 1 });

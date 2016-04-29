@@ -6,8 +6,8 @@ import logger from '../lib/logger';
 import bcrypt from 'bcrypt';
 
 
-const { isProduction } = config;
-const ADMIN_PWD = isProduction ? process.env.APP_ADMIN_PWD : 'passw0rd';
+const { isProduction, adminPwd } = config;
+
 
 const {
   identityTypes,
@@ -82,7 +82,7 @@ export default function loadData() {
       ),
     ])
   ).then(() => models.sequelize.transaction(t =>
-    bcrypt.hashAsync(ADMIN_PWD, 10).then(passwordHashed =>
+    bcrypt.hashAsync(adminPwd, 10).then(passwordHashed =>
       models.user.create({
         username: 'terrencelam',
         password: passwordHashed

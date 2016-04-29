@@ -6,11 +6,11 @@ import config from '../config';
 import models from '../models';
 
 
-const { isProduction } = config;
-const RBMQ_ADDR = isProduction ? process.env.RBMQ_PORT_5672_TCP_ADDR : '192.168.99.100';
-const RBMQ_USER = isProduction ? process.env.RBMQ_USER : 'user';
-const RBMQ_PWD = isProduction ? process.env.RBMQ_PWD : 'passw0rd';
-
+const {
+  rbmqUri,
+  rbmqUser,
+  rbmqPwd,
+} = config;
 
 function placementFieldMapping(ws, r, c) {
   return {
@@ -26,8 +26,7 @@ export default function placement(ws) {
   }
   const rows = Boarding.getRows(ws);
   const cols = Boarding.getColIndexes(placementFields.placementFields);
-
-  const context = rabbit.createContext(`amqp://${RBMQ_USER}:${RBMQ_PWD}@${RBMQ_ADDR}`);
+  const context = rabbit.createContext(`amqp://${rbmqUser}:${rbmqPwd}@${rbmqUri}`);
   context.on('ready', () => {
     const push = context.socket('PUSH');
     const worker = context.socket('WORKER', { prefetch: 1 });

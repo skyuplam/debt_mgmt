@@ -4,6 +4,9 @@ uploads/
 coverage
 coverage/
 
+# docker compose config file
+docker-compose.yml
+
 # Este
 *.sublime-workspace
 src/common/secrets.json
