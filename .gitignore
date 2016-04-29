@@ -6,6 +6,7 @@ coverage/
 
 # docker compose config file
 docker-compose.yml
+*.env
 
 # Este
 *.sublime-workspace
