@@ -90,7 +90,7 @@
     "json-loader": "^0.5.4",
     "jsonwebtoken": "^5.7.0",
     "make-error": "^1.1.1",
-    "material-ui": "^0.15.0-beta.2",
+    "material-ui": "^0.15.0",
     "moment": "^2.13.0",
     "multer": "^1.1.0",
     "nconf": "^0.8.4",
@@ -105,7 +105,7 @@
     "pg-hstore": "^2.3.2",
     "postcss-loader": "^0.8.2",
     "rabbit.js": "^0.4.4",
-    "react": "^15.0.1",
+    "react": "^15.0.2",
     "react-addons-shallow-compare": "^15.0.1",
     "react-addons-test-utils": "^15.0.1",
     "react-dom": "^15.0.1",
@@ -152,7 +152,7 @@
     "webpack": "^1.13.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.10.0",
-    "webpack-isomorphic-tools": "^2.2.48",
+    "webpack-isomorphic-tools": "^2.2.50",
     "xlsx": "^0.8.0",
     "yargs": "^4.6.0"
   }

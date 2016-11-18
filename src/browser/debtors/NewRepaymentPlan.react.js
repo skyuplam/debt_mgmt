@@ -11,6 +11,7 @@ import { fields } from '../../common/lib/redux-fields';
 import { FormattedNumber, injectIntl, intlShape } from 'react-intl';
 import DatePicker from 'material-ui/DatePicker';
 import { setField } from '../../common/lib/redux-fields/actions';
+import SelectField from 'material-ui/SelectField';
 import {
   getTotalAmount,
   getServicingFee,
@@ -204,6 +205,25 @@ class NewRepaymentPlan extends Component {
           cancelLabel={intl.formatMessage(repaymentsMessages.cancel)}
           okLabel={intl.formatMessage(repaymentsMessages.ok)}
         />
+        <SelectField
+          floatingLabelText={intl.formatMessage(contactsMessages.relationship)}
+          onChange={this.handleSelectedRelationship}
+          value={fields.relationship.value}
+          maxHeight={300}
+        >
+          {
+            relationships.toArray().map(relationship => (
+              <MenuItem
+                key={relationship.id}
+                value={relationship.id}
+                label={intl.formatMessage(contactsMessages[relationship.relationship])}
+                primaryText={
+                  intl.formatMessage(contactsMessages[relationship.relationship])
+                }
+              />
+            ))
+          }
+        </SelectField><br />
       <div style={{ textAlign: 'right' }}>
           <FlatButton
             label={intl.formatMessage(repaymentsMessages.generateRepayments)}

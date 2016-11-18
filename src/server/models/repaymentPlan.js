@@ -30,6 +30,9 @@ export default function (sequelize, DataTypes) {
     repaidAmount: {
       type: DataTypes.FLOAT,
       defaultValue: 0.0
+    },
+    repaymentPlanType: {
+      type: DataTypes.STRING,
     }
   }, {
     classMethods: {

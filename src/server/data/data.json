@@ -279,5 +279,15 @@
       "relationship": "Others",
       "description": ""
     }
+  ],
+  "repaymentPlanTypes": [
+    {
+      "type": "Monthly Repayment Plan",
+      "description": ""
+    },
+    {
+      "type": "Onetime Repayment Plan",
+      "description": ""
+    }
   ]
 }

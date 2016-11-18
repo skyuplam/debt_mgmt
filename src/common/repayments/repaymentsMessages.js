@@ -204,5 +204,13 @@ export default defineMessages({
   paidInFull: {
     id: 'repayments.paidInFull',
     defaultMessage: '是否结清',
-  }
+  },
+  MonthlyRepaymentPlan: {
+    id: 'repayments.MonthlyRepaymentPlan',
+    defaultMessage: '按月还款计划',
+  },
+  OnetimeRepaymentPlan: {
+    id: 'repayments.OnetimeRepaymentPlan',
+    defaultMessage: '单次还款计划',
+  },
 });

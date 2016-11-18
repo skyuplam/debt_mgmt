@@ -110,7 +110,6 @@ class Header extends Component {
       <header>
         <AppBar
           title={appBarTitle}
-          className="app-bar"
           iconElementRight={actionBtn}
           onLeftIconButtonTouchTap={toggleSideMenu}
         />

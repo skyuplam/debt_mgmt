@@ -17,6 +17,7 @@ const {
   repaymentPlanStatuses,
   placementStatuses,
   contactNumberTypes,
+  repaymentPlanTypes,
   addressTypes,
   sources,
   relationships,
@@ -77,6 +78,11 @@ export default function loadData() {
       ),
       roles.map(role =>
         models.role.create(role, {
+          transaction: t2
+        })
+      ),
+      repaymentPlanTypes.map(repaymentPlanType =>
+        models.repaymentPlanType.create(repaymentPlanType, {
           transaction: t2
         })
       ),

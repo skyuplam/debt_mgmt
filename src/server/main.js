@@ -37,12 +37,12 @@ const directives = isProduction ?
 :
 {
   defaultSrc: ['*'],
-  scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cdn.polyfill.io', '192.168.1.210:8080', 'localhost'],
+  scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://cdn.polyfill.io', '*', 'localhost'],
   styleSrc: ["'self'", "'unsafe-inline'", 'localhost'],
   imgSrc: ["'self'", 'data:'],
   sandbox: ['allow-forms', 'allow-scripts', 'allow-same-origin'],
   reportUri: '/report-violation',
-  connectSrc: ["'self'", 'allow-same-origin', '192.168.1.210:8080'],
+  connectSrc: ["'self'", 'allow-same-origin', '*'],
   mediaSrc: ["'self'"],
   objectSrc: ["'self'", 'allow-same-origin'], // An empty array allows nothing through
 };
