@@ -1,144 +1,139 @@
-import 'babel-polyfill';
+// @flow
+import App from '../../browser/app/App.react';
 import Helmet from 'react-helmet';
-import Html from './Html.react';
+import Html from './Html';
 import React from 'react';
-import ReactDOMServer from 'react-dom/server';
+import ServerFetchProvider from './ServerFetchProvider';
 import config from '../config';
+// import configureFela from '../../common/configureFela';
 import configureStore from '../../common/configureStore';
-import createRoutes from '../../browser/createRoutes';
-import loadMessages from '../intl/loadMessages';
+import createInitialState from './createInitialState';
 import serialize from 'serialize-javascript';
-import { Provider } from 'react-redux';
-import { createMemoryHistory, match, RouterContext } from 'react-router';
-import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
+import { Provider as Redux } from 'react-redux';
+import { createServerRenderContext, ServerRouter } from 'react-router';
+import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 
-const messages = loadMessages();
+const settleAllWithTimeout = promises => Promise
+  .all(promises.map(p => p.reflect()))
+  // $FlowFixMe
+  .each((inspection) => {
+    if (inspection.isFulfilled()) return;
+    console.log('Server fetch failed:', inspection.reason());
+  })
+  .timeout(15000) // Do not block rendering forever.
+  .catch((error) => {
+    // $FlowFixMe
+    if (error instanceof Promise.TimeoutError) {
+      console.log('Server fetch timeouted:', error);
+      return;
+    }
+    throw error;
+  });
 
-const fetchComponentDataAsync = async (dispatch, renderProps) => {
-  const { components, location, params } = renderProps;
-  const promises = components
-    .reduce((actions, component) => {
-      if (typeof component === 'function') {
-        actions = actions.concat(component.fetchActions || []);
-      } else {
-        Object.keys(component).forEach(c => {
-          actions = actions.concat(component[c].fetchActions || []);
-        });
-      }
-      return actions;
-    }, [])
-    .map(action =>
-      // Server side fetching can use only router location and params props.
-      // There is no easy way how to support custom component props.
-      dispatch(action({ location, params })).payload.promise
-    );
-  await Promise.all(promises);
-};
+// createInitialState loads files, so it must be called once.
+const initialState = createInitialState();
 
-const intlPolyfillFeatures = config.locales
-  .map(locale => `Intl.~locale.${locale}`)
-  .join();
+const getHost = req =>
+  `${req.headers['x-forwarded-proto'] || req.protocol}://${req.headers.host}`;
 
-const getInitialState = req => {
-  const currentLocale = process.env.IS_SERVERLESS
-    ? config.defaultLocale
-    : req.acceptsLanguages(config.locales) || config.defaultLocale;
-  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-  return {
-    config: {
-      appName: config.appName,
+const getLocale = req => process.env.IS_SERVERLESS
+  ? config.defaultLocale
+  : req.acceptsLanguages(config.locales) || config.defaultLocale;
+
+const createStore = req => configureStore({
+  initialState: {
+    ...initialState,
+    device: {
+      ...initialState.device,
+      host: getHost(req),
     },
     intl: {
-      currentLocale,
+      ...initialState.intl,
+      currentLocale: getLocale(req),
       initialNow: Date.now(),
-      locales: config.locales,
-      messages
     },
-    device: {
-      host: `${protocol}://${req.headers.host}`
-    }
-  };
-};
+  },
+});
 
-const renderApp = (store, renderProps) => {
-  const appHtml = ReactDOMServer.renderToString(
-    <Provider store={store}>
-      <RouterContext {...renderProps} />
-    </Provider>
+const renderBody = (store, context, location, fetchPromises) => {
+  const html = renderToString(
+    <Redux store={store}>
+      <ServerFetchProvider promises={fetchPromises}>
+        <ServerRouter context={context} location={location}>
+          <App />
+        </ServerRouter>
+      </ServerFetchProvider>
+    </Redux>,
   );
-  return { appHtml, helmet: Helmet.rewind() };
+  const helmet = Helmet.rewind();
+  return { html, helmet };
 };
 
-const renderScripts = (state, headers, hostname, appJsFilename) =>
-  // https://github.com/yahoo/serialize-javascript#user-content-automatic-escaping-of-html-characters
-  // https://github.com/andyearnshaw/Intl.js/#intljs-and-ft-polyfill-service
+const renderScripts = (state, appJsFilename) =>
+  // github.com/yahoo/serialize-javascript#user-content-automatic-escaping-of-html-characters
   // TODO: Switch to CSP, https://github.com/este/este/pull/731
   `
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=${
-      intlPolyfillFeatures
-    }"></script>
     <script>
       window.__INITIAL_STATE__ = ${serialize(state)};
     </script>
     <script src="${appJsFilename}"></script>
   `;
 
-const renderPage = (store, renderProps, req) => {
-  const state = store.getState();
-  // No server routing for server-less apps.
-  if (process.env.IS_SERVERLESS) {
-    delete state.routing;
-  }
-  const { headers, hostname } = req;
-  const { appHtml, helmet } = renderApp(store, renderProps);
+const renderHtml = (state, body) => {
   const {
     styles: { app: appCssFilename },
-    javascript: { app: appJsFilename }
-  } = webpackIsomorphicTools.assets();
-  const scriptsHtml = renderScripts(state, headers, hostname, appJsFilename);
+    javascript: { app: appJsFilename },
+  } = global.webpackIsomorphicTools.assets();
   if (!config.isProduction) {
-    webpackIsomorphicTools.refresh();
+    global.webpackIsomorphicTools.refresh();
   }
-  const docHtml = ReactDOMServer.renderToStaticMarkup(
+  const scripts = renderScripts(state, appJsFilename);
+  const html = renderToStaticMarkup(
     <Html
       appCssFilename={appCssFilename}
-      bodyHtml={`<div id="app">${appHtml}</div>${scriptsHtml}`}
+      bodyCss={body.css}
+      bodyHtml={`<div id="app">${body.html}</div>${scripts}`}
       googleAnalyticsId={config.googleAnalyticsId}
-      helmet={helmet}
+      helmet={body.helmet}
       isProduction={config.isProduction}
-    />
+    />,
   );
-  return `<!DOCTYPE html>${docHtml}`;
+  return `<!DOCTYPE html>${html}`;
 };
 
-export default function render(req, res, next) {
-  const initialState = getInitialState(req);
-  const memoryHistory = createMemoryHistory(req.originalUrl);
-  const store = configureStore({
-    initialState,
-    platformMiddleware: [routerMiddleware(memoryHistory)]
-  });
-  const history = syncHistoryWithStore(memoryHistory, store);
-  const routes = createRoutes(store.getState);
-  const location = req.url;
+// react-router.now.sh/ServerRouter
+const render = async (req: Object, res: Object, next: Function) => {
+  try {
+    const context = createServerRenderContext();
+    const store = createStore(req);
+    const fetchPromises = [];
 
-  match({ history, routes, location }, async (error, redirectLocation, renderProps) => {
-    if (redirectLocation) {
-      res.redirect(301, redirectLocation.pathname + redirectLocation.search);
+    let body = renderBody(store, context, req.url, fetchPromises);
+    const result = context.getResult();
+
+    if (result.redirect) {
+      res.redirect(301, result.redirect.pathname + result.redirect.search);
       return;
     }
-    if (error) {
-      next(error);
+
+    if (result.missed) {
+      body = renderBody(store, context, req.url);
+      const html = renderHtml(store.getState(), body);
+      res.status(404).send(html);
       return;
     }
-    try {
-      await fetchComponentDataAsync(store.dispatch, renderProps);
-      const html = renderPage(store, renderProps, req);
-      const status = renderProps.routes
-        .some(route => route.path === '*') ? 404 : 200;
-      res.status(status).send(html);
-    } catch (e) {
-      next(e);
+
+    if (!process.env.IS_SERVERLESS && fetchPromises.length > 0) {
+      await settleAllWithTimeout(fetchPromises);
+      body = renderBody(store, context, req.url);
     }
-  });
-}
+
+    const html = renderHtml(store.getState(), body);
+    res.status(200).send(html);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+export default render;

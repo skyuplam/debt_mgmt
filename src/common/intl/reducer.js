@@ -9,17 +9,23 @@ const InitialState = Record({
 });
 const initialState = new InitialState;
 
-export default function intlReducer(state = initialState, action) {
-  if (!(state instanceof InitialState)) return new InitialState(state);
+const reducer = (
+  state: IntlState = initialState,
+  action?: Action,
+): IntlState => {
+  // Because it's called from the createInitialState.
+  if (!action) return state;
 
   switch (action.type) {
 
-    case actions.SET_CURRENT_LOCALE: {
-      const { locale } = action.payload;
-      return state.set('currentLocale', locale);
+    case 'SET_CURRENT_LOCALE': {
+      return { ...state, currentLocale: action.payload.locale };
     }
 
-  }
+    default:
+      return state;
 
-  return state;
-}
+  }
+};
+
+export default reducer;

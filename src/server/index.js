@@ -1,12 +1,17 @@
-require('babel-register');
-require('babel-polyfill');
 
-const Bluebird = require('bluebird');
-const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
-const config = require('./config');
-const polyfillLocales = require('./intl/polyfillLocales');
+
+// const Bluebird = require('bluebird');
+// const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
+// const config = require('./config').default;
+// const polyfillLocales = require('./intl/polyfillLocales');
+// const rootDir = require('path').resolve(__dirname, '..', '..');
+// const webpackIsomorphicAssets = require('../../internal/webpack/assets').default;
+import Bluebird from 'bluebird';
+import WebpackIsomorphicTools from 'webpack-isomorphic-tools';
+import config from './config';
+import polyfillLocales from './intl/polyfillLocales';
 const rootDir = require('path').resolve(__dirname, '..', '..');
-const webpackIsomorphicAssets = require('../../webpack/assets');
+import webpackIsomorphicAssets from '../../internal/webpack/assets';
 
 if (!process.env.NODE_ENV) {
   throw new Error(
@@ -20,7 +25,6 @@ polyfillLocales(global, config.locales);
 global.Promise = Bluebird;
 
 global.webpackIsomorphicTools = new WebpackIsomorphicTools(webpackIsomorphicAssets)
-  .development(!config.isProduction)
   .server(rootDir, () => {
     require('./main');
   });

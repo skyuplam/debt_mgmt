@@ -5,11 +5,11 @@ import nconf from 'nconf';
 
 const appName = require('../../package.json').name;
 const isProduction = process.env.NODE_ENV === 'production';
-const DB_ADDR = isProduction ? process.env.DB_ADDR : '192.168.99.100';
+const DB_ADDR = isProduction ? process.env.DB_ADDR : 'localhost';
 const DB_PWD = isProduction ? process.env.DB_PWD : 'passw0rd';
 const ADMIN_PWD = isProduction ? process.env.APP_ADMIN_PWD : 'passw0rd';
 const LOAD_BOOTSTRAP = isProduction ? process.env.BOOTSTRAP === 'boostrap' : true;
-const RBMQ_ADDR = isProduction ? process.env.RBMQ_ADDR : '192.168.99.100';
+const RBMQ_ADDR = isProduction ? process.env.RBMQ_ADDR : 'localhost';
 const RBMQ_USER = isProduction ? process.env.RBMQ_USER : 'user';
 const RBMQ_PWD = isProduction ? process.env.RBMQ_PWD : 'passw0rd';
 
